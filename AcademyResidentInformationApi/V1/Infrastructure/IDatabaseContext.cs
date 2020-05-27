@@ -1,4 +1,3 @@
-using AcademyResidentInformationApi.V1.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcademyResidentInformationApi.V1.Infrastructure

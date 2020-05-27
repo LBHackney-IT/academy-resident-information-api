@@ -1,9 +1,9 @@
+using AcademyResidentInformationApi.V1.Factories;
+using AcademyResidentInformationApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
-using AcademyResidentInformationApi.V1.Domain;
-using AcademyResidentInformationApi.V1.Factory;
 
-namespace UnitTests.V1.Factories
+namespace AcademyResidentInformationApi.Tests.V1.Factories
 {
     [TestFixture]
     public class EntityFactoryTest

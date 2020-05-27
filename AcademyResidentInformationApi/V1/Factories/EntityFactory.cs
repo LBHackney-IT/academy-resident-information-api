@@ -1,6 +1,7 @@
 using AcademyResidentInformationApi.V1.Domain;
+using AcademyResidentInformationApi.V1.Infrastructure;
 
-namespace AcademyResidentInformationApi.V1.Factory
+namespace AcademyResidentInformationApi.V1.Factories
 {
     public class EntityFactory : AbstractEntityFactory
     {

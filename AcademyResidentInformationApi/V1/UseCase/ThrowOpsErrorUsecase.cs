@@ -1,5 +1,5 @@
 
-namespace AcademyResidentInformationApi.UseCase.V1
+namespace AcademyResidentInformationApi.V1.UseCase
 {
     public static class ThrowOpsErrorUsecase
     {

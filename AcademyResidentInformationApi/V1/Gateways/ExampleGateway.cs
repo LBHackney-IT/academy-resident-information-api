@@ -1,5 +1,5 @@
 using AcademyResidentInformationApi.V1.Domain;
-using AcademyResidentInformationApi.V1.Factory;
+using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
 
 namespace AcademyResidentInformationApi.V1.Gateways

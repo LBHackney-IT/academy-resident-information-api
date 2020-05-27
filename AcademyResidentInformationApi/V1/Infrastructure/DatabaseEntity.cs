@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AcademyResidentInformationApi.V1.Domain
+namespace AcademyResidentInformationApi.V1.Infrastructure
 {
     [Table("example_entities")]
     public class DatabaseEntity

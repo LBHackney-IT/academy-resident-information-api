@@ -1,9 +1,9 @@
 using System.Linq;
+using AcademyResidentInformationApi.Tests.V1.Helper;
+using AcademyResidentInformationApi.V1.Infrastructure;
 using NUnit.Framework;
-using AcademyResidentInformationApi.V1.Domain;
-using UnitTests.V1.Helper;
 
-namespace UnitTests.V1.Infrastructure
+namespace AcademyResidentInformationApi.Tests.V1.Infrastructure
 {
     [TestFixture]
     public class DatabaseContextTest : DatabaseTests

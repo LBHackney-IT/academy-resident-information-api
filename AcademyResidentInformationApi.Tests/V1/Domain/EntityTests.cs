@@ -1,9 +1,9 @@
 using System;
+using AcademyResidentInformationApi.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
-using AcademyResidentInformationApi.V1.Domain;
 
-namespace UnitTests.V1.Domain
+namespace AcademyResidentInformationApi.Tests.V1.Domain
 {
     [TestFixture]
     public class EntityTests

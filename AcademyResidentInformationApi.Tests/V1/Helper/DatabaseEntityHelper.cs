@@ -1,7 +1,8 @@
-using AutoFixture;
 using AcademyResidentInformationApi.V1.Domain;
+using AcademyResidentInformationApi.V1.Infrastructure;
+using AutoFixture;
 
-namespace UnitTests.V1.Helper
+namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class DatabaseEntityHelper
     {

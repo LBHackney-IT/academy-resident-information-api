@@ -1,8 +1,8 @@
+using AcademyResidentInformationApi.V1.UseCase;
 using FluentAssertions;
 using NUnit.Framework;
-using AcademyResidentInformationApi.UseCase.V1;
 
-namespace UnitTests.V1.UseCase
+namespace AcademyResidentInformationApi.Tests.V1.UseCase
 {
     [TestFixture]
     public class ThrowOpsErrorUsecaseTests

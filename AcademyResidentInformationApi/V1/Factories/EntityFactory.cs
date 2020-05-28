@@ -1,10 +1,11 @@
 using AcademyResidentInformationApi.V1.Domain;
+using AcademyResidentInformationApi.V1.Infrastructure;
 
-namespace AcademyResidentInformationApi.V1.Factory
+namespace AcademyResidentInformationApi.V1.Factories
 {
-    public class EntityFactory : AbstractEntityFactory
+    public static class EntityFactory
     {
-        public override Entity ToDomain(DatabaseEntity databaseEntity)
+        public static Entity ToDomain(this DatabaseEntity databaseEntity)
         {
             return new Entity
             {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using AcademyResidentInformationApi.UseCase.V1;
+using AcademyResidentInformationApi.V1.UseCase;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AcademyResidentInformationApi.Controllers.V1
+namespace AcademyResidentInformationApi.V1.Controllers
 {
     [Route("api/v1/healthcheck")]
     [ApiController]

@@ -1,9 +1,9 @@
+using AcademyResidentInformationApi.V1.Factories;
+using AcademyResidentInformationApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
-using AcademyResidentInformationApi.V1.Domain;
-using AcademyResidentInformationApi.V1.Factory;
 
-namespace UnitTests.V1.Factories
+namespace AcademyResidentInformationApi.Tests.V1.Factories
 {
     [TestFixture]
     public class EntityFactoryTest
@@ -12,7 +12,7 @@ namespace UnitTests.V1.Factories
         public void CanBeCreatedFromDatabaseEntity()
         {
             var databaseEntity = new DatabaseEntity();
-            var entity = new EntityFactory().ToDomain(databaseEntity);
+            var entity = databaseEntity.ToDomain();
 
             databaseEntity.Id.Should().Be(entity.Id);
             databaseEntity.CreatedAt.Should().BeSameDateAs(entity.CreatedAt);

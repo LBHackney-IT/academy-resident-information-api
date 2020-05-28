@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using AcademyResidentInformationApi.V1.Controllers;
+using AcademyResidentInformationApi.V1.UseCase;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
-using AcademyResidentInformationApi.Controllers.V1;
-using AcademyResidentInformationApi.UseCase.V1;
 
-namespace UnitTests.V1.Controllers
+namespace AcademyResidentInformationApi.Tests.V1.Controllers
 {
 
     [TestFixture]

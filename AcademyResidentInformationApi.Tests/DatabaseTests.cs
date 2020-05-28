@@ -1,9 +1,8 @@
+using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using AcademyResidentInformationApi.V1.Infrastructure;
-using AcademyResidentInformationApi.Tests;
 
-namespace UnitTests
+namespace AcademyResidentInformationApi.Tests
 {
     [TestFixture]
     public class DatabaseTests

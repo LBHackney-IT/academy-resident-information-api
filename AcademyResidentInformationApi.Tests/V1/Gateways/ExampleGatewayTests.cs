@@ -1,11 +1,11 @@
+using AcademyResidentInformationApi.Tests.V1.Helper;
+using AcademyResidentInformationApi.V1.Domain;
+using AcademyResidentInformationApi.V1.Gateways;
 using AutoFixture;
 using FluentAssertions;
 using NUnit.Framework;
-using UnitTests.V1.Helper;
-using AcademyResidentInformationApi.V1.Gateways;
-using AcademyResidentInformationApi.V1.Domain;
 
-namespace UnitTests.V1.Gateways
+namespace AcademyResidentInformationApi.Tests.V1.Gateways
 {
     [TestFixture]
     public class ExampleGatewayTests : DatabaseTests

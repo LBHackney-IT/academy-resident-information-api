@@ -1,7 +1,7 @@
 using AcademyResidentInformationApi.V1.Boundary;
 using Microsoft.Extensions.HealthChecks;
 
-namespace AcademyResidentInformationApi.UseCase.V1
+namespace AcademyResidentInformationApi.V1.UseCase
 {
     public class DbHealthCheckUseCase
     {

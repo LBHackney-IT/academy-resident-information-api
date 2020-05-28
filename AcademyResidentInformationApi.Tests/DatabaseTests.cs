@@ -1,3 +1,4 @@
+using System;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;

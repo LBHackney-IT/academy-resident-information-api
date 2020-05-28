@@ -55,7 +55,7 @@ commands:
       - run:
           name: apply
           command: |
-            cd ./terraform/
+            cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve
   deploy-lambda:
     description: "Deploys API via Serverless"

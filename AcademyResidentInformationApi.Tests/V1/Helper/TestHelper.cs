@@ -1,8 +1,8 @@
+using System;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
-using System;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper

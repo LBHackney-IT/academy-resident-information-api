@@ -1,11 +1,11 @@
 using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AutoFixture;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 

@@ -16,21 +16,75 @@ executors:
      docker:
         - image: mcr.microsoft.com/dotnet/core/sdk:3.1
 
-workflows:
-  check-and-deploy:
-    jobs:
-      - check-code-formatting
-      - build-and-test
-      - assume-role-development:
-          context: api-assume-role-development-context
-          requires:
-            - build-and-test
-      - terraform-init-and-apply-to-development:
-          requires:
-            - assume-role-development
-      - deploy-to-development:
-          requires:
-            - assume-role-development
+references:
+  workspace_root: &workspace_root "~"
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+commands:
+  assume-role-and-persist-workspace:
+    description: "assumes deployment role and persists credentials across jobs"
+    parameters:
+      aws-account:
+        type: string
+    steps:
+      - checkout
+      - aws_assume_role/assume_role:
+          account: <<parameters.aws-account>>
+          profile_name: default
+          role: 'LBH_Circle_CI_Deployment_Role'
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
+  deploy-lambda:
+    description: "Deploys API via Serverless"
+    parameters:
+      stage:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Install Node.js
+          command: |
+            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            apt-get update && apt-get install -y nodejs
+      - run:
+          name: Install serverless CLI
+          command: npm i -g serverless
+      - run:
+          name: Build lambda
+          command: |
+            cd ./AcademyResidentInformationApi/
+            chmod +x ./build.sh
+            ./build.sh
+      - run:
+          name: Deploy lambda
+          command: |
+            cd ./AcademyResidentInformationApi/
+            sls deploy --stage <<parameters.stage>>
 
 jobs:
   check-code-formatting:
@@ -57,249 +111,126 @@ jobs:
   assume-role-development:
     executor: docker-python
     steps:
-      - checkout
-      - aws_assume_role/assume_role:
-            account: $AWS_ACCOUNT_DEVELOPMENT
-            profile_name: default
-            role: 'LBH_Circle_CI_Deployment_Role'
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+  assume-role-staging:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_STAGING
+  assume-role-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
-      - checkout
       - terraform-init-then-apply:
-          aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
+          environment: development
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: 'staging'
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: 'production'
   deploy-to-development:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
-          aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
           stage: 'development'
-
-commands:
-  terraform-init-then-apply:
-    description: "Initializes and applies terraform configuration"
-    parameters:
-      aws-account:
-        type: string
-      aws-role-name:
-        type: string
+  deploy-to-staging:
+    executor: docker-dotnet
     steps:
-       - run:
-          command: |
-              cd ./terraform/
-              terraform get -update=true
-              terraform init
-          name: get and init
-       - run:
-          name: apply
-          command: |
-            cd ./terraform/
-            terraform apply -auto-approve
-  deploy-lambda:
-    description: "Deploys API via Serverless"
-    parameters:
-      stage:
-        type: string
-      aws-account:
-        type: string
-      aws-role-name:
-        type: string
+      - deploy-lambda:
+          stage: 'staging'
+  deploy-to-production:
+    executor: docker-dotnet
     steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Install Node.js
-          command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
-            apt-get update && apt-get install -y nodejs
-      - run:
-          name: Install serverless CLI
-          command: npm i -g serverless
-      - run:
-          name: Build lambda
-          command: |
-            cd ./AcademyResidentInformationApi/
-            chmod +x ./build.sh
-            ./build.sh
-      - run:
-          name: Deploy lambda
-          command: |
-            cd ./AcademyResidentInformationApi/
-            sls deploy --stage <<parameters.stage>>
+      - deploy-lambda:
+          stage: 'production'
 
-# jobs:
-#   terraform-init-and-apply-to-development:
-#     executor: docker-terraform
-#     steps:
-#       - checkout
-#       - terraform-init-then-apply:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_DEVELOPMENT
-#   terraform-init-and-apply-to-staging:
-#     executor: docker-terraform
-#     steps:
-#       - terraform-init-then-apply:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_STAGING
-#   terraform-init-and-apply-to-production:
-#     executor: docker-terraform
-#     steps:
-#       - terraform-init-then-apply:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_PRODUCTION
-#   assume-role-development:
-#      executor: docker-python
-#      steps:
-#        - checkout
-#        - aws_assume_role/assume_role:
-#              account: $AWS_ACCOUNT_DEVELOPMENT
-#              profile_name: default
-#              role: 'LBH_Circle_CI_Deployment_Role'
-#   assume-role-staging:
-#      executor: docker-python
-#      steps:
-#        - checkout
-#        - aws_assume_role/assume_role:
-#              account: $AWS_ACCOUNT_STAGING
-#              profile_name: default
-#              role: 'LBH_Circle_CI_Deployment_Role'
-#   assume-role-production:
-#      executor: docker-python
-#      steps:
-#        - checkout
-#        - aws_assume_role/assume_role:
-#              account: $AWS_ACCOUNT_PRODUCTION
-#              profile_name: default
-#              role: 'LBH_Circle_CI_Deployment_Role'
-#   check-code-formatting:
-#     executor: docker-dotnet
-#     steps:
-#       - checkout
-#       - setup_remote_docker
-#       - run:
-#           name: Install dotnet format
-#           command: dotnet tool install dotnet-format --tool-path ./dotnet-format-local/
-#       - run:
-#           name: Run formatter check
-#           command: ./dotnet-format-local/dotnet-format --dry-run --check
-#   build-and-test:
-#     executor: docker-python
-#     steps:
-#       - checkout
-#       - setup_remote_docker
-#       - run:
-#           name: build
-#           command: docker-compose build base-api-test
-#       - run:
-#          name: Run tests
-#          command: docker-compose run base-api-test
-#   deploy-to-development:
-#     executor: docker-python
-#     steps:
-#       - deploy-lambda:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_DEVELOPMENT
-#           stage: 'development'
-#   deploy-to-staging:
-#     executor: docker-dotnet
-#     steps:
-#       - deploy-lambda:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_STAGING
-#           stage: 'staging'
-#   deploy-to-production:
-#     executor: docker-dotnet
-#     steps:
-#       - deploy-lambda:
-#           aws-role-name: 'LBH_Circle_CI_Deployment_Role'
-#           aws-account: $AWS_ACCOUNT_PRODUCTION
-#           stage: 'production'
-
-# workflows:
-#   check-and-deploy:
-#       jobs:
-#       - check-code-formatting
-#       - build-and-test
-#       - assume-role-development:
-#           context: api-assume-role-development-context
-#           requires:
-#               - build-and-test
-#           filters:
-#              branches:
-#                only: development
-#       - terraform-init-and-apply-to-development:
-#           context: api-assume-role-development-context
-#           requires:
-#               - assume-role-development
-#           filters:
-#              branches:
-#                only: development
-#       - deploy-to-development:
-#           context: api-assume-role-development-context
-#           requires:
-#             - build-and-test
-#             - assume-role-development
-#           filters:
-#             branches:
-#               only: development
-# #   check-and-deploy-staging-and-production:
-# #       jobs:
-# #       - build-and-test:
-# #           filters:
-# #             branches:
-# #               only: master
-# #       - assume-role-staging:
-# #           context: api-assume-role-staging-context
-# #           requires:
-# #               - build-and-test
-# #           filters:
-# #              branches:
-# #                only: master
-# #       - terraform-init-and-apply-to-staging:
-# #           requires:
-# #             - assume-role-staging
-# #           filters:
-# #             branches:
-# #               only: master
-# #       - deploy-to-staging:
-# #           context: api-assume-role-staging-context
-# #           requires:
-# #             - build-and-test
-# #             - assume-role-staging
-# #           filters:
-# #             branches:
-# #               only: master
-# #       - permit-production-terraform-release:
-# #           type: approval
-# #           requires:
-# #             - deploy-to-staging
-# #       - assume-role-production:
-# #           context: api-assume-role-production-context
-# #           requires:
-# #               - permit-production-terraform-release
-# #           filters:
-# #              branches:
-# #                only: master
-# #       - terraform-init-and-apply-to-production:
-# #           requires:
-# #             - assume-role-production
-# #           filters:
-# #             branches:
-# #               only: master
-# #       - permit-production-release:
-# #           type: approval
-# #           requires:
-# #             - deploy-to-staging
-# #           filters:
-# #             branches:
-# #               only: master
-# #       - deploy-to-production:
-# #           context: api-assume-role-production-context
-# #           requires:
-# #             - permit-production-release
-# #             - assume-role-production
-# #           filters:
-# #             branches:
-# #               only: master
+workflows:
+  check-and-deploy-development:
+    jobs:
+      - check-code-formatting
+      - build-and-test
+      - assume-role-development:
+          context: api-assume-role-development-context
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: development
+      - terraform-init-and-apply-to-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: development
+      - deploy-to-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: development
+  check-and-deploy-staging-and-production:
+    jobs:
+      - build-and-test:
+          filters:
+            branches:
+              only: master
+      - assume-role-staging:
+          context: api-assume-role-staging-context
+          requires:
+              - build-and-test
+          filters:
+             branches:
+               only: master
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - deploy-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - permit-production-terraform-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+      - assume-role-production:
+          context: api-assume-role-production-context
+          requires:
+              - permit-production-terraform-release
+          filters:
+             branches:
+               only: master
+      - terraform-init-and-apply-to-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: master
+      - permit-production-release:
+          type: approval
+          requires:
+            - deploy-to-staging
+          filters:
+            branches:
+              only: master
+      - deploy-to-production:
+          requires:
+            - permit-production-release
+            - assume-role-production
+          filters:
+            branches:
+              only: master

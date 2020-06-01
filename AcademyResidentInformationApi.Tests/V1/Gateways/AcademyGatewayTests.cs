@@ -31,7 +31,5 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         {
             _classUnderTest.GetAllResidents().Should().BeEmpty();
         }
-
-
     }
 }

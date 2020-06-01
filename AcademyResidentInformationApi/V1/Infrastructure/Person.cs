@@ -11,26 +11,23 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     public class Person
     {
         [Column("claim_id")]
-        [MaxLength(32)]
         [Key]
         public int Id { get; set; }
 
         [Column("forename")]
         [MaxLength(32)]
-        [Key]
         public string FirstName { get; set; }
 
         [Column("surname")]
         [MaxLength(32)]
-        [Key]
         public string LastName { get; set; }
 
         [Column("title")]
-        [MaxLength(8)]
+        [MaxLength(4)]
         public string Title { get; set; }
 
         [Column("find_name")]
-        [MaxLength(62)]
+        [MaxLength(32)]
         public string FullName { get; set; }
 
         [Column("birth_date")]

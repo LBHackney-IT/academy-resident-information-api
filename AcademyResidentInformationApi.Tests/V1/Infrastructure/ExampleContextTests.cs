@@ -11,7 +11,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Infrastructure
         [Test]
         public void CanGetADatabaseEntity()
         {
-            DatabaseEntity databaseEntity = DatabaseEntityHelper.CreateDatabaseEntity();
+            var databaseEntity = TestHelper.CreateDatabasePersonEntity();
 
             AcademyContext.Add(databaseEntity);
             AcademyContext.SaveChanges();

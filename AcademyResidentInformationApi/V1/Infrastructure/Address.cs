@@ -10,35 +10,26 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         public Person Person { get; set; }
 
         [Column("claim_id")]
-        [MaxLength(32)]
-        [Key]
         public int ClaimId { get; set; }
 
         [Column("addr1")]
-        [MaxLength(116)]
-        [Key]
+        [MaxLength(35)]
         public string AddressLine1 { get; set; }
 
         [Column("addr2")]
-        [MaxLength(116)]
-        [Key]
+        [MaxLength(35)]
         public string AddressLine2 { get; set; }
 
         [Column("addr3")]
-        [MaxLength(116)]
-        [Key]
+        [MaxLength(35)]
         public string AddressLine3 { get; set; }
 
         [Column("addr4")]
-        [MaxLength(116)]
-        [Key]
+        [MaxLength(32)]
         public string AddressLine4 { get; set; }
 
         [Column("post_code")]
-        [MaxLength(16)]
-        [Key]
+        [MaxLength(10)]
         public string PostCode { get; set; }
-
-
     }
 }

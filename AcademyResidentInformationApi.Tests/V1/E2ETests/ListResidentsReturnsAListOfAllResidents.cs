@@ -1,4 +1,5 @@
 using System;
+using System.Configuration;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AutoFixture;
 using FluentAssertions;
@@ -21,6 +22,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
+        [Ignore("Incomplete end-to-end test")]
         public async Task IfNoQueryParametersListResidentsReturnsAllResidentRecordInAcademy()
         {
             var expectedResidentResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);

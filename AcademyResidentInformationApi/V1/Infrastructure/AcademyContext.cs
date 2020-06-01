@@ -13,6 +13,12 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         public DbSet<Person> Persons { get; set; }
         public DbSet<Address> Addresses { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Address>()
+                .HasNoKey();
+        }
+
         //public DbSet<TelephoneNumber> TelephoneNumbers { get; set; }
         //Don't think the database hold up-to-date telephone numbers, we may have some for landlords.
     }

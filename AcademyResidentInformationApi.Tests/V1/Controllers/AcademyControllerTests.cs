@@ -14,12 +14,14 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
     {
         private AcademyController _classUnderTest;
         private Mock<IGetAllResidentsUseCase> _mockGetAllResidentsUseCase;
+        private Mock<IGetResidentByIdUseCase> _mockGetResidentByIdUseCase;
 
-        [SetUp]
+    [SetUp]
         public void SetUp()
         {
             _mockGetAllResidentsUseCase = new Mock<IGetAllResidentsUseCase>();
-            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object);
+            _mockGetResidentByIdUseCase = new Mock<IGetResidentByIdUseCase>();
+            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object, _mockGetResidentByIdUseCase.Object);
         }
 
         [Test]

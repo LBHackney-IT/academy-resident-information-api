@@ -16,7 +16,7 @@ namespace AcademyResidentInformationApi.V1.Controllers
 
         [HttpGet]
         [Route("{academyId}")]
-        public IActionResult ViewRecord(int mosaicId)
+        public IActionResult ViewRecord()
         {
             return Ok();
         }

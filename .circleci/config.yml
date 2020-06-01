@@ -137,10 +137,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build base-api-test
+          command: docker-compose build academy-api-test
       - run:
          name: Run tests
-         command: docker-compose run base-api-test
+         command: docker-compose run academy-api-test
   deploy-to-development:
     executor: docker-python
     steps:

@@ -17,6 +17,7 @@ namespace AcademyResidentInformationApi.Tests
         private MockWebApplicationFactory<TStartup> _factory;
         private NpgsqlConnection _connection;
         private IDbContextTransaction _transaction;
+        private DbContextOptionsBuilder _builder;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -27,15 +28,16 @@ namespace AcademyResidentInformationApi.Tests
             npgsqlCommand.CommandText = "SET deadlock_timeout TO 30";
             npgsqlCommand.ExecuteNonQuery();
 
-            var builder = new DbContextOptionsBuilder();
-            builder.UseNpgsql(_connection);
-            AcademyContext = new AcademyContext(builder.Options);
-            AcademyContext.Database.EnsureCreated();
+            _builder = new DbContextOptionsBuilder();
+            _builder.UseNpgsql(_connection);
         }
 
         [SetUp]
         public void BaseSetup()
         {
+            AcademyContext = new AcademyContext(_builder.Options);
+            AcademyContext.Database.EnsureCreated();
+
             _factory = new MockWebApplicationFactory<TStartup>(_connection);
             Client = _factory.CreateClient();
 

@@ -22,15 +22,5 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return people.Select(p => p.ToDomain()).ToList();
         }
-
-        // public static Address ToDomain(this DbAddress address)
-        // {
-        //     return new Address
-        //     {
-        //         AddressLine1 = address.AddressLines,
-        //         PostCode = address.PostCode
-        //     };
-        // }
-
     }
 }

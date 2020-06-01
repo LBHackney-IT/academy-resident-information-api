@@ -33,15 +33,5 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .Without(add => add.Person)
                 .Create();
         }
-
-        public static DatabaseEntity CreateDatabaseEntity()
-        {
-            throw new NotImplementedException();
-        }
-
-        public static object CreateDatabaseEntityFrom(Entity entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -7,23 +7,23 @@ namespace AcademyResidentInformationApi.Tests
     [TestFixture]
     public class DatabaseTests
     {
-        protected DatabaseContext DatabaseContext { get; set; }
+        protected AcademyContext AcademyContext { get; set; }
 
         [OneTimeSetUp]
         public void RunBeforeAnyTests()
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(ConnectionString.TestDatabase());
-            DatabaseContext = new DatabaseContext(builder.Options);
+            AcademyContext = new AcademyContext(builder.Options);
 
-            DatabaseContext.Database.EnsureCreated();
-            DatabaseContext.Database.BeginTransaction();
+            AcademyContext.Database.EnsureCreated();
+            AcademyContext.Database.BeginTransaction();
         }
 
         [OneTimeTearDown]
         public void RunAfterAnyTests()
         {
-            DatabaseContext.Database.RollbackTransaction();
+            AcademyContext.Database.RollbackTransaction();
         }
     }
 }

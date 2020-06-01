@@ -119,7 +119,7 @@ namespace AcademyResidentInformationApi
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddSingleton<IExampleGateway, ExampleGateway>();
+            services.AddSingleton<IAcademyGateway, AcademyGateway>();
         }
 
         private static void RegisterUseCases(IServiceCollection services)

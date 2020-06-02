@@ -11,12 +11,12 @@ namespace AcademyResidentInformationApi.Tests.V1.Infrastructure
         [Test]
         public void CanGetADatabaseEntity()
         {
-            DatabaseEntity databaseEntity = DatabaseEntityHelper.CreateDatabaseEntity();
+            var databaseEntity = TestHelper.CreateDatabasePersonEntity();
 
-            DatabaseContext.Add(databaseEntity);
-            DatabaseContext.SaveChanges();
+            AcademyContext.Add(databaseEntity);
+            AcademyContext.SaveChanges();
 
-            var result = DatabaseContext.DatabaseEntities.ToList().FirstOrDefault();
+            var result = AcademyContext.Persons.ToList().FirstOrDefault();
 
             Assert.AreEqual(result, databaseEntity);
         }

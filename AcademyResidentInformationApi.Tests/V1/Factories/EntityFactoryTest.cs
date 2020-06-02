@@ -1,3 +1,6 @@
+using System.Globalization;
+using AcademyResidentInformationApi.Tests.V1.Helper;
+using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using FluentAssertions;
@@ -9,13 +12,16 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
     public class EntityFactoryTest
     {
         [Test]
-        public void CanBeCreatedFromDatabaseEntity()
+        public void ItMapsAPersonDatabaseRecordIntoResidentInformationDomainObject()
         {
-            var databaseEntity = new DatabaseEntity();
-            var entity = databaseEntity.ToDomain();
-
-            databaseEntity.Id.Should().Be(entity.Id);
-            databaseEntity.CreatedAt.Should().BeSameDateAs(entity.CreatedAt);
+            var personRecord = TestHelper.CreateDatabasePersonEntity();
+            var domain = personRecord.ToDomain();
+            domain.Should().BeEquivalentTo(new ResidentInformation
+            {
+                FirstName = personRecord.FirstName,
+                LastName = personRecord.LastName,
+                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture)
+            });
         }
     }
 }

@@ -31,6 +31,14 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
+        [Ignore("Query not implemented")]
+        public void GetResidentInformationByAcademyIdWhenThereAreNoMatchingRecordsReturnsNull()
+        {
+            var response = _classUnderTest.GetResidentById(123);
+            response.Should().BeNull();
+        }
+
+        [Test]
         public void GetAllResidentsIfThereAreNoResidentsReturnsAnEmptyList()
         {
             _classUnderTest.GetAllResidents().Should().BeEmpty();

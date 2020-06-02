@@ -1,6 +1,5 @@
 using System;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
-using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;

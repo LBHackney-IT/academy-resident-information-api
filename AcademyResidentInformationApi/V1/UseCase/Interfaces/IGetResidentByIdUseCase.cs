@@ -4,6 +4,6 @@ namespace AcademyResidentInformationApi.V1.UseCase.Interfaces
 {
     public interface IGetResidentByIdUseCase
     {
-        public ResidentInformation Execute(int id);
+        ResidentInformation Execute(int id);
     }
 }

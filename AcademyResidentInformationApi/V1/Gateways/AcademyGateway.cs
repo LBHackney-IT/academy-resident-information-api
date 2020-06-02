@@ -58,5 +58,11 @@ namespace AcademyResidentInformationApi.V1.Gateways
                     return domainPerson;
                 }).ToList();
         }
+
+
+        public ResidentInformation GetResidentById(int academyId)
+        {
+            return new ResidentInformation();
+        }
     }
 }

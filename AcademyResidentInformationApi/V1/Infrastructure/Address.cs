@@ -12,6 +12,9 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("claim_id")]
         public int ClaimId { get; set; }
 
+        [Column("house_id")]
+        public int HouseId { get; set; }
+
         [Column("addr1")]
         [MaxLength(35)]
         public string AddressLine1 { get; set; }
@@ -21,7 +24,7 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         public string AddressLine2 { get; set; }
 
         [Column("addr3")]
-        [MaxLength(35)]
+        [MaxLength(32)]
         public string AddressLine3 { get; set; }
 
         [Column("addr4")]

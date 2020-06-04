@@ -7,7 +7,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 
-namespace MosaicResidentInformationApi.Tests.V1.UseCase
+namespace AcademyResidentInformationApi.Tests.V1.UseCase
 {
     [TestFixture]
     public class GetEntityByIdCaseTest

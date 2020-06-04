@@ -33,5 +33,8 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("birth_date")]
         public DateTime DateOfBirth { get; set; }
 
+        [Column("nino")]
+        [MaxLength(10)]
+        public string NINumber { get; set; }
     }
 }

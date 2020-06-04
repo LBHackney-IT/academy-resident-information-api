@@ -16,6 +16,7 @@ namespace AcademyResidentInformationApi.V1.Factories
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
                 DateOfBirth = domain.DateOfBirth,
+                NINumber = domain.NINumber,
                 AddressList = domain.AddressList.ToResponse(),
             };
         }

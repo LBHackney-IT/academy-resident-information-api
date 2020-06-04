@@ -33,6 +33,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 DateOfBirth = person.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                NINumber = person.NINumber,
                 AddressList = new List<Address>
                 {
                     new Address {

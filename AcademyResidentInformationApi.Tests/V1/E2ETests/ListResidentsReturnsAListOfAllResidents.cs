@@ -22,7 +22,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task IfNoQueryParametersListResidentsReturnsAllResidentRecordInAcademy()
+        public async Task IfNoQueryParametersListResidentsReturnsAllResidentRecordsInAcademy()
         {
             var expectedResidentResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
             var expectedResidentResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);

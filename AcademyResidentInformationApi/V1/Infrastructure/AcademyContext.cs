@@ -22,8 +22,5 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
                     address.HouseId
                 });
         }
-
-        //public DbSet<TelephoneNumber> TelephoneNumbers { get; set; }
-        //Don't think the database hold up-to-date telephone numbers, we may have some for landlords.
     }
 }

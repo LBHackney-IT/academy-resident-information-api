@@ -17,6 +17,7 @@ namespace AcademyResidentInformationApi.V1.Factories
                 AcademyId = databaseEntity.Id.ToString(CultureInfo.InvariantCulture),
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
+                NINumber = databaseEntity.NINumber,
                 DateOfBirth = databaseEntity.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
             };
         }

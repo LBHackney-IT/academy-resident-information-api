@@ -20,7 +20,8 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
             {
                 FirstName = personRecord.FirstName,
                 LastName = personRecord.LastName,
-                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture)
+                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                NINumber = personRecord.NINumber
             });
         }
     }

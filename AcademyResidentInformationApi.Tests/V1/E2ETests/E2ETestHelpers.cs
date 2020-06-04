@@ -19,10 +19,12 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             person.FirstName = firstname ?? person.FirstName;
             person.LastName = lastname ?? person.LastName;
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(person.Id);
+            var personEntity = context.Persons.Add(person);
 
-            context.Persons.Add(person);
             context.SaveChanges();
+
+            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.Id);
+
 
             context.Addresses.Add(address);
             context.SaveChanges();

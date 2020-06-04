@@ -5,18 +5,20 @@ using System.Linq;
 using System.Reflection;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.Infrastructure;
+using AcademyResidentInformationApi.V1.UseCase;
+using AcademyResidentInformationApi.V1.UseCase.Interfaces;
+using AcademyResidentInformationApi.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AcademyResidentInformationApi.Versioning;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
-using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace AcademyResidentInformationApi
 {
@@ -121,8 +123,7 @@ namespace AcademyResidentInformationApi
 
         private static void RegisterUseCases(IServiceCollection services)
         {
-            if (services == null) throw new ArgumentNullException(nameof(services));
-            // your usecases here
+            services.AddScoped<IGetAllResidentsUseCase, GetAllResidentsUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,11 +1,11 @@
 using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AutoFixture;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 
@@ -22,14 +22,13 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
-        [Ignore("Incomplete end-to-end test")]
         public async Task IfNoQueryParametersListResidentsReturnsAllResidentRecordInAcademy()
         {
             var expectedResidentResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
             var expectedResidentResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
             var expectedResidentResponseThree = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
 
-            var listUri = new Uri("api/v1/residents");
+            var listUri = new Uri("/api/v1/residents", UriKind.Relative);
 
             var response = Client.GetAsync(listUri);
             var statusCode = response.Result.StatusCode;

@@ -1,9 +1,10 @@
+using System;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
-using System;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
+using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
@@ -18,7 +19,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
         public static Person CreateDatabasePersonEntity()
         {
             var faker = new Fixture();
-            var fp = faker.Create<Person>();
+            var fp = faker.Build<Person>().Create();
             fp.DateOfBirth = new DateTime
                 (fp.DateOfBirth.Year, fp.DateOfBirth.Month, fp.DateOfBirth.Day);
             return fp;

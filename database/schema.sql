@@ -1,5 +1,7 @@
 CREATE TABLE hbhousehold (
-	claim_id int NULL,
+	claim_id int NULL
+	constraint FK_HBHOUSEHOLD_HBMEMBER_CLAIM_ID
+            primary key,
 	house_id smallint NULL,
 	last_upd int NULL,
 	from_date timestamp NULL,
@@ -36,7 +38,7 @@ CREATE TABLE hbhousehold (
 );
 
 CREATE TABLE hbmember (
-	claim_id int NULL,
+	claim_id int NULL primary key,
 	house_id smallint NULL,
 	member_id smallint NULL,
 	person_ref int NULL,
@@ -97,7 +99,6 @@ CREATE TABLE hbmember (
 	sanction_type int NULL,
 	sanction_rate_type int NULL
 );
-
 
 CREATE TABLE ctaccount (
 	division_id smallint NULL,
@@ -207,10 +208,3 @@ CREATE TABLE ctproperty (
 	own_is_charity smallint NULL,
 	own_addr_abroad smallint NULL
 );
-
-
-
-
-
-
-

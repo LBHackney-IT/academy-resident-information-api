@@ -16,7 +16,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
         private Mock<IGetAllResidentsUseCase> _mockGetAllResidentsUseCase;
         private Mock<IGetResidentByIdUseCase> _mockGetResidentByIdUseCase;
 
-    [SetUp]
+        [SetUp]
         public void SetUp()
         {
             _mockGetAllResidentsUseCase = new Mock<IGetAllResidentsUseCase>();
@@ -50,6 +50,24 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
             response.Value.Should().BeEquivalentTo(residentInformationList);
+        }
+
+        [Test]
+        public void ViewRecordTests()
+        {
+            var singleResidentInfo = new ResidentInformation()
+            {
+                FirstName = "test",
+                LastName = "test",
+                DateOfBirth = "01/01/2020"
+            };
+
+            _mockGetResidentByIdUseCase.Setup(x => x.Execute(12345)).Returns(singleResidentInfo);
+            var response = _classUnderTest.ViewRecord(12345) as OkObjectResult;
+
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeEquivalentTo(singleResidentInfo);
         }
 
     }

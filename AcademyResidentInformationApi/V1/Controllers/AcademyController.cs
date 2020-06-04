@@ -9,8 +9,8 @@ namespace AcademyResidentInformationApi.V1.Controllers
     [Produces("application/json")]
     public class AcademyController : BaseController
     {
-        private IGetAllResidentsUseCase _getAllResidentsUseCase;
-        private IGetResidentByIdUseCase _getResidentByIdUseCase;
+        private readonly IGetAllResidentsUseCase _getAllResidentsUseCase;
+        private readonly IGetResidentByIdUseCase _getResidentByIdUseCase;
         public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase, IGetResidentByIdUseCase getResidentByIdUseCase)
         {
             _getAllResidentsUseCase = getAllResidentsUseCase;

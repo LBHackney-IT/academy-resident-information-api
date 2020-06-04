@@ -36,6 +36,17 @@ namespace AcademyResidentInformationApi.V1.Gateways
             return allResidentInfo;
         }
 
+        public ResidentInformation GetResidentById(int academyId)
+        {
+            var databaseRecord = _academyContext.Persons.Find(academyId);
+            if (databaseRecord == null) return null;
+
+            var addressesForPerson = _academyContext.Addresses.Where(a => a.ClaimId == databaseRecord.Id);
+            var singleResident = MapPersonAndAddressesToResidentInformation(databaseRecord, addressesForPerson);
+
+            return singleResident;
+        }
+
         private static ResidentInformation MapPersonAndAddressesToResidentInformation(Person person, IEnumerable<Address> addresses)
         {
             var resident = person.ToDomain();
@@ -57,12 +68,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
                     domainPerson.AddressList = null;
                     return domainPerson;
                 }).ToList();
-        }
-
-
-        public ResidentInformation GetResidentById(int academyId)
-        {
-            return new ResidentInformation();
         }
     }
 }

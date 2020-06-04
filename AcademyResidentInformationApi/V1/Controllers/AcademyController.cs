@@ -1,3 +1,4 @@
+using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AcademyResidentInformationApi.V1.Controllers
@@ -8,10 +9,17 @@ namespace AcademyResidentInformationApi.V1.Controllers
     [Produces("application/json")]
     public class AcademyController : BaseController
     {
+        private IGetAllResidentsUseCase _getAllResidentsUseCase;
+        public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase)
+        {
+            _getAllResidentsUseCase = getAllResidentsUseCase;
+
+        }
         [HttpGet]
         public IActionResult ListContacts()
         {
-            return Ok();
+            return Ok(_getAllResidentsUseCase.Execute());
+
         }
 
         [HttpGet]
@@ -20,5 +28,7 @@ namespace AcademyResidentInformationApi.V1.Controllers
         {
             return Ok();
         }
+
+
     }
 }

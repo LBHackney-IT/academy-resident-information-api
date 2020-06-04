@@ -25,12 +25,13 @@ namespace AcademyResidentInformationApi.Tests
                 .UseStartup<Startup>();
             builder.ConfigureServices(services =>
             {
-                services.AddDbContext<AcademyContext>(options => options.UseNpgsql(_connection),
-                    ServiceLifetime.Singleton);
+                var builder = new DbContextOptionsBuilder();
+                builder.UseNpgsql(_connection);
+
+                services.AddSingleton(new AcademyContext(builder.Options));
 
                 var serviceProvider = services.BuildServiceProvider();
                 var dbContext = serviceProvider.GetRequiredService<AcademyContext>();
-
                 dbContext.Database.EnsureCreated();
             });
         }

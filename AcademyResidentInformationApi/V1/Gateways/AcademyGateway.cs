@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
 
 namespace AcademyResidentInformationApi.V1.Gateways
 {
@@ -15,13 +17,47 @@ namespace AcademyResidentInformationApi.V1.Gateways
             _academyContext = academyContext;
         }
 
-        public List<ResidentInformation> GetAllResidents()
+        public List<ResidentInformation> GetAllResidents(string postcode = null, string address = null)
         {
-            var persons = _academyContext.Persons.ToList();
+            var addressesWithNoFilters = _academyContext.Addresses
+                .Include(p => p.Person)
+                .ToList();
 
-            var personDomain = persons.ToDomain();
+            var peopleWithAddresses = addressesWithNoFilters
+                .GroupBy(address => address.Person, MapPersonAndAddressesToResidentInformation)
+                .ToList();
 
-            return personDomain;
+            var peopleWithNoAddress = string.IsNullOrEmpty(postcode) && string.IsNullOrEmpty(address)
+                ? QueryPeopleWithNoAddressByName(addressesWithNoFilters)
+                : new List<ResidentInformation>();
+
+            var allResidentInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
+
+            return allResidentInfo;
+        }
+
+        private static ResidentInformation MapPersonAndAddressesToResidentInformation(Person person, IEnumerable<Address> addresses)
+        {
+            var resident = person.ToDomain();
+            var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
+            resident.AddressList = addressesDomain;
+            resident.AddressList = addressesDomain.Any()
+                ? addressesDomain
+                : null;
+            return resident;
+        }
+
+        private List<ResidentInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)
+        {
+            return _academyContext.Persons
+                .ToList()
+                .Where(p => addressesWithNoFilters.All(add => add.ClaimId != p.Id))
+                .Select(person =>
+                {
+                    var domainPerson = person.ToDomain();
+                    domainPerson.AddressList = null;
+                    return domainPerson;
+                }).ToList();
         }
     }
 }

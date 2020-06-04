@@ -1,12 +1,11 @@
 using System.Linq;
 using AcademyResidentInformationApi.Tests.V1.Helper;
-using AcademyResidentInformationApi.V1.Infrastructure;
 using NUnit.Framework;
 
 namespace AcademyResidentInformationApi.Tests.V1.Infrastructure
 {
     [TestFixture]
-    public class DatabaseContextTest : DatabaseTests
+    public class AcademyContextTests : DatabaseTests
     {
         [Test]
         public void CanGetADatabaseEntity()

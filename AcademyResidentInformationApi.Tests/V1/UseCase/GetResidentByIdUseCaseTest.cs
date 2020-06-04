@@ -1,4 +1,5 @@
-using AcademyResidentInformationApi.V1.Boundary.Responses;
+using AcademyResidentInformationApi.V1.Domain;
+using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.UseCase;
 using AutoFixture;
@@ -13,7 +14,7 @@ namespace MosaicResidentInformationApi.Tests.V1.UseCase
     {
         private Mock<IAcademyGateway> _mockAcademyGateway;
         private GetResidentByIdUseCase _classUnderTest;
-        private Fixture _fixture = new Fixture();
+        private readonly Fixture _fixture = new Fixture();
 
         [SetUp]
         public void SetUp()
@@ -23,8 +24,7 @@ namespace MosaicResidentInformationApi.Tests.V1.UseCase
         }
 
         [Test]
-        [Ignore("Response object needed")]
-        public void ReturnsResidentInformationList()
+        public void ReturnsAResidentInformationRecordForTheSpecifiedID()
         {
             var stubbedResidentInfo = _fixture.Create<ResidentInformation>();
 
@@ -33,10 +33,10 @@ namespace MosaicResidentInformationApi.Tests.V1.UseCase
                 .Returns(stubbedResidentInfo);
 
             var response = _classUnderTest.Execute(12345);
-            //var expectedResponse = stubbedResidentInfo.ToResponse();
+            var expectedResponse = stubbedResidentInfo.ToResponse();
 
             response.Should().NotBeNull();
-            //response.Should().BeEquivalentTo(expectedResponse);
+            response.Should().BeEquivalentTo(expectedResponse);
         }
     }
 }

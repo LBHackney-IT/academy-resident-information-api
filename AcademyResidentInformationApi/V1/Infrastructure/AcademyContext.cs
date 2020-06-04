@@ -16,7 +16,11 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Address>()
-                .HasNoKey();
+                .HasKey(address => new
+                {
+                    address.ClaimId,
+                    address.HouseId
+                });
         }
 
         //public DbSet<TelephoneNumber> TelephoneNumbers { get; set; }

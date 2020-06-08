@@ -6,6 +6,7 @@ using AcademyResidentInformationApi.V1.UseCase;
 using AutoFixture;
 using FluentAssertions;
 using Moq;
+using MosaicResidentInformationApi.V1.Boundary.Requests;
 using NUnit.Framework;
 using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
 
@@ -29,14 +30,26 @@ namespace AcademyResidentInformationApi.Tests.V1.UseCase
         public void ReturnsResidentInformationList()
         {
             var stubbedResidents = _fixture.CreateMany<ResidentInformation>();
+            var expectedResponse = new ResidentInformationList()
+            {
+                Residents = stubbedResidents.ToResponse()
+            };
 
-            _mockAcademyGateway.Setup(x => x.GetAllResidents(null, null))
+            _mockAcademyGateway.Setup(x =>
+                x.GetAllResidents(0, 20, "ciasom", "tessellate", "E8 1DY", "1 Montage street"))
                 .Returns(stubbedResidents.ToList());
 
-            var response = _classUnderTest.Execute();
+            var rqp = new ResidentQueryParam()
+            {
+                FirstName = "ciasom",
+                LastName = "tessellate",
+                Postcode = "E8 1DY",
+                Address = "1 Montage street"
+            };
+            var response = _classUnderTest.Execute(rqp, 0, 20);
 
             response.Should().NotBeNull();
-            response.Residents.Should().BeEquivalentTo(stubbedResidents.ToResponse());
+            response.Should().BeEquivalentTo(expectedResponse);
         }
     }
 }

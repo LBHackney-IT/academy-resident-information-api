@@ -16,7 +16,7 @@ namespace AcademyResidentInformationApi.V1.Factories
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
                 DateOfBirth = domain.DateOfBirth,
-                AddressList = domain.AddressList.ToResponse(),
+                ResidentAddress = domain.ResidentAddress.ToResponse(),
             };
         }
 
@@ -25,16 +25,16 @@ namespace AcademyResidentInformationApi.V1.Factories
             return people.Select(p => p.ToResponse()).ToList();
         }
 
-        private static List<AddressResponse> ToResponse(this List<Address> addresses)
+        private static AddressResponse ToResponse(this Address residentAddress)
         {
-            return addresses.Select(add => new AddressResponse
+            return new AddressResponse()
             {
-                AddressLine1 = add.AddressLine1,
-                AddressLine2 = add.AddressLine2,
-                AddressLine3 = add.AddressLine3,
-                AddressLine4 = add.AddressLine4,
-                PostCode = add.PostCode
-            }).ToList();
+                AddressLine1 = residentAddress.AddressLine1,
+                AddressLine2 = residentAddress.AddressLine2,
+                AddressLine3 = residentAddress.AddressLine3,
+                AddressLine4 = residentAddress.AddressLine4,
+                PostCode = residentAddress.PostCode
+            };
         }
     }
 }

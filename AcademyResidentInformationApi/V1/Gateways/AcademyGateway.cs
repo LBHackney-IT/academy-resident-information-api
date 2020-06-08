@@ -17,46 +17,32 @@ namespace AcademyResidentInformationApi.V1.Gateways
             _academyContext = academyContext;
         }
 
-        public List<ResidentInformation> GetAllResidents(string postcode = null, string address = null)
+        public List<ResidentInformation> GetAllResidents(int cursor, int limit, string firstname = null,
+            string lastname = null, string postcode = null, string address = null)
         {
-            var addressesWithNoFilters = _academyContext.Addresses
+            var addressesFilteredByPostcode = _academyContext.Addresses
                 .Include(p => p.Person)
+                .Where(a => string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
+                .Where(a => string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
+                .Where(a => string.IsNullOrEmpty(firstname) || a.Person.FirstName.ToLower().Replace(" ", "").Equals(StripString(firstname)))
+                .Where(a => string.IsNullOrEmpty(lastname) || a.Person.LastName.ToLower().Replace(" ", "").Equals(StripString(lastname)))
+                .Where(a => a.Person.Id > cursor)
                 .ToList();
 
-            var peopleWithAddresses = addressesWithNoFilters
-                .GroupBy(address => address.Person, MapPersonAndAddressesToResidentInformation)
+            var peopleWithAddresses = addressesFilteredByPostcode
+                .Select(address =>
+                    {
+                        var person = address.Person.ToDomain();
+                        person.ResidentAddress = address.ToDomain();
+                        return person;
+                    })
                 .ToList();
 
-            var peopleWithNoAddress = string.IsNullOrEmpty(postcode) && string.IsNullOrEmpty(address)
-                ? QueryPeopleWithNoAddressByName(addressesWithNoFilters)
-                : new List<ResidentInformation>();
-
-            var allResidentInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
-
-            return allResidentInfo;
+            return peopleWithAddresses;
         }
-
-        private static ResidentInformation MapPersonAndAddressesToResidentInformation(Person person, IEnumerable<Address> addresses)
+        private static string StripString(string str)
         {
-            var resident = person.ToDomain();
-            var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            resident.AddressList = addressesDomain.Any()
-                ? addressesDomain
-                : null;
-            return resident;
-        }
-
-        private List<ResidentInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)
-        {
-            return _academyContext.Persons
-                .ToList()
-                .Where(p => addressesWithNoFilters.All(add => add.ClaimId != p.Id))
-                .Select(person =>
-                {
-                    var domainPerson = person.ToDomain();
-                    domainPerson.AddressList = null;
-                    return domainPerson;
-                }).ToList();
+            return str?.ToLower().Replace(" ", "");
         }
     }
 }

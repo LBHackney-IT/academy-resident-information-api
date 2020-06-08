@@ -5,6 +5,7 @@ using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using MosaicResidentInformationApi.V1.Boundary.Requests;
 using NUnit.Framework;
 
 namespace AcademyResidentInformationApi.Tests.V1.Controllers
@@ -42,8 +43,10 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
                 Residents = residentInfo
             };
 
-            _mockGetAllResidentsUseCase.Setup(x => x.Execute()).Returns(residentInformationList);
-            var response = _classUnderTest.ListContacts() as OkObjectResult;
+            var rqp = new ResidentQueryParam();
+
+            _mockGetAllResidentsUseCase.Setup(x => x.Execute(rqp, 0, 20)).Returns(residentInformationList);
+            var response = _classUnderTest.ListContacts(rqp) as OkObjectResult;
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);

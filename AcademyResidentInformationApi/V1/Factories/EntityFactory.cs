@@ -14,10 +14,10 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ResidentInformation
             {
-                AcademyId = databaseEntity.Id.ToString(CultureInfo.InvariantCulture),
+                AcademyId = databaseEntity.Id.ToString(),
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
-                DateOfBirth = databaseEntity.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                DateOfBirth = databaseEntity.DateOfBirth.ToString("O"),
             };
         }
 

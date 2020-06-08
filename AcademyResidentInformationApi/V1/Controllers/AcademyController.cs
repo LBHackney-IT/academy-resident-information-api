@@ -1,5 +1,6 @@
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using MosaicResidentInformationApi.V1.Boundary.Requests;
 
 namespace AcademyResidentInformationApi.V1.Controllers
 {
@@ -16,9 +17,9 @@ namespace AcademyResidentInformationApi.V1.Controllers
 
         }
         [HttpGet]
-        public IActionResult ListContacts()
+        public IActionResult ListContacts([FromQuery] ResidentQueryParam rqp, int? cursor = 0, int? limit = 20)
         {
-            return Ok(_getAllResidentsUseCase.Execute());
+            return Ok(_getAllResidentsUseCase.Execute(rqp, (int) cursor, (int) limit));
 
         }
 

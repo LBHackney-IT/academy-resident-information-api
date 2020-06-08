@@ -7,7 +7,8 @@ namespace AcademyResidentInformationApi.V1.Gateways
 {
     public interface IAcademyGateway
     {
-        List<ResidentInformation> GetAllResidents(string postcode = null, string address = null);
+        List<ResidentInformation> GetAllResidents(int cursor, int limit, string firstname = null,
+            string lastname = null, string postcode = null, string address = null);
     }
 
 }

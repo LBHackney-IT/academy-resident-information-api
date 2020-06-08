@@ -16,23 +16,30 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             return faker.Create<ResidentInformation>();
         }
 
-        public static Person CreateDatabasePersonEntity()
+        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null)
         {
             var faker = new Fixture();
-            var fp = faker.Build<Person>().Create();
+            var fp = faker.Create<Person>();
             fp.DateOfBirth = new DateTime
                 (fp.DateOfBirth.Year, fp.DateOfBirth.Month, fp.DateOfBirth.Day);
+            fp.FirstName = firstname ?? fp.FirstName;
+            fp.LastName = lastname ?? fp.LastName;
+            fp.Id = id ?? fp.Id;
             return fp;
         }
 
-        public static Address CreateDatabaseAddressForPersonId(int claimId)
+        public static Address CreateDatabaseAddressForPersonId(int claimId, string postcode = null, string address = null)
         {
             var faker = new Fixture();
 
-            return faker.Build<Address>()
+            var fa = faker.Build<Address>()
                 .With(add => add.ClaimId, claimId)
                 .Without(add => add.Person)
                 .Create();
+
+            fa.PostCode = postcode ?? fa.PostCode;
+            fa.AddressLine1 = address ?? fa.AddressLine1;
+            return fa;
         }
     }
 }

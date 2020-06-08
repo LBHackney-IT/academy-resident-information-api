@@ -40,7 +40,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
         {
             var resident = person.ToDomain();
             var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            resident.AddressList = addressesDomain;
             resident.AddressList = addressesDomain.Any()
                 ? addressesDomain
                 : null;

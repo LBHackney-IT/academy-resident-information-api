@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
@@ -12,28 +11,37 @@ namespace AcademyResidentInformationApi.V1.Gateways
     {
         private readonly AcademyContext _academyContext;
 
+
         public AcademyGateway(AcademyContext academyContext)
         {
             _academyContext = academyContext;
         }
 
-        public List<ClaimantInformation> GetAllClaimants(string postcode = null, string address = null)
+        public List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
+            string lastname = null, string postcode = null, string address = null)
         {
-            var addressesWithNoFilters = _academyContext.Addresses
+            var addressesFilteredByPostcode = _academyContext.Addresses
                 .Include(p => p.Person)
+                .Where(a => string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
+                .Where(a => string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
+                .Where(a => string.IsNullOrEmpty(firstname) || a.Person.FirstName.ToLower().Replace(" ", "").Equals(StripString(firstname)))
+                .Where(a => string.IsNullOrEmpty(lastname) || a.Person.LastName.ToLower().Replace(" ", "").Equals(StripString(lastname)))
                 .ToList();
 
-            var peopleWithAddresses = addressesWithNoFilters
-                .GroupBy(address => address.Person, MapPersonAndAddressesToClaimantInformation)
+            var peopleWithAddresses = addressesFilteredByPostcode
+                .Select(address =>
+                    {
+                        var person = address.Person.ToDomain();
+                        person.ClaimantAddress = address.ToDomain();
+                        return person;
+                    })
                 .ToList();
 
-            var peopleWithNoAddress = string.IsNullOrEmpty(postcode) && string.IsNullOrEmpty(address)
-                ? QueryPeopleWithNoAddressByName(addressesWithNoFilters)
-                : new List<ClaimantInformation>();
-
-            var allClaimantInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
-
-            return allClaimantInfo;
+            return peopleWithAddresses;
+        }
+        private static string StripString(string str)
+        {
+            return str?.ToLower().Replace(" ", "");
         }
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
@@ -41,7 +49,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
             var databaseRecord = _academyContext.Persons.Find(claimId, personRef);
             if (databaseRecord == null) return null;
 
-            var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.Id) && (a.HouseId == databaseRecord.HouseId));
+            var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.ClaimId) && (a.HouseId == databaseRecord.HouseId));
             var singleClaimant = MapPersonAndAddressesToClaimantInformation(databaseRecord, addressesForPerson);
 
             return singleClaimant;
@@ -51,23 +59,8 @@ namespace AcademyResidentInformationApi.V1.Gateways
         {
             var claimant = person.ToDomain();
             var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            claimant.AddressList = addressesDomain.Any()
-                ? addressesDomain
-                : null;
+            claimant.ClaimantAddress = addressesDomain.Any() ? addressesDomain.First() : null;
             return claimant;
-        }
-
-        private List<ClaimantInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)
-        {
-            return _academyContext.Persons
-                .ToList()
-                .Where(p => addressesWithNoFilters.All(add => add.ClaimId != p.Id))
-                .Select(person =>
-                {
-                    var domainPerson = person.ToDomain();
-                    domainPerson.AddressList = null;
-                    return domainPerson;
-                }).ToList();
         }
     }
 }

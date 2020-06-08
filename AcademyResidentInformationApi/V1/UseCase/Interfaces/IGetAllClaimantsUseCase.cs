@@ -1,11 +1,12 @@
 
 using AcademyResidentInformationApi.V1.Boundary.Responses;
+using AcademyResidentInformationApi.V1.Boundary.Requests;
 
 namespace AcademyResidentInformationApi.V1.UseCase.Interfaces
 {
     public interface IGetAllClaimantsUseCase
     {
-        ClaimantInformationList Execute();
+        ClaimantInformationList Execute(ClaimantQueryParam cqp, int cursor, int limit);
     }
 
 }

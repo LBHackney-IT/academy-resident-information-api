@@ -12,13 +12,13 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
-        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null)
+        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
         {
             var person = TestHelper.CreateDatabasePersonEntity();
             if (id != null)
             {
                 var separateIdComponents = id.Split("-");
-                person.Id = int.Parse(separateIdComponents[0]);
+                person.ClaimId = int.Parse(separateIdComponents[0]);
                 person.PersonRef = int.Parse(separateIdComponents[1]);
             }
             person.FirstName = firstname ?? person.FirstName;
@@ -28,27 +28,25 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 
             context.SaveChanges();
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.Id, personEntity.Entity.HouseId);
+            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.ClaimId, personEntity.Entity.HouseId, address: addressLines, postcode: postcode);
 
 
             context.Addresses.Add(address);
             context.SaveChanges();
             return new ClaimantInformation
             {
-                AcademyId = $"{person.Id}-{person.PersonRef}",
+                AcademyId = $"{person.ClaimId}-{person.PersonRef}",
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 DateOfBirth = person.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
                 NINumber = person.NINumber,
-                AddressList = new List<Address>
+                ClaimantAddress = new Address
                 {
-                    new Address {
-                                AddressLine1 = address.AddressLine1,
-                                AddressLine2 = address.AddressLine2,
-                                AddressLine3 = address.AddressLine3,
-                                AddressLine4 = address.AddressLine4,
-                                PostCode = address.PostCode
-                                }
+                    AddressLine1 = address.AddressLine1,
+                    AddressLine2 = address.AddressLine2,
+                    AddressLine3 = address.AddressLine3,
+                    AddressLine4 = address.AddressLine4,
+                    PostCode = address.PostCode
                 }
 
             };

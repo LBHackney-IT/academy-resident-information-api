@@ -27,7 +27,7 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
             modelBuilder.Entity<Person>()
                 .HasKey(person => new
                 {
-                    person.Id,
+                    person.ClaimId,
                     person.PersonRef
                 });
 
@@ -36,10 +36,6 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
                 .HasOne(x => x.Address)
                 .WithOne(x => x.Person)
                 .HasPrincipalKey<Person>(x => new
-                {
-                    x.Id,
-                    x.HouseId
-                }).HasForeignKey<Address>(x => new
                 {
                     x.ClaimId,
                     x.HouseId

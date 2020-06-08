@@ -14,7 +14,7 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ClaimantInformation
             {
-                AcademyId = $"{databaseEntity.Id}-{databaseEntity.PersonRef}",
+                AcademyId = $"{databaseEntity.ClaimId}-{databaseEntity.PersonRef}",
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
                 NINumber = databaseEntity.NINumber,

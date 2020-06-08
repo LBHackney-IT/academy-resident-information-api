@@ -11,13 +11,17 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     public class Person
     {
         [Column("claim_id")]
-        public int Id { get; set; }
-
-        [Column("person_ref")]
-        public int PersonRef { get; set; }
+        [Key]
+        public int ClaimId { get; set; }
 
         [Column("house_id")]
         public int HouseId { get; set; }
+
+        [Column("member_id")]
+        public int MemberId { get; set; }
+
+        [Column("person_ref")]
+        public int PersonRef { get; set; }
 
         [Column("forename")]
         [MaxLength(32)]

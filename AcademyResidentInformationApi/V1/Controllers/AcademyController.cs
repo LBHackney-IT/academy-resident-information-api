@@ -1,5 +1,6 @@
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using AcademyResidentInformationApi.V1.Boundary.Requests;
 
 namespace AcademyResidentInformationApi.V1.Controllers
 {
@@ -19,9 +20,9 @@ namespace AcademyResidentInformationApi.V1.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListContacts()
+        public IActionResult ListContacts([FromQuery] ClaimantQueryParam cqp, int? cursor = 0, int? limit = 20)
         {
-            return Ok(_getAllClaimantsUseCase.Execute());
+            return Ok(_getAllClaimantsUseCase.Execute(cqp, (int) cursor, (int) limit));
 
         }
 

@@ -26,7 +26,7 @@ namespace AcademyResidentInformationApi.V1.Controllers
 
         [HttpGet]
         [Route("{academyId}")]
-        public IActionResult ViewRecord(int academyId)
+        public IActionResult ViewRecord(string academyId)
         {
             return Ok(_getResidentByIdUseCase.Execute(academyId));
         }

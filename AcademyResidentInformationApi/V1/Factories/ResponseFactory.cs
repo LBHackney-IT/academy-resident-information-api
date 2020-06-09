@@ -13,6 +13,7 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ResidentInformationResponse
             {
+                AcademyId = domain.AcademyId,
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
                 DateOfBirth = domain.DateOfBirth,

@@ -62,8 +62,10 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
                 DateOfBirth = "01/01/2020"
             };
 
-            _mockGetResidentByIdUseCase.Setup(x => x.Execute(12345)).Returns(singleResidentInfo);
-            var response = _classUnderTest.ViewRecord(12345) as OkObjectResult;
+            var testAcademyId = "5678-1234";
+
+            _mockGetResidentByIdUseCase.Setup(x => x.Execute(testAcademyId)).Returns(singleResidentInfo);
+            var response = _classUnderTest.ViewRecord(testAcademyId) as OkObjectResult;
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);

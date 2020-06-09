@@ -22,7 +22,9 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task GetResidentInformationByIdReturnsTheCorrectInformation()
         {
-            var academyId = _fixture.Create<int>();
+            var claimId = _fixture.Create<int>();
+            var personRef = _fixture.Create<int>();
+            var academyId = $"{claimId}-{personRef}";
             var expectedResponse = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, academyId);
 
             var requestUri = new Uri($"api/v1/residents/{academyId}", UriKind.Relative);

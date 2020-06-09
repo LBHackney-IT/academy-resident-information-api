@@ -10,7 +10,7 @@ using NUnit.Framework;
 namespace AcademyResidentInformationApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class GetEntityByIdCaseTest
+    public class GetResidentByIdUseCaseTest
     {
         private Mock<IAcademyGateway> _mockAcademyGateway;
         private GetResidentByIdUseCase _classUnderTest;
@@ -27,12 +27,13 @@ namespace AcademyResidentInformationApi.Tests.V1.UseCase
         public void ReturnsAResidentInformationRecordForTheSpecifiedID()
         {
             var stubbedResidentInfo = _fixture.Create<ResidentInformation>();
+            var testAcademyId = "1234-5678";
 
             _mockAcademyGateway.Setup(x =>
-                    x.GetResidentById(12345))
+                    x.GetResidentById(1234, 5678))
                 .Returns(stubbedResidentInfo);
 
-            var response = _classUnderTest.Execute(12345);
+            var response = _classUnderTest.Execute(testAcademyId);
             var expectedResponse = stubbedResidentInfo.ToResponse();
 
             response.Should().NotBeNull();

@@ -2,10 +2,7 @@ service: academy-api
 provider:
   name: aws
   runtime: dotnetcore3.1
-  vpc:
-    subnetIds:
-      - subnet-00356e0650138f74f
-      - subnet-0a7f442c22a6feedc
+  vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
 
@@ -74,3 +71,11 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+custom:
+  vpc:
+    staging:
+      securityGroupIds:
+        - sg-0436b39b527a8ef07
+      subnetIds:
+        - subnet-06d3de1bd9181b0d7
+        - subnet-0ed7d7713d1127656

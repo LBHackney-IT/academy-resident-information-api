@@ -7,36 +7,36 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.UseCase
 {
     [TestFixture]
-    public class GetAllResidentsUseCaseTests
+    public class GetAllClaimantsUseCaseTests
     {
         private Mock<IAcademyGateway> _mockAcademyGateway;
-        private GetAllResidentsUseCase _classUnderTest;
+        private GetAllClaimantsUseCase _classUnderTest;
         private readonly Fixture _fixture = new Fixture();
 
         [SetUp]
         public void SetUp()
         {
             _mockAcademyGateway = new Mock<IAcademyGateway>();
-            _classUnderTest = new GetAllResidentsUseCase(_mockAcademyGateway.Object);
+            _classUnderTest = new GetAllClaimantsUseCase(_mockAcademyGateway.Object);
         }
 
         [Test]
-        public void ReturnsResidentInformationList()
+        public void ReturnsClaimantInformationList()
         {
-            var stubbedResidents = _fixture.CreateMany<ResidentInformation>();
+            var stubbedClaimants = _fixture.CreateMany<ClaimantInformation>();
 
-            _mockAcademyGateway.Setup(x => x.GetAllResidents(null, null))
-                .Returns(stubbedResidents.ToList());
+            _mockAcademyGateway.Setup(x => x.GetAllClaimants(null, null))
+                .Returns(stubbedClaimants.ToList());
 
             var response = _classUnderTest.Execute();
 
             response.Should().NotBeNull();
-            response.Residents.Should().BeEquivalentTo(stubbedResidents.ToResponse());
+            response.Claimants.Should().BeEquivalentTo(stubbedClaimants.ToResponse());
         }
     }
 }

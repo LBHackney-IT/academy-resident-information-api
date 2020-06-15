@@ -31,19 +31,19 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsIfThereAreNoResidentsReturnsAnEmptyList()
+        public void GetAllClaimantsIfThereAreNoClaimantsReturnsAnEmptyList()
         {
-            _classUnderTest.GetAllResidents().Should().BeEmpty();
+            _classUnderTest.GetAllClaimants().Should().BeEmpty();
         }
 
         [Test]
-        public void GetAllResidentIfThereAreResidentsWillReturnThem()
+        public void GetAllClaimantIfThereAreClaimantsWillReturnThem()
         {
             var databaseEntity = AddPersonRecordToDatabase();
             var databaseEntity1 = AddPersonRecordToDatabase();
             var databaseEntity2 = AddPersonRecordToDatabase();
 
-            var listOfPersons = _classUnderTest.GetAllResidents();
+            var listOfPersons = _classUnderTest.GetAllClaimants();
 
             listOfPersons.Should().ContainEquivalentOf(databaseEntity.ToDomain());
             listOfPersons.Should().ContainEquivalentOf(databaseEntity1.ToDomain());
@@ -51,7 +51,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsIfThereAreResidentAddressesWillReturnThem()
+        public void GetAllClaimantsIfThereAreClaimantAddressesWillReturnThem()
         {
             var databaseEntity = AddPersonRecordToDatabase();
 
@@ -59,7 +59,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllResidents();
+            var listOfPersons = _classUnderTest.GetAllClaimants();
 
             listOfPersons
                 .First(p => p.AcademyId.Equals(databaseEntity.Id.ToString(CultureInfo.InvariantCulture), StringComparison.InvariantCulture))

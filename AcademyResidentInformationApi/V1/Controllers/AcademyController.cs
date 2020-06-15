@@ -5,20 +5,20 @@ namespace AcademyResidentInformationApi.V1.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v1/residents")]
+    [Route("api/v1/claimants")]
     [Produces("application/json")]
     public class AcademyController : BaseController
     {
-        private IGetAllResidentsUseCase _getAllResidentsUseCase;
-        public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase)
+        private IGetAllClaimantsUseCase _getAllClaimantsUseCase;
+        public AcademyController(IGetAllClaimantsUseCase getAllClaimantsUseCase)
         {
-            _getAllResidentsUseCase = getAllResidentsUseCase;
+            _getAllClaimantsUseCase = getAllClaimantsUseCase;
 
         }
         [HttpGet]
         public IActionResult ListContacts()
         {
-            return Ok(_getAllResidentsUseCase.Execute());
+            return Ok(_getAllClaimantsUseCase.Execute());
 
         }
 

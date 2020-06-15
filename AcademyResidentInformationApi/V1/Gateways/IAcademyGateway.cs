@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Domain;
-using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.V1.Gateways
 {
     public interface IAcademyGateway
     {
-        List<ResidentInformation> GetAllResidents(string postcode = null, string address = null);
+        List<ClaimantInformation> GetAllClaimants(string postcode = null, string address = null);
     }
 
 }

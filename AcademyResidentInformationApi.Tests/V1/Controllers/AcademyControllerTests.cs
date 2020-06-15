@@ -13,22 +13,22 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
     public class AcademyControllerTests
     {
         private AcademyController _classUnderTest;
-        private Mock<IGetAllResidentsUseCase> _mockGetAllResidentsUseCase;
+        private Mock<IGetAllClaimantsUseCase> _mockGetAllClaimantsUseCase;
 
         [SetUp]
         public void SetUp()
         {
-            _mockGetAllResidentsUseCase = new Mock<IGetAllResidentsUseCase>();
-            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object);
+            _mockGetAllClaimantsUseCase = new Mock<IGetAllClaimantsUseCase>();
+            _classUnderTest = new AcademyController(_mockGetAllClaimantsUseCase.Object);
         }
 
         [Test]
         public void ListContacts()
         {
 
-            var residentInfo = new List<ResidentInformation>()
+            var claimantInfo = new List<ClaimantInformation>()
             {
-                new ResidentInformation()
+                new ClaimantInformation()
                 {
                     FirstName = "test",
                     LastName = "test",
@@ -37,17 +37,17 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
                 }
             };
 
-            var residentInformationList = new ResidentInformationList()
+            var claimantInformationList = new ClaimantInformationList()
             {
-                Residents = residentInfo
+                Claimants = claimantInfo
             };
 
-            _mockGetAllResidentsUseCase.Setup(x => x.Execute()).Returns(residentInformationList);
+            _mockGetAllClaimantsUseCase.Setup(x => x.Execute()).Returns(claimantInformationList);
             var response = _classUnderTest.ListContacts() as OkObjectResult;
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
-            response.Value.Should().BeEquivalentTo(residentInformationList);
+            response.Value.Should().BeEquivalentTo(claimantInformationList);
         }
 
     }

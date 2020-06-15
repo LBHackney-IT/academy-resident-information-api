@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Linq;
 using AcademyResidentInformationApi.V1.Domain;
 using AddressResponse = AcademyResidentInformationApi.V1.Boundary.Responses.Address;
-using ResidentInformationResponse = AcademyResidentInformationApi.V1.Boundary.Responses.ResidentInformation;
+using ClaimantInformationResponse = AcademyResidentInformationApi.V1.Boundary.Responses.ClaimantInformation;
 
 
 namespace AcademyResidentInformationApi.V1.Factories
 {
     public static class ResponseFactory
     {
-        public static ResidentInformationResponse ToResponse(this ResidentInformation domain)
+        public static ClaimantInformationResponse ToResponse(this ClaimantInformation domain)
         {
-            return new ResidentInformationResponse
+            return new ClaimantInformationResponse
             {
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
@@ -20,7 +20,7 @@ namespace AcademyResidentInformationApi.V1.Factories
             };
         }
 
-        public static List<ResidentInformationResponse> ToResponse(this IEnumerable<ResidentInformation> people)
+        public static List<ClaimantInformationResponse> ToResponse(this IEnumerable<ClaimantInformation> people)
         {
             return people.Select(p => p.ToResponse()).ToList();
         }

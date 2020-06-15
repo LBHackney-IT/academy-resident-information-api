@@ -3,16 +3,16 @@ using System.Globalization;
 using System.Linq;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Address = AcademyResidentInformationApi.V1.Domain.Address;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 using DbAddress = AcademyResidentInformationApi.V1.Infrastructure.Address;
-using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
 
 namespace AcademyResidentInformationApi.V1.Factories
 {
     public static class EntityFactory
     {
-        public static ResidentInformation ToDomain(this Person databaseEntity)
+        public static ClaimantInformation ToDomain(this Person databaseEntity)
         {
-            return new ResidentInformation
+            return new ClaimantInformation
             {
                 AcademyId = databaseEntity.Id.ToString(CultureInfo.InvariantCulture),
                 FirstName = databaseEntity.FirstName,
@@ -21,7 +21,7 @@ namespace AcademyResidentInformationApi.V1.Factories
             };
         }
 
-        public static List<ResidentInformation> ToDomain(this IEnumerable<Person> people)
+        public static List<ClaimantInformation> ToDomain(this IEnumerable<Person> people)
         {
             return people.Select(p => p.ToDomain()).ToList();
         }

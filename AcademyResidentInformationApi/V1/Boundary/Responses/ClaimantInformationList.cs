@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace AcademyResidentInformationApi.V1.Boundary.Responses
 {
-    public class ResidentInformationList
+    public class ClaimantInformationList
     {
-        public List<ResidentInformation> Residents { get; set; }
+        public List<ClaimantInformation> Claimants { get; set; }
     }
 }

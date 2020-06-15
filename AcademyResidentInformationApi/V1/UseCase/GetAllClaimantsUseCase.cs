@@ -5,21 +5,21 @@ using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 
 namespace AcademyResidentInformationApi.V1.UseCase
 {
-    public class GetAllResidentsUseCase : IGetAllResidentsUseCase
+    public class GetAllClaimantsUseCase : IGetAllClaimantsUseCase
     {
         private readonly IAcademyGateway _academyGateway;
 
-        public GetAllResidentsUseCase(IAcademyGateway academyGateway)
+        public GetAllClaimantsUseCase(IAcademyGateway academyGateway)
         {
             _academyGateway = academyGateway;
         }
 
-        public ResidentInformationList Execute()
+        public ClaimantInformationList Execute()
         {
-            var residents = _academyGateway.GetAllResidents();
-            return new ResidentInformationList
+            var claimants = _academyGateway.GetAllClaimants();
+            return new ClaimantInformationList
             {
-                Residents = residents.ToResponse()
+                Claimants = claimants.ToResponse()
             };
         }
     }

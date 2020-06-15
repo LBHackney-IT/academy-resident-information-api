@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace AcademyResidentInformationApi.V1.Boundary.Responses
 {
-    public class ResidentInformation
+    public class ClaimantInformation
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

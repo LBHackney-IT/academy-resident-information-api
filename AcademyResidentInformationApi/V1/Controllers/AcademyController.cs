@@ -9,12 +9,14 @@ namespace AcademyResidentInformationApi.V1.Controllers
     [Produces("application/json")]
     public class AcademyController : BaseController
     {
-        private IGetAllResidentsUseCase _getAllResidentsUseCase;
-        public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase)
+        private readonly IGetAllResidentsUseCase _getAllResidentsUseCase;
+        private readonly IGetResidentByIdUseCase _getResidentByIdUseCase;
+        public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase, IGetResidentByIdUseCase getResidentByIdUseCase)
         {
             _getAllResidentsUseCase = getAllResidentsUseCase;
-
+            _getResidentByIdUseCase = getResidentByIdUseCase;
         }
+
         [HttpGet]
         public IActionResult ListContacts()
         {
@@ -24,9 +26,9 @@ namespace AcademyResidentInformationApi.V1.Controllers
 
         [HttpGet]
         [Route("{academyId}")]
-        public IActionResult ViewRecord()
+        public IActionResult ViewRecord(string academyId)
         {
-            return Ok();
+            return Ok(_getResidentByIdUseCase.Execute(academyId));
         }
 
 

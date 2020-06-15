@@ -18,9 +18,11 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
             var domain = personRecord.ToDomain();
             domain.Should().BeEquivalentTo(new ResidentInformation
             {
+                AcademyId = $"{personRecord.Id}-{personRecord.PersonRef}",
                 FirstName = personRecord.FirstName,
                 LastName = personRecord.LastName,
-                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture)
+                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                NINumber = personRecord.NINumber
             });
         }
     }

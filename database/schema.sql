@@ -1,44 +1,5 @@
-CREATE TABLE hbhousehold (
-	claim_id int NULL
-	constraint FK_HBHOUSEHOLD_HBMEMBER_CLAIM_ID
-            primary key,
-	house_id smallint NULL,
-	last_upd int NULL,
-	from_date timestamp NULL,
-	to_date timestamp NULL,
-	inc_supp_ind smallint NULL,
-	claim_type_ind smallint NULL,
-	addr1 varchar(35) NULL,
-	addr2 varchar(35) NULL,
-	addr3 varchar(32) NULL,
-	addr4 varchar(32) NULL,
-	post_code varchar(10) NULL,
-	find_addr1 varchar(16) NULL,
-	find_addr2 varchar(16) NULL,
-	reassess_ind smallint NULL,
-	srr_exempt smallint NULL,
-	lp_protect_ind smallint NULL,
-	cbl_protect_ind smallint NULL,
-	bereavement_override smallint NULL,
-	is_claim_date timestamp NULL,
-	is_award_date timestamp NULL,
-	is_reject_date timestamp NULL,
-	uprn varchar(12) NULL,
-	away_address_ind smallint NULL,
-	shared_accom_ind smallint NULL,
-	is_mid_week_split smallint NULL,
-	locality_code varchar(6) NULL,
-	districtmove_id int NULL,
-	dmp_ind smallint NULL,
-	group_id int NULL,
-	ben_cap_level_ind smallint NULL,
-	uc_dhp_ind smallint NULL,
-	category_ind int NULL,
-	fa_ind int NULL
-);
-
 CREATE TABLE hbmember (
-	claim_id int NULL primary key,
+	claim_id int NULL,
 	house_id smallint NULL,
 	member_id smallint NULL,
 	person_ref int NULL,
@@ -97,7 +58,48 @@ CREATE TABLE hbmember (
 	severely_mentally_impaired_ind smallint NULL,
 	period_sanction int NULL,
 	sanction_type int NULL,
-	sanction_rate_type int NULL
+	sanction_rate_type int NULL,
+	CONSTRAINT PK_hbmember PRIMARY KEY (claim_id, person_ref),
+	CONSTRAINT UC_hbmember UNIQUE (claim_id, house_id)
+);
+
+CREATE TABLE hbhousehold (
+	claim_id int NULL,
+	house_id smallint NULL,
+	last_upd int NULL,
+	from_date timestamp NULL,
+	to_date timestamp NULL,
+	inc_supp_ind smallint NULL,
+	claim_type_ind smallint NULL,
+	addr1 varchar(35) NULL,
+	addr2 varchar(35) NULL,
+	addr3 varchar(32) NULL,
+	addr4 varchar(32) NULL,
+	post_code varchar(10) NULL,
+	find_addr1 varchar(16) NULL,
+	find_addr2 varchar(16) NULL,
+	reassess_ind smallint NULL,
+	srr_exempt smallint NULL,
+	lp_protect_ind smallint NULL,
+	cbl_protect_ind smallint NULL,
+	bereavement_override smallint NULL,
+	is_claim_date timestamp NULL,
+	is_award_date timestamp NULL,
+	is_reject_date timestamp NULL,
+	uprn varchar(12) NULL,
+	away_address_ind smallint NULL,
+	shared_accom_ind smallint NULL,
+	is_mid_week_split smallint NULL,
+	locality_code varchar(6) NULL,
+	districtmove_id int NULL,
+	dmp_ind smallint NULL,
+	group_id int NULL,
+	ben_cap_level_ind smallint NULL,
+	uc_dhp_ind smallint NULL,
+	category_ind int NULL,
+	fa_ind int NULL,
+	CONSTRAINT PK_hbhousehold PRIMARY KEY (claim_id, house_id),
+	CONSTRAINT FK_hbhousehold_hbmember FOREIGN KEY (claim_id, house_id) REFERENCES hbmember(claim_id,house_id)
 );
 
 CREATE TABLE ctaccount (
@@ -144,7 +146,6 @@ CREATE TABLE ctaccount (
 	for_addr_abroad smallint NULL,
 	documerge_excl_ind smallint NULL
 );
-
 
 CREATE TABLE ctproperty (
 	division_id smallint NULL,

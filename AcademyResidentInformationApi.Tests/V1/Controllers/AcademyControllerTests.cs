@@ -14,12 +14,14 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
     {
         private AcademyController _classUnderTest;
         private Mock<IGetAllResidentsUseCase> _mockGetAllResidentsUseCase;
+        private Mock<IGetResidentByIdUseCase> _mockGetResidentByIdUseCase;
 
         [SetUp]
         public void SetUp()
         {
             _mockGetAllResidentsUseCase = new Mock<IGetAllResidentsUseCase>();
-            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object);
+            _mockGetResidentByIdUseCase = new Mock<IGetResidentByIdUseCase>();
+            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object, _mockGetResidentByIdUseCase.Object);
         }
 
         [Test]
@@ -48,6 +50,26 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
             response.Value.Should().BeEquivalentTo(residentInformationList);
+        }
+
+        [Test]
+        public void ViewRecordTests()
+        {
+            var singleResidentInfo = new ResidentInformation()
+            {
+                FirstName = "test",
+                LastName = "test",
+                DateOfBirth = "01/01/2020"
+            };
+
+            var testAcademyId = "5678-1234";
+
+            _mockGetResidentByIdUseCase.Setup(x => x.Execute(testAcademyId)).Returns(singleResidentInfo);
+            var response = _classUnderTest.ViewRecord(testAcademyId) as OkObjectResult;
+
+            response.Should().NotBeNull();
+            response.StatusCode.Should().Be(200);
+            response.Value.Should().BeEquivalentTo(singleResidentInfo);
         }
 
     }

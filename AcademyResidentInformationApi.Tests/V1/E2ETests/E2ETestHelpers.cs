@@ -12,10 +12,15 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
-        public static ResidentInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, int? id = null, string firstname = null, string lastname = null)
+        public static ResidentInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null)
         {
             var person = TestHelper.CreateDatabasePersonEntity();
-            if (id != null) person.Id = (int) id;
+            if (id != null)
+            {
+                var separateIdComponents = id.Split("-");
+                person.Id = int.Parse(separateIdComponents[0]);
+                person.PersonRef = int.Parse(separateIdComponents[1]);
+            }
             person.FirstName = firstname ?? person.FirstName;
             person.LastName = lastname ?? person.LastName;
 
@@ -23,16 +28,18 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 
             context.SaveChanges();
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.Id);
+            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.Id, personEntity.Entity.HouseId);
 
 
             context.Addresses.Add(address);
             context.SaveChanges();
             return new ResidentInformation
             {
+                AcademyId = $"{person.Id}-{person.PersonRef}",
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 DateOfBirth = person.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                NINumber = person.NINumber,
                 AddressList = new List<Address>
                 {
                     new Address {

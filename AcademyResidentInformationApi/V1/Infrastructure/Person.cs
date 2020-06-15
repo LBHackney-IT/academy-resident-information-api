@@ -11,8 +11,13 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     public class Person
     {
         [Column("claim_id")]
-        [Key]
         public int Id { get; set; }
+
+        [Column("person_ref")]
+        public int PersonRef { get; set; }
+
+        [Column("house_id")]
+        public int HouseId { get; set; }
 
         [Column("forename")]
         [MaxLength(32)]
@@ -33,5 +38,10 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("birth_date")]
         public DateTime DateOfBirth { get; set; }
 
+        [Column("nino")]
+        [MaxLength(10)]
+        public string NINumber { get; set; }
+
+        public Address Address { get; set; }
     }
 }

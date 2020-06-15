@@ -6,7 +6,6 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     [Table("hbhousehold")]
     public class Address
     {
-        [ForeignKey("ClaimId")]
         public Person Person { get; set; }
 
         [Column("claim_id")]

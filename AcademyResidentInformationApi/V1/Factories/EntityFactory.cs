@@ -14,9 +14,10 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ResidentInformation
             {
-                AcademyId = databaseEntity.Id.ToString(CultureInfo.InvariantCulture),
+                AcademyId = $"{databaseEntity.Id}-{databaseEntity.PersonRef}",
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
+                NINumber = databaseEntity.NINumber,
                 DateOfBirth = databaseEntity.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
             };
         }

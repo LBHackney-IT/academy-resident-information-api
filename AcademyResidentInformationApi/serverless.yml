@@ -6,10 +6,10 @@ provider:
   stage: ${opt:stage}
   region: eu-west-2
   apiKeys:
-    - secure-access:
-      - api-key-${self:service}-${opt:stage}
+    - secureAccess:
+      - api-key-${self:service}-${self:provider.stage}
   usagePlan:
-    - secure-access:
+    - secureAccess:
         throttle:
           burstLimit: 200
           rateLimit: 100

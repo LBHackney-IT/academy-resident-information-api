@@ -79,7 +79,7 @@ data "aws_ssm_parameter" "academy_password" {
    name = "/academy/reporting-server/password"
 }
 data "aws_ssm_parameter" "academy_hostname" {
-   name = "/academy-api/staging/hostname"
+   name = "/academy/reporting-server/hostname"
 }
 module "dms_setup_staging" {
   source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"

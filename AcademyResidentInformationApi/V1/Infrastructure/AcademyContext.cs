@@ -15,15 +15,35 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // composite primary key for Address table
             modelBuilder.Entity<Address>()
                 .HasKey(address => new
                 {
                     address.ClaimId,
                     address.HouseId
                 });
-        }
 
-        //public DbSet<TelephoneNumber> TelephoneNumbers { get; set; }
-        //Don't think the database hold up-to-date telephone numbers, we may have some for landlords.
+            // composite primary key for Person table
+            modelBuilder.Entity<Person>()
+                .HasKey(person => new
+                {
+                    person.Id,
+                    person.PersonRef
+                });
+
+            // composite foreign key for Address targeting unique columns in the Person table
+            modelBuilder.Entity<Person>()
+                .HasOne(x => x.Address)
+                .WithOne(x => x.Person)
+                .HasPrincipalKey<Person>(x => new
+                {
+                    x.Id,
+                    x.HouseId
+                }).HasForeignKey<Address>(x => new
+                {
+                    x.ClaimId,
+                    x.HouseId
+                });
+        }
     }
 }

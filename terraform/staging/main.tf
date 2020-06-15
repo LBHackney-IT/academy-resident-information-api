@@ -79,7 +79,7 @@ data "aws_ssm_parameter" "academy_password" {
    name = "/academy/reporting-server/password"
 }
 data "aws_ssm_parameter" "academy_hostname" {
-   name = "/academy-api/staging/hostname"
+   name = "/academy/reporting-server/hostname"
 }
 module "dms_setup_staging" {
   source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"
@@ -108,5 +108,5 @@ module "dms_setup_staging" {
   replication_task_indentifier = "academy-api-dms-task" //unique identifier (name) you give for the instance to be created
   task_settings = file("${path.module}/task_settings.json") //path to your json file with task settings
   task_table_mappings = file("${path.module}/selection_rules.json") //path to your json file with selection rules
-  replication_instance_arn = "arn:aws:dms:${data.aws_region.current}:${data.aws_caller_identity.current.account_id}:rep:parameter"
+  replication_instance_arn = "arn:aws:dms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rep:parameter"
 }

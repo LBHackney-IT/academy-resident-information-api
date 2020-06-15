@@ -124,6 +124,7 @@ namespace AcademyResidentInformationApi
         private static void RegisterUseCases(IServiceCollection services)
         {
             services.AddScoped<IGetAllClaimantsUseCase, GetAllClaimantsUseCase>();
+            services.AddScoped<IGetClaimantByIdUseCase, GetClaimantByIdUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,11 +10,14 @@ namespace AcademyResidentInformationApi.V1.Controllers
     public class AcademyController : BaseController
     {
         private IGetAllClaimantsUseCase _getAllClaimantsUseCase;
-        public AcademyController(IGetAllClaimantsUseCase getAllClaimantsUseCase)
+        private readonly IGetClaimantByIdUseCase _getClaimantByIdUseCase;
+
+        public AcademyController(IGetAllClaimantsUseCase getAllClaimantsUseCase, IGetClaimantByIdUseCase getClaimantByIdUseCase)
         {
             _getAllClaimantsUseCase = getAllClaimantsUseCase;
-
+            _getClaimantByIdUseCase = getClaimantByIdUseCase;
         }
+
         [HttpGet]
         public IActionResult ListContacts()
         {
@@ -24,9 +27,9 @@ namespace AcademyResidentInformationApi.V1.Controllers
 
         [HttpGet]
         [Route("{academyId}")]
-        public IActionResult ViewRecord()
+        public IActionResult ViewRecord(string academyId)
         {
-            return Ok();
+            return Ok(_getClaimantByIdUseCase.Execute(academyId));
         }
 
 

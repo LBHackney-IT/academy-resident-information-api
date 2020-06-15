@@ -24,26 +24,37 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 .ToList();
 
             var peopleWithAddresses = addressesWithNoFilters
-                .GroupBy(address => address.Person, MapPersonAndAddressesToResidentInformation)
+                .GroupBy(address => address.Person, MapPersonAndAddressesToClaimantInformation)
                 .ToList();
 
             var peopleWithNoAddress = string.IsNullOrEmpty(postcode) && string.IsNullOrEmpty(address)
                 ? QueryPeopleWithNoAddressByName(addressesWithNoFilters)
                 : new List<ClaimantInformation>();
 
-            var allResidentInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
+            var allClaimantInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
 
-            return allResidentInfo;
+            return allClaimantInfo;
         }
 
-        private static ClaimantInformation MapPersonAndAddressesToResidentInformation(Person person, IEnumerable<Address> addresses)
+        public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
-            var resident = person.ToDomain();
+            var databaseRecord = _academyContext.Persons.Find(claimId, personRef);
+            if (databaseRecord == null) return null;
+
+            var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.Id) && (a.HouseId == databaseRecord.HouseId));
+            var singleClaimant = MapPersonAndAddressesToClaimantInformation(databaseRecord, addressesForPerson);
+
+            return singleClaimant;
+        }
+
+        private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, IEnumerable<Address> addresses)
+        {
+            var claimant = person.ToDomain();
             var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            resident.AddressList = addressesDomain.Any()
+            claimant.AddressList = addressesDomain.Any()
                 ? addressesDomain
                 : null;
-            return resident;
+            return claimant;
         }
 
         private List<ClaimantInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)

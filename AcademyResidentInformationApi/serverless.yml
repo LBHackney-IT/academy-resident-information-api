@@ -15,7 +15,7 @@ functions:
     handler: AcademyResidentInformationApi::AcademyResidentInformationApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      CONNECTION_STRING: Host=${ssm:/academy-api/${self:provider.stage}/postgres-hostname};Port=5002;Database=academy;Username=${ssm:/academy-api/${self:provider.stage}/postgres-username};Password=${ssm:/academy-api/${self:provider.stage}/postgres-password}
+      CONNECTION_STRING: Host=${ssm:/academy-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/academy-api/${self:provider.stage}/postgres-port};Database=academy;Username=${ssm:/academy-api/${self:provider.stage}/postgres-username};Password=${ssm:/academy-api/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
@@ -79,3 +79,9 @@ custom:
       subnetIds:
         - subnet-06d3de1bd9181b0d7
         - subnet-0ed7d7713d1127656
+    production:
+      securityGroupIds:
+        - sg-0f4370f57c11b8082
+      subnetIds:
+        - subnet-01d3657f97a243261
+        - subnet-0b7b8fea07efabf34

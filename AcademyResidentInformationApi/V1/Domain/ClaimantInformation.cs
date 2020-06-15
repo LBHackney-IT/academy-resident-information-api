@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AcademyResidentInformationApi.V1.Domain
 {
-    public class ResidentInformation
+    public class ClaimantInformation
     {
         public string AcademyId { get; set; }
         public string FirstName { get; set; }

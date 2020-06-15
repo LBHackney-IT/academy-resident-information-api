@@ -12,11 +12,11 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
     public class EntityFactoryTest
     {
         [Test]
-        public void ItMapsAPersonDatabaseRecordIntoResidentInformationDomainObject()
+        public void ItMapsAPersonDatabaseRecordIntoClaimantInformationDomainObject()
         {
             var personRecord = TestHelper.CreateDatabasePersonEntity();
             var domain = personRecord.ToDomain();
-            domain.Should().BeEquivalentTo(new ResidentInformation
+            domain.Should().BeEquivalentTo(new ClaimantInformation
             {
                 AcademyId = $"{personRecord.Id}-{personRecord.PersonRef}",
                 FirstName = personRecord.FirstName,

@@ -13,24 +13,24 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
     public class AcademyControllerTests
     {
         private AcademyController _classUnderTest;
-        private Mock<IGetAllResidentsUseCase> _mockGetAllResidentsUseCase;
-        private Mock<IGetResidentByIdUseCase> _mockGetResidentByIdUseCase;
+        private Mock<IGetAllClaimantsUseCase> _mockGetAllClaimantsUseCase;
+        private Mock<IGetClaimantByIdUseCase> _mockGetClaimantByIdUseCase;
 
         [SetUp]
         public void SetUp()
         {
-            _mockGetAllResidentsUseCase = new Mock<IGetAllResidentsUseCase>();
-            _mockGetResidentByIdUseCase = new Mock<IGetResidentByIdUseCase>();
-            _classUnderTest = new AcademyController(_mockGetAllResidentsUseCase.Object, _mockGetResidentByIdUseCase.Object);
+            _mockGetAllClaimantsUseCase = new Mock<IGetAllClaimantsUseCase>();
+            _mockGetClaimantByIdUseCase = new Mock<IGetClaimantByIdUseCase>();
+            _classUnderTest = new AcademyController(_mockGetAllClaimantsUseCase.Object, _mockGetClaimantByIdUseCase.Object);
         }
 
         [Test]
         public void ListContacts()
         {
 
-            var residentInfo = new List<ResidentInformation>()
+            var claimantInfo = new List<ClaimantInformation>()
             {
-                new ResidentInformation()
+                new ClaimantInformation()
                 {
                     FirstName = "test",
                     LastName = "test",
@@ -39,23 +39,23 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
                 }
             };
 
-            var residentInformationList = new ResidentInformationList()
+            var claimantInformationList = new ClaimantInformationList()
             {
-                Residents = residentInfo
+                Claimants = claimantInfo
             };
 
-            _mockGetAllResidentsUseCase.Setup(x => x.Execute()).Returns(residentInformationList);
+            _mockGetAllClaimantsUseCase.Setup(x => x.Execute()).Returns(claimantInformationList);
             var response = _classUnderTest.ListContacts() as OkObjectResult;
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
-            response.Value.Should().BeEquivalentTo(residentInformationList);
+            response.Value.Should().BeEquivalentTo(claimantInformationList);
         }
 
         [Test]
         public void ViewRecordTests()
         {
-            var singleResidentInfo = new ResidentInformation()
+            var singleClaimantInfo = new ClaimantInformation()
             {
                 FirstName = "test",
                 LastName = "test",
@@ -64,12 +64,12 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
 
             var testAcademyId = "5678-1234";
 
-            _mockGetResidentByIdUseCase.Setup(x => x.Execute(testAcademyId)).Returns(singleResidentInfo);
+            _mockGetClaimantByIdUseCase.Setup(x => x.Execute(testAcademyId)).Returns(singleClaimantInfo);
             var response = _classUnderTest.ViewRecord(testAcademyId) as OkObjectResult;
 
             response.Should().NotBeNull();
             response.StatusCode.Should().Be(200);
-            response.Value.Should().BeEquivalentTo(singleResidentInfo);
+            response.Value.Should().BeEquivalentTo(singleClaimantInfo);
         }
 
     }

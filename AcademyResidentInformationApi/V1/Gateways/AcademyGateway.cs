@@ -4,7 +4,7 @@ using System.Linq;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.V1.Gateways
 {
@@ -17,47 +17,47 @@ namespace AcademyResidentInformationApi.V1.Gateways
             _academyContext = academyContext;
         }
 
-        public List<ResidentInformation> GetAllResidents(string postcode = null, string address = null)
+        public List<ClaimantInformation> GetAllClaimants(string postcode = null, string address = null)
         {
             var addressesWithNoFilters = _academyContext.Addresses
                 .Include(p => p.Person)
                 .ToList();
 
             var peopleWithAddresses = addressesWithNoFilters
-                .GroupBy(address => address.Person, MapPersonAndAddressesToResidentInformation)
+                .GroupBy(address => address.Person, MapPersonAndAddressesToClaimantInformation)
                 .ToList();
 
             var peopleWithNoAddress = string.IsNullOrEmpty(postcode) && string.IsNullOrEmpty(address)
                 ? QueryPeopleWithNoAddressByName(addressesWithNoFilters)
-                : new List<ResidentInformation>();
+                : new List<ClaimantInformation>();
 
-            var allResidentInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
+            var allClaimantInfo = peopleWithAddresses.Concat(peopleWithNoAddress).ToList();
 
-            return allResidentInfo;
+            return allClaimantInfo;
         }
 
-        public ResidentInformation GetResidentById(int claimId, int personRef)
+        public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
             var databaseRecord = _academyContext.Persons.Find(claimId, personRef);
             if (databaseRecord == null) return null;
 
             var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.Id) && (a.HouseId == databaseRecord.HouseId));
-            var singleResident = MapPersonAndAddressesToResidentInformation(databaseRecord, addressesForPerson);
+            var singleClaimant = MapPersonAndAddressesToClaimantInformation(databaseRecord, addressesForPerson);
 
-            return singleResident;
+            return singleClaimant;
         }
 
-        private static ResidentInformation MapPersonAndAddressesToResidentInformation(Person person, IEnumerable<Address> addresses)
+        private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, IEnumerable<Address> addresses)
         {
-            var resident = person.ToDomain();
+            var claimant = person.ToDomain();
             var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            resident.AddressList = addressesDomain.Any()
+            claimant.AddressList = addressesDomain.Any()
                 ? addressesDomain
                 : null;
-            return resident;
+            return claimant;
         }
 
-        private List<ResidentInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)
+        private List<ClaimantInformation> QueryPeopleWithNoAddressByName(List<Address> addressesWithNoFilters)
         {
             return _academyContext.Persons
                 .ToList()

@@ -5,20 +5,20 @@ using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 
 namespace AcademyResidentInformationApi.V1.UseCase
 {
-    public class GetResidentByIdUseCase : IGetResidentByIdUseCase
+    public class GetClaimantByIdUseCase : IGetClaimantByIdUseCase
     {
         private readonly IAcademyGateway _academyGateway;
-        public GetResidentByIdUseCase(IAcademyGateway academyGateway)
+        public GetClaimantByIdUseCase(IAcademyGateway academyGateway)
         {
             _academyGateway = academyGateway;
         }
-        public ResidentInformation Execute(string academyId)
+        public ClaimantInformation Execute(string academyId)
         {
             var compositeKeyArray = academyId.Split('-');
             var claimId = int.Parse(compositeKeyArray[0]);
             var personRef = int.Parse(compositeKeyArray[1]);
 
-            return _academyGateway.GetResidentById(claimId, personRef).ToResponse();
+            return _academyGateway.GetClaimantById(claimId, personRef).ToResponse();
         }
     }
 }

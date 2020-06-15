@@ -32,17 +32,17 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetResidentInformationByAcademyIdWhenThereAreNoMatchingRecordsReturnsNull()
+        public void GetClaimantInformationByAcademyIdWhenThereAreNoMatchingRecordsReturnsNull()
         {
-            var response = _classUnderTest.GetResidentById(123, 456);
+            var response = _classUnderTest.GetClaimantById(123, 456);
             response.Should().BeNull();
         }
 
         [Test]
-        public void GetResidentInformationByClaimIdAndPersonRefReturnsPersonalDetails()
+        public void GetClaimantInformationByClaimIdAndPersonRefReturnsPersonalDetails()
         {
             var databaseEntity = AddPersonRecordToDatabase();
-            var response = _classUnderTest.GetResidentById(databaseEntity.Id, databaseEntity.PersonRef);
+            var response = _classUnderTest.GetClaimantById(databaseEntity.Id, databaseEntity.PersonRef);
 
             response.FirstName.Should().Be(databaseEntity.FirstName);
             response.LastName.Should().Be(databaseEntity.LastName);
@@ -52,7 +52,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetResidentInformationByClaimIdAndPersonRefReturnsAddressDetails()
+        public void GetClaimantInformationByClaimIdAndPersonRefReturnsAddressDetails()
         {
             var databaseEntity = AddPersonRecordToDatabase();
 
@@ -60,7 +60,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address);
             AcademyContext.SaveChanges();
 
-            var response = _classUnderTest.GetResidentById(databaseEntity.Id, databaseEntity.PersonRef);
+            var response = _classUnderTest.GetClaimantById(databaseEntity.Id, databaseEntity.PersonRef);
 
             var expectedDomainAddress = new DomainAddress
             {
@@ -74,19 +74,19 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsIfThereAreNoResidentsReturnsAnEmptyList()
+        public void GetAllClaimantsIfThereAreNoClaimantsReturnsAnEmptyList()
         {
-            _classUnderTest.GetAllResidents().Should().BeEmpty();
+            _classUnderTest.GetAllClaimants().Should().BeEmpty();
         }
 
         [Test]
-        public void GetAllResidentIfThereAreResidentsWillReturnThem()
+        public void GetAllClaimantsIfThereAreClaimantsWillReturnThem()
         {
             var databaseEntity = AddPersonRecordToDatabase();
             var databaseEntity1 = AddPersonRecordToDatabase();
             var databaseEntity2 = AddPersonRecordToDatabase();
 
-            var listOfPersons = _classUnderTest.GetAllResidents();
+            var listOfPersons = _classUnderTest.GetAllClaimants();
 
             listOfPersons.Should().ContainEquivalentOf(databaseEntity.ToDomain());
             listOfPersons.Should().ContainEquivalentOf(databaseEntity1.ToDomain());
@@ -94,7 +94,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsIfThereAreResidentAddressesWillReturnThem()
+        public void GetAllClaimantsIfThereAreClaimantAddressesWillReturnThem()
         {
             var databaseEntity = AddPersonRecordToDatabase();
 
@@ -102,7 +102,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllResidents();
+            var listOfPersons = _classUnderTest.GetAllClaimants();
 
             listOfPersons
                 .First(p => ExtractClaimIdFromAcademyIdString(p.AcademyId).Equals(databaseEntity.Id))

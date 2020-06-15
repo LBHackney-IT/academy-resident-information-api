@@ -3,16 +3,16 @@ using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
-using ResidentInformation = AcademyResidentInformationApi.V1.Domain.ResidentInformation;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static ResidentInformation CreateDomainResident()
+        public static ClaimantInformation CreateDomainClaimant()
         {
             var faker = new Fixture();
-            return faker.Create<ResidentInformation>();
+            return faker.Create<ClaimantInformation>();
         }
 
         public static Person CreateDatabasePersonEntity()

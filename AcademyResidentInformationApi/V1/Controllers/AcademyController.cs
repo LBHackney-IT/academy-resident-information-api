@@ -5,22 +5,23 @@ namespace AcademyResidentInformationApi.V1.Controllers
 {
     [ApiController]
     [ApiVersion("1.0")]
-    [Route("api/v1/residents")]
+    [Route("api/v1/claimants")]
     [Produces("application/json")]
     public class AcademyController : BaseController
     {
-        private readonly IGetAllResidentsUseCase _getAllResidentsUseCase;
-        private readonly IGetResidentByIdUseCase _getResidentByIdUseCase;
-        public AcademyController(IGetAllResidentsUseCase getAllResidentsUseCase, IGetResidentByIdUseCase getResidentByIdUseCase)
+        private IGetAllClaimantsUseCase _getAllClaimantsUseCase;
+        private readonly IGetClaimantByIdUseCase _getClaimantByIdUseCase;
+
+        public AcademyController(IGetAllClaimantsUseCase getAllClaimantsUseCase, IGetClaimantByIdUseCase getClaimantByIdUseCase)
         {
-            _getAllResidentsUseCase = getAllResidentsUseCase;
-            _getResidentByIdUseCase = getResidentByIdUseCase;
+            _getAllClaimantsUseCase = getAllClaimantsUseCase;
+            _getClaimantByIdUseCase = getClaimantByIdUseCase;
         }
 
         [HttpGet]
         public IActionResult ListContacts()
         {
-            return Ok(_getAllResidentsUseCase.Execute());
+            return Ok(_getAllClaimantsUseCase.Execute());
 
         }
 
@@ -28,7 +29,7 @@ namespace AcademyResidentInformationApi.V1.Controllers
         [Route("{academyId}")]
         public IActionResult ViewRecord(string academyId)
         {
-            return Ok(_getResidentByIdUseCase.Execute(academyId));
+            return Ok(_getClaimantByIdUseCase.Execute(academyId));
         }
 
 

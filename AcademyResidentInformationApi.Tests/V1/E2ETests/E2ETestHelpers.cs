@@ -12,7 +12,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
-        public static ResidentInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null)
+        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null)
         {
             var person = TestHelper.CreateDatabasePersonEntity();
             if (id != null)
@@ -33,7 +33,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 
             context.Addresses.Add(address);
             context.SaveChanges();
-            return new ResidentInformation
+            return new ClaimantInformation
             {
                 AcademyId = $"{person.Id}-{person.PersonRef}",
                 FirstName = person.FirstName,

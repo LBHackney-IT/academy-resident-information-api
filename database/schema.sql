@@ -33,7 +33,8 @@ CREATE TABLE hbhousehold (
 	uc_dhp_ind smallint NULL,
 	category_ind int NULL,
 	fa_ind int NULL,
-	CONSTRAINT PK_hbhousehold PRIMARY KEY (claim_id, house_id)
+	-- CONSTRAINT PK_hbhousehold PRIMARY KEY (claim_id, house_id)
+	PRIMARY KEY (claim_id, house_id)
 );
 
 CREATE TABLE hbmember (
@@ -97,8 +98,9 @@ CREATE TABLE hbmember (
 	period_sanction int NULL,
 	sanction_type int NULL,
 	sanction_rate_type int NULL,
-	CONSTRAINT PK_hbmember PRIMARY KEY (claim_id, person_ref),
-	CONSTRAINT UC_hbmember UNIQUE (claim_id, house_id)
+	-- CONSTRAINT PK_hbmember PRIMARY KEY (claim_id, person_ref),
+	-- CONSTRAINT UC_hbmember UNIQUE (claim_id, house_id) # primary key statement enforces uniqueness?
+	PRIMARY KEY (claim_id, person_ref)
 );
 
 CREATE TABLE ctaccount (

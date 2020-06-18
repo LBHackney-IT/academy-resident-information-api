@@ -10,6 +10,6 @@ namespace AcademyResidentInformationApi.V1.Boundary.Responses
         public string DateOfBirth { get; set; }
 
         public string NINumber { get; set; }
-        public List<Address> AddressList { get; set; }
+        public Address ClaimantAddress { get; set; }
     }
 }

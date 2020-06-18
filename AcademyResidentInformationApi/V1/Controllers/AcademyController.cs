@@ -36,10 +36,20 @@ namespace AcademyResidentInformationApi.V1.Controllers
         }
 
         [HttpGet]
-        [Route("{academyId}")]
-        public IActionResult ViewRecord(string academyId)
+        [Route("/claims/{claimId}/person/{personRef}")]
+        public IActionResult ViewRecord(int claimId, int personRef)
         {
-            return Ok(_getClaimantByIdUseCase.Execute(academyId));
+            try
+            {
+                var record = _getClaimantByIdUseCase.Execute(claimId, personRef);
+                return Ok(record);
+            }
+            catch (ClaimantNotFoundException)
+            {
+                //return a 404
+                return NotFound();
+            }
+
         }
 
 

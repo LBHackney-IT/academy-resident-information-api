@@ -280,6 +280,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             return databaseEntity;
         }
 
+        //Composite AcademyId key.
+        /*AcademyId is not a column in the DB but rather a string made up of the
+        claimId and personRef*/
         private static int ExtractClaimIdFromAcademyIdString(string academyId)
         {
             return int.Parse(academyId.Split('-').First());

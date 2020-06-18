@@ -6,6 +6,8 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using System;
+using ClaimantInformationResponse = AcademyResidentInformationApi.V1.Boundary.Responses.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.UseCase
 {
@@ -27,17 +29,29 @@ namespace AcademyResidentInformationApi.Tests.V1.UseCase
         public void ReturnsAClaimantInformationRecordForTheSpecifiedID()
         {
             var stubbedClaimantInfo = _fixture.Create<ClaimantInformation>();
-            var testAcademyId = "1234-5678";
 
             _mockAcademyGateway.Setup(x =>
                     x.GetClaimantById(1234, 5678))
                 .Returns(stubbedClaimantInfo);
 
-            var response = _classUnderTest.Execute(testAcademyId);
+            var response = _classUnderTest.Execute(1234, 5678);
             var expectedResponse = stubbedClaimantInfo.ToResponse();
 
             response.Should().NotBeNull();
             response.Should().BeEquivalentTo(expectedResponse);
+        }
+
+        [Test]
+        public void IfGatewayReturnsNullThrowNotFoundException()
+        {
+            ClaimantInformation nullResult = null;
+
+            _mockAcademyGateway.Setup(x =>
+                    x.GetClaimantById(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(nullResult);
+
+            Func<ClaimantInformationResponse> testDelegate = () => _classUnderTest.Execute(123, 456);
+            testDelegate.Should().Throw<ClaimantNotFoundException>();
         }
     }
 }

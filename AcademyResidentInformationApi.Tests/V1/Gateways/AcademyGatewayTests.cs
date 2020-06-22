@@ -30,7 +30,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetClaimantInformationByAcademyIdWhenThereAreNoMatchingRecordsReturnsNull()
+        public void GetClaimantInformationByClaimIdAndPersonRefWhenThereAreNoMatchingRecordsReturnsNull()
         {
             var response = _classUnderTest.GetClaimantById(123, 456);
             response.Should().BeNull();
@@ -94,7 +94,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             listOfPersons.Should().ContainEquivalentOf(domainEntity);
 
             listOfPersons
-                .First(p => ExtractClaimIdFromAcademyIdString(p.AcademyId).Equals(databaseEntity.ClaimId))
+                .First(p => p.ClaimId == databaseEntity.ClaimId)
                 .ClaimantAddress
                 .Should().BeEquivalentTo(address.ToDomain());
         }
@@ -172,7 +172,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.SaveChanges();
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom", lastname: "Tessellate");
-            var firstPersonId = ExtractClaimIdFromAcademyIdString(listOfPersons.First().AcademyId);
+            var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
             firstPersonId.Should().Be(databaseEntity.ClaimId);
@@ -195,7 +195,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, postcode: "E8 1DY");
             listOfPersons.Count.Should().Be(1);
             listOfPersons
-                .First(p => ExtractClaimIdFromAcademyIdString(p.AcademyId).Equals(databaseEntity.ClaimId))
+                .First(p => p.ClaimId == databaseEntity.ClaimId)
                 .ClaimantAddress
                 .Should().BeEquivalentTo(address.ToDomain());
         }
@@ -219,7 +219,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.SaveChanges();
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom", postcode: "E8 1DY").ToList();
-            var firstPersonId = ExtractClaimIdFromAcademyIdString(listOfPersons.First().AcademyId);
+            var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
             firstPersonId.Should().Be(databaseEntity.ClaimId);
@@ -239,7 +239,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.SaveChanges();
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, postcode: "E8 1DY");
-            var firstPersonId = ExtractClaimIdFromAcademyIdString(listOfPersons.First().AcademyId);
+            var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
 
@@ -268,7 +268,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, address: addressQuery).ToList();
             listOfPersons.Count.Should().Be(1);
             listOfPersons
-                .First(p => ExtractClaimIdFromAcademyIdString(p.AcademyId).Equals(databaseEntity.ClaimId))
+                .First(p => p.ClaimId == databaseEntity.ClaimId)
                 .ClaimantAddress
                 .Should().BeEquivalentTo(address.ToDomain());
         }
@@ -278,14 +278,6 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Persons.Add(databaseEntity);
             AcademyContext.SaveChanges();
             return databaseEntity;
-        }
-
-        //Composite AcademyId key.
-        /*AcademyId is not a column in the DB but rather a string made up of the
-        claimId and personRef*/
-        private static int ExtractClaimIdFromAcademyIdString(string academyId)
-        {
-            return int.Parse(academyId.Split('-').First());
         }
     }
 }

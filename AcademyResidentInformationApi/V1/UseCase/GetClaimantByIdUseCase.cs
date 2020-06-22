@@ -2,6 +2,7 @@ using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
+using ClaimantNotFoundException = AcademyResidentInformationApi.V1.Domain.ClaimantNotFoundException;
 
 namespace AcademyResidentInformationApi.V1.UseCase
 {
@@ -12,13 +13,11 @@ namespace AcademyResidentInformationApi.V1.UseCase
         {
             _academyGateway = academyGateway;
         }
-        public ClaimantInformation Execute(string academyId)
+        public ClaimantInformation Execute(int claimId, int personRef)
         {
-            var compositeKeyArray = academyId.Split('-');
-            var claimId = int.Parse(compositeKeyArray[0]);
-            var personRef = int.Parse(compositeKeyArray[1]);
-
-            return _academyGateway.GetClaimantById(claimId, personRef).ToResponse();
+            var claimant = _academyGateway.GetClaimantById(claimId, personRef);
+            if (claimant == null) throw new ClaimantNotFoundException();
+            return claimant.ToResponse();
         }
     }
 }

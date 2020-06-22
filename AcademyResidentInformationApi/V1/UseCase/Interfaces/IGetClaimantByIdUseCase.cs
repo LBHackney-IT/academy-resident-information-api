@@ -4,6 +4,6 @@ namespace AcademyResidentInformationApi.V1.UseCase.Interfaces
 {
     public interface IGetClaimantByIdUseCase
     {
-        ClaimantInformation Execute(string academyId);
+        ClaimantInformation Execute(int claimId, int personRef);
     }
 }

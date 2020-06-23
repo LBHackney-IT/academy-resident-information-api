@@ -12,15 +12,12 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
-        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, string id = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
+        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, int? claimid = null, int? personref = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
         {
             var person = TestHelper.CreateDatabasePersonEntity();
-            if (id != null)
-            {
-                var separateIdComponents = id.Split("-");
-                person.ClaimId = int.Parse(separateIdComponents[0]);
-                person.PersonRef = int.Parse(separateIdComponents[1]);
-            }
+            person.ClaimId = claimid ?? person.ClaimId;
+            person.PersonRef = personref ?? person.PersonRef;
+
             person.FirstName = firstname ?? person.FirstName;
             person.LastName = lastname ?? person.LastName;
 
@@ -35,7 +32,8 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             context.SaveChanges();
             return new ClaimantInformation
             {
-                AcademyId = $"{person.ClaimId}-{person.PersonRef}",
+                ClaimId = person.ClaimId,
+                PersonRef = person.PersonRef,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 DateOfBirth = person.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),

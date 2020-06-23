@@ -4,7 +4,8 @@ namespace AcademyResidentInformationApi.V1.Boundary.Responses
 {
     public class ClaimantInformation
     {
-        public string AcademyId { get; set; }
+        public int ClaimId { get; set; }
+        public int PersonRef { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string DateOfBirth { get; set; }

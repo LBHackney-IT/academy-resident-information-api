@@ -13,7 +13,8 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ClaimantInformationResponse
             {
-                AcademyId = domain.AcademyId,
+                ClaimId = domain.ClaimId,
+                PersonRef = domain.PersonRef,
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
                 DateOfBirth = domain.DateOfBirth,

@@ -24,8 +24,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         {
             var claimId = _fixture.Create<int>();
             var personRef = _fixture.Create<int>();
-            var academyId = $"{claimId}-{personRef}";
-            var expectedResponse = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, academyId);
+            var expectedResponse = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, claimid: claimId, personref: personRef);
 
             var requestUri = new Uri($"/claims/{claimId}/person/{personRef}", UriKind.Relative);
             var response = Client.GetAsync(requestUri);

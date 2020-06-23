@@ -28,7 +28,8 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
                 .HasKey(person => new
                 {
                     person.ClaimId,
-                    person.PersonRef
+                    person.MemberId,
+                    person.HouseId
                 });
 
             // composite foreign key for Address targeting unique columns in the Person table

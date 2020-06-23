@@ -46,7 +46,9 @@ namespace AcademyResidentInformationApi.V1.Gateways
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
-            var databaseRecord = _academyContext.Persons.Find(claimId, personRef);
+            //Retrieve the first record or null
+            var databaseRecord = _academyContext.Persons.Where(r => r.ClaimId == claimId && r.PersonRef == personRef)
+                .FirstOrDefault();
             if (databaseRecord == null) return null;
 
             var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.ClaimId) && (a.HouseId == databaseRecord.HouseId));

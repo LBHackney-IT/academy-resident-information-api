@@ -97,7 +97,7 @@ CREATE TABLE hbmember (
 	period_sanction int NULL,
 	sanction_type int NULL,
 	sanction_rate_type int NULL,
-	CONSTRAINT PK_hbmember PRIMARY KEY (claim_id, person_ref),
+	CONSTRAINT PK_hbmember PRIMARY KEY (claim_id, member_id, house_id),
 	CONSTRAINT UC_hbmember UNIQUE (claim_id, house_id)
 );
 

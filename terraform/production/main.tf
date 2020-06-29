@@ -76,7 +76,7 @@ data "aws_ssm_parameter" "academy_password" {
 data "aws_ssm_parameter" "academy_hostname" {
    name = "/academy/reporting-server/hostname"
 }
-module "dms_setup_staging" {
+module "dms_setup_production" {
   source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"
   environment_name = "production"
   project_name = "resident-information-apis" 

@@ -76,6 +76,9 @@ data "aws_ssm_parameter" "academy_password" {
 data "aws_ssm_parameter" "academy_hostname" {
    name = "/academy/reporting-server/hostname"
 }
+data "aws_ssm_parameter" "academy_postgres_hostname" {
+   name = "/academy-api/production/postgres-hostname"
+}
 module "dms_setup_production" {
   source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"
   environment_name = "production"

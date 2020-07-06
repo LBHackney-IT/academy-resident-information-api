@@ -11,6 +11,9 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("claim_id")]
         public int ClaimId { get; set; }
 
+        [ForeignKey("ClaimId")]
+        public Claim Claim { get; set; }
+
         [Column("house_id")]
         public int HouseId { get; set; }
 

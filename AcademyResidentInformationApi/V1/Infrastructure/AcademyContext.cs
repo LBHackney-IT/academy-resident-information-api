@@ -5,13 +5,15 @@ using Microsoft.EntityFrameworkCore;
 namespace AcademyResidentInformationApi.V1.Infrastructure
 {
 
-    public class AcademyContext : DbContext
+    public partial class AcademyContext : DbContext
     {
         public AcademyContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<Person> Persons { get; set; }
         public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<Claim> Claims { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

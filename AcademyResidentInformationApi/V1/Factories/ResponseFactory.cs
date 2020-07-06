@@ -14,6 +14,7 @@ namespace AcademyResidentInformationApi.V1.Factories
             return new ClaimantInformationResponse
             {
                 ClaimId = domain.ClaimId,
+                CheckDigit = domain.CheckDigit,
                 PersonRef = domain.PersonRef,
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,

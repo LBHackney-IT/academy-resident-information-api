@@ -15,6 +15,7 @@ namespace AcademyResidentInformationApi.V1.Factories
             return new ClaimantInformation
             {
                 ClaimId = databaseEntity.ClaimId,
+                CheckDigit = databaseEntity.Claim?.CheckDigit,
                 PersonRef = databaseEntity.PersonRef,
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,

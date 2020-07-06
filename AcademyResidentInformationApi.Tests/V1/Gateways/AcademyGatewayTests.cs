@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using AcademyResidentInformationApi.Tests.V1.Helper;
+using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
+using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
 using DomainAddress = AcademyResidentInformationApi.V1.Domain.Address;
 
 namespace AcademyResidentInformationApi.Tests.V1.Gateways
@@ -53,10 +55,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         public void GetClaimantInformationByClaimIdAndPersonRefReturnsAddressDetails()
         {
             var databaseEntity = AddPersonRecordToDatabase();
-
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId);
 
             var response = _classUnderTest.GetClaimantById(databaseEntity.ClaimId, databaseEntity.PersonRef);
 
@@ -72,26 +71,48 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void GetClaimantInformationByClaimIdAndPersonRefReturnsCheckDigit()
+        {
+            var personEntity = AddPersonRecordToDatabase(withClaim: false);
+            var claimEntity = AddClaimToDatabase(personEntity.ClaimId);
+
+            var response = _classUnderTest.GetClaimantById(personEntity.ClaimId, personEntity.PersonRef);
+
+            response.CheckDigit.Should().Be(claimEntity.CheckDigit);
+        }
+
+        [Test]
         public void GetAllClaimantsIfThereAreNoClaimantsReturnsAnEmptyList()
         {
             _classUnderTest.GetAllClaimants(0, 20).Should().BeEmpty();
         }
 
         [Test]
+        public void GetAllClaimantsWillReturnThemWithCheckDigit()
+        {
+            var personEntity = AddPersonRecordToDatabase(withClaim: false);
+            var claim = AddClaimToDatabase(personEntity.ClaimId);
+            AddAddressToDatabase(personEntity.ClaimId, personEntity.HouseId);
+
+            var expectedDomain = personEntity.ToDomain();
+            expectedDomain.CheckDigit = claim.CheckDigit;
+
+            var personFromList = _classUnderTest.GetAllClaimants(0, 20)
+                .First(p => p.ClaimId == personEntity.ClaimId);
+
+            personFromList.CheckDigit.Should().Be(claim.CheckDigit);
+        }
+
+        [Test]
         public void GetAllClaimantsIfThereAreClaimantWillReturnThemWithAddresses()
         {
             var databaseEntity = AddPersonRecordToDatabase();
-
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId);
 
             var domainEntity = databaseEntity.ToDomain();
             domainEntity.ClaimantAddress = address.ToDomain();
 
             var listOfPersons = _classUnderTest.GetAllClaimants(0, 20, postcode: address.PostCode);
-
-            listOfPersons.Should().ContainEquivalentOf(domainEntity);
 
             listOfPersons
                 .First(p => p.ClaimId == databaseEntity.ClaimId)
@@ -106,17 +127,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity1 = AddPersonRecordToDatabase(firstname: "shape");
             var databaseEntity2 = AddPersonRecordToDatabase(firstname: "Ciasom");
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
-
-            var address1 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity1.ClaimId, databaseEntity1.HouseId);
-            AcademyContext.Addresses.Add(address1);
-            AcademyContext.SaveChanges();
-
-            var address2 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity2.ClaimId, databaseEntity2.HouseId);
-            AcademyContext.Addresses.Add(address2);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId);
+            var address1 = AddAddressToDatabase(databaseEntity1.ClaimId, databaseEntity1.HouseId);
+            var address2 = AddAddressToDatabase(databaseEntity2.ClaimId, databaseEntity2.HouseId);
 
             var domainEntity = databaseEntity.ToDomain();
             domainEntity.ClaimantAddress = address.ToDomain();
@@ -138,17 +151,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity1 = AddPersonRecordToDatabase(lastname: "square");
             var databaseEntity2 = AddPersonRecordToDatabase(lastname: "Tessellate");
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
-
-            var address1 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity1.ClaimId, databaseEntity1.HouseId);
-            AcademyContext.Addresses.Add(address1);
-            AcademyContext.SaveChanges();
-
-            var address2 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity2.ClaimId, databaseEntity2.HouseId);
-            AcademyContext.Addresses.Add(address2);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId);
+            var address1 = AddAddressToDatabase(databaseEntity1.ClaimId, databaseEntity1.HouseId);
+            var address2 = AddAddressToDatabase(databaseEntity2.ClaimId, databaseEntity2.HouseId);
 
             var domainEntity = databaseEntity.ToDomain();
             domainEntity.ClaimantAddress = address.ToDomain();
@@ -233,10 +238,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         public void GetAllResidentsWithPostCodeQueryParameterIgnoresFormatting(string postcode)
         {
             var databaseEntity = AddPersonRecordToDatabase();
-
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId, postcode);
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId, postcode: postcode);
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, postcode: "E8 1DY");
             var firstPersonId = listOfPersons.First().ClaimId;
@@ -257,13 +259,8 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity = AddPersonRecordToDatabase();
             var databaseEntity1 = AddPersonRecordToDatabase();
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId, address: "1 My Street, Hackney, London");
-            AcademyContext.Addresses.Add(address);
-            AcademyContext.SaveChanges();
-
-            var address1 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity1.ClaimId, databaseEntity.HouseId, address: "5 Another Street, Lambeth, London");
-            AcademyContext.Addresses.Add(address1);
-            AcademyContext.SaveChanges();
+            var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId, address: "1 My Street, Hackney, London");
+            var address1 = AddAddressToDatabase(databaseEntity1.ClaimId, databaseEntity.HouseId, address: "5 Another Street, Lambeth, London");
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, address: addressQuery).ToList();
             listOfPersons.Count.Should().Be(1);
@@ -272,12 +269,33 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
                 .ClaimantAddress
                 .Should().BeEquivalentTo(address.ToDomain());
         }
-        private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null)
+        private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null, bool withClaim = true)
         {
             var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id);
             AcademyContext.Persons.Add(databaseEntity);
             AcademyContext.SaveChanges();
+            if (withClaim)
+            {
+                AcademyContext.Claims.Add(new Claim { ClaimId = databaseEntity.ClaimId });
+                AcademyContext.SaveChanges();
+            }
             return databaseEntity;
+        }
+
+        private Address AddAddressToDatabase(int claimId, int houseId, string address = null, string postcode = null)
+        {
+            var addressEntity = TestHelper.CreateDatabaseAddressForPersonId(claimId, houseId, postcode, address);
+            AcademyContext.Addresses.Add(addressEntity);
+            AcademyContext.SaveChanges();
+            return addressEntity;
+        }
+
+        private Claim AddClaimToDatabase(int claimId)
+        {
+            var claimEntity = TestHelper.CreateDatabaseClaimEntity(claimId);
+            AcademyContext.Claims.Add(claimEntity);
+            AcademyContext.SaveChanges();
+            return claimEntity;
         }
     }
 }

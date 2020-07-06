@@ -12,6 +12,7 @@ namespace AcademyResidentInformationApi.V1.Domain
         public string DateOfBirth { get; set; }
         public string NINumber { get; set; }
         public Address ClaimantAddress { get; set; }
+        public string CheckDigit { get; set; }
     }
 
     public class Address

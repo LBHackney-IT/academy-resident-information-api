@@ -6,33 +6,38 @@ using System.Threading.Tasks;
 using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Infrastructure;
+using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Boundary.Responses.Address;
 
 namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
-        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, int? claimid = null, int? personref = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
+        public static ClaimantInformation AddPersonWithRelatesEntitiesToDb(AcademyContext context, int? claimId = null, int? personRef = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
         {
             var person = TestHelper.CreateDatabasePersonEntity();
-            person.ClaimId = claimid ?? person.ClaimId;
-            person.PersonRef = personref ?? person.PersonRef;
+            person.ClaimId = claimId ?? person.ClaimId;
+            person.PersonRef = personRef ?? person.PersonRef;
 
             person.FirstName = firstname ?? person.FirstName;
             person.LastName = lastname ?? person.LastName;
 
             var personEntity = context.Persons.Add(person);
-
             context.SaveChanges();
 
-            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.ClaimId, personEntity.Entity.HouseId, address: addressLines, postcode: postcode);
-
-
+            var address = TestHelper.CreateDatabaseAddressForPersonId(personEntity.Entity.ClaimId,
+                personEntity.Entity.HouseId, address: addressLines, postcode: postcode);
             context.Addresses.Add(address);
             context.SaveChanges();
+
+            var claim = TestHelper.CreateDatabaseClaimEntity(personEntity.Entity.ClaimId);
+            context.Claims.Add(claim);
+            context.SaveChanges();
+
             return new ClaimantInformation
             {
                 ClaimId = person.ClaimId,
+                CheckDigit = claim.CheckDigit,
                 PersonRef = person.PersonRef,
                 FirstName = person.FirstName,
                 LastName = person.LastName,

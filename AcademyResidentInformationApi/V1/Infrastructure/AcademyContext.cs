@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace AcademyResidentInformationApi.V1.Infrastructure
 {
 
-    public partial class AcademyContext : DbContext
+    public class AcademyContext : DbContext
     {
         public AcademyContext(DbContextOptions options) : base(options)
         {

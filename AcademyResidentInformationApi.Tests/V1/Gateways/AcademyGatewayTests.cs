@@ -132,6 +132,38 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void GetAllResidentsWildcardSearchWithFirstNameQueryParameterReturnsMatchingResident()
+        {
+            var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom");
+            var databaseEntity1 = AddPersonRecordToDatabase(firstname: "shape");
+            var databaseEntity2 = AddPersonRecordToDatabase(firstname: "Ciasom");
+
+            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
+            AcademyContext.Addresses.Add(address);
+            AcademyContext.SaveChanges();
+
+            var address1 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity1.ClaimId, databaseEntity1.HouseId);
+            AcademyContext.Addresses.Add(address1);
+            AcademyContext.SaveChanges();
+
+            var address2 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity2.ClaimId, databaseEntity2.HouseId);
+            AcademyContext.Addresses.Add(address2);
+            AcademyContext.SaveChanges();
+
+            var domainEntity = databaseEntity.ToDomain();
+            domainEntity.ClaimantAddress = address.ToDomain();
+
+            var domainEntity2 = databaseEntity2.ToDomain();
+            domainEntity2.ClaimantAddress = address2.ToDomain();
+
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "iaso");
+            listOfPersons.Count.Should().Be(2);
+            listOfPersons.Should().ContainEquivalentOf(domainEntity);
+            listOfPersons.Should().ContainEquivalentOf(domainEntity2);
+
+        }
+
+        [Test]
         public void GetAllResidentsWithLastNameQueryParameterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(lastname: "tessellate");
@@ -163,6 +195,37 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void GetAllResidentsWildcardSearchWithLastNameQueryParameterReturnsMatchingResident()
+        {
+            var databaseEntity = AddPersonRecordToDatabase(lastname: "tessellate");
+            var databaseEntity1 = AddPersonRecordToDatabase(lastname: "square");
+            var databaseEntity2 = AddPersonRecordToDatabase(lastname: "Tessellate");
+
+            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
+            AcademyContext.Addresses.Add(address);
+            AcademyContext.SaveChanges();
+
+            var address1 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity1.ClaimId, databaseEntity1.HouseId);
+            AcademyContext.Addresses.Add(address1);
+            AcademyContext.SaveChanges();
+
+            var address2 = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity2.ClaimId, databaseEntity2.HouseId);
+            AcademyContext.Addresses.Add(address2);
+            AcademyContext.SaveChanges();
+
+            var domainEntity = databaseEntity.ToDomain();
+            domainEntity.ClaimantAddress = address.ToDomain();
+
+            var domainEntity2 = databaseEntity2.ToDomain();
+            domainEntity2.ClaimantAddress = address2.ToDomain();
+
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, lastname: "sell");
+            listOfPersons.Count.Should().Be(2);
+            listOfPersons.Should().ContainEquivalentOf(domainEntity);
+            listOfPersons.Should().ContainEquivalentOf(domainEntity2);
+        }
+
+        [Test]
         public void GetAllResidentsWithNameQueryParametersReturnsMatchingResidentOnlyOnce()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom", lastname: "Tessellate");
@@ -172,6 +235,22 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.SaveChanges();
 
             var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom", lastname: "Tessellate");
+            var firstPersonId = listOfPersons.First().ClaimId;
+
+            listOfPersons.Count.Should().Be(1);
+            firstPersonId.Should().Be(databaseEntity.ClaimId);
+        }
+
+        [Test]
+        public void GetAllResidentsWildcardSearchWithNameQueryParametersReturnsMatchingResidentOnlyOnce()
+        {
+            var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom", lastname: "Tessellate");
+
+            var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId);
+            AcademyContext.Addresses.Add(address);
+            AcademyContext.SaveChanges();
+
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciaso", lastname: "essellat");
             var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);

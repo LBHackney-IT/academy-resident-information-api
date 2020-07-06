@@ -64,6 +64,28 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseOne);
         }
         [Test]
+        public async Task FirstNameLastNameQueryParametersWildcardSearchReturnsMatchingClaimantRecordsFromAcademy()
+        {
+            var expectedClaimantResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
+            var expectedClaimantResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
+            var expectedClaimantResponseThree = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+
+            var queryUri = new Uri("api/v1/claimants?first_name=iasom&last_name=essellat", UriKind.Relative);
+
+            var response = Client.GetAsync(queryUri);
+
+            var statusCode = response.Result.StatusCode;
+
+            statusCode.Should().Be(200);
+
+            var content = response.Result.Content;
+            var stringContent = await content.ReadAsStringAsync().ConfigureAwait(true);
+            var convertedResponse = JsonConvert.DeserializeObject<ClaimantInformationList>(stringContent);
+
+            convertedResponse.Claimants.Count.Should().Be(1);
+            convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseOne);
+        }
+        [Test]
         public async Task PostcodeAndAddressQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
         {
             var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street, Hackney, LDN");

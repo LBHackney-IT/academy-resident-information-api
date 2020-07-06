@@ -22,6 +22,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
         {
             var addressesFilteredByPostcode = _academyContext.Addresses
                 .Include(p => p.Person)
+                .Include(p => p.Claim)
                 .Where(a => string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
                 .Where(a => string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
                 .Where(a => string.IsNullOrEmpty(firstname) || a.Person.FirstName.ToLower().Replace(" ", "").Equals(StripString(firstname)))
@@ -47,11 +48,13 @@ namespace AcademyResidentInformationApi.V1.Gateways
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
             //Retrieve the first record or null
-            var databaseRecord = _academyContext.Persons.Where(r => r.ClaimId == claimId && r.PersonRef == personRef)
-                .FirstOrDefault();
+            var databaseRecord = _academyContext.Persons
+                .Include(p => p.Claim)
+                .FirstOrDefault(r => r.ClaimId == claimId && r.PersonRef == personRef);
             if (databaseRecord == null) return null;
 
-            var addressesForPerson = _academyContext.Addresses.Where(a => (a.ClaimId == databaseRecord.ClaimId) && (a.HouseId == databaseRecord.HouseId));
+            var addressesForPerson = _academyContext.Addresses.Where(a =>
+                (a.ClaimId == databaseRecord.ClaimId) && (a.HouseId == databaseRecord.HouseId));
             var singleClaimant = MapPersonAndAddressesToClaimantInformation(databaseRecord, addressesForPerson);
 
             return singleClaimant;

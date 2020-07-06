@@ -1,8 +1,7 @@
 using System.Globalization;
 using AcademyResidentInformationApi.Tests.V1.Helper;
-using AcademyResidentInformationApi.V1.Boundary.Responses;
+using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
-using AcademyResidentInformationApi.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 

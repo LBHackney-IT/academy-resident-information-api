@@ -9,16 +9,13 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static ClaimantInformation CreateDomainClaimant()
-        {
-            var faker = new Fixture();
-            return faker.Create<ClaimantInformation>();
-        }
-
         public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null)
         {
             var faker = new Fixture();
-            var fp = faker.Build<Person>().Without(p => p.Address).Create();
+            var fp = faker.Build<Person>()
+                .Without(p => p.Address)
+                .Without(p => p.Claim)
+                .Create();
             fp.DateOfBirth = new DateTime
                 (fp.DateOfBirth.Year, fp.DateOfBirth.Month, fp.DateOfBirth.Day);
             fp.FirstName = firstname ?? fp.FirstName;
@@ -35,11 +32,24 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .With(add => add.ClaimId, claimId)
                 .With(add => add.HouseId, houseId)
                 .Without(add => add.Person)
+                .Without(add => add.Claim)
                 .Create();
 
             fa.PostCode = postcode ?? fa.PostCode;
             fa.AddressLine1 = address ?? fa.AddressLine1;
             return fa;
+        }
+
+        public static Claim CreateDatabaseClaimEntity(int? claimId)
+        {
+            var fixture = new Fixture();
+
+            var claim = new Claim
+            {
+                ClaimId = claimId ?? fixture.Create<int>(),
+                CheckDigit = fixture.Create<char>().ToString()
+            };
+            return claim;
         }
     }
 }

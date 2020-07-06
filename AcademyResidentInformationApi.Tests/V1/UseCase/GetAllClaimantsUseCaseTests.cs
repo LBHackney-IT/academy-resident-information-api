@@ -30,10 +30,6 @@ namespace AcademyResidentInformationApi.Tests.V1.UseCase
         public void ReturnsClaimantInformationList()
         {
             var stubbedClaimants = _fixture.CreateMany<ClaimantInformation>();
-            var expectedResponse = new ClaimantInformationList()
-            {
-                Claimants = stubbedClaimants.ToResponse()
-            };
 
             _mockAcademyGateway.Setup(x =>
                 x.GetAllClaimants(0, 20, "ciasom", "tessellate", "E8 1DY", "1 Montage street"))

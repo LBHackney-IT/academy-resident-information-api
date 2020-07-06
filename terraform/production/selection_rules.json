@@ -65,6 +65,17 @@
             },
             "rule-action": "include",
             "filters": []
+        },
+        {
+          "rule-type": "selection",
+          "rule-id": "7",
+          "rule-name": "7",
+          "object-locator": {
+            "schema-name": "%",
+            "table-name": "hbclaim"
+          },
+          "rule-action": "include",
+          "filters": []
         }
     ]
 }

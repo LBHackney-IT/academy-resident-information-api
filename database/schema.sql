@@ -1,4 +1,6 @@
-CREATE TABLE hbhousehold (
+CREATE SCHEMA IF NOT EXISTS dbo;
+
+CREATE TABLE dbo.hbhousehold (
 	claim_id int NULL,
 	house_id smallint NULL,
 	last_upd int NULL,
@@ -36,7 +38,7 @@ CREATE TABLE hbhousehold (
 	CONSTRAINT PK_hbhousehold PRIMARY KEY (claim_id, house_id)
 );
 
-CREATE TABLE hbmember (
+CREATE TABLE dbo.hbmember (
 	claim_id int NULL,
 	house_id smallint NULL,
 	member_id smallint NULL,
@@ -101,8 +103,7 @@ CREATE TABLE hbmember (
 	CONSTRAINT UC_hbmember UNIQUE (claim_id, house_id)
 );
 
-CREATE TABLE hbclaim
-(
+CREATE TABLE dbo.hbclaim(
     division_id                 smallint,
     claim_id                    int,
     last_upd                    int,
@@ -315,7 +316,7 @@ CREATE TABLE hbclaim
     uc_dhp_start_date           timestamp
 );
 
-CREATE TABLE ctaccount (
+CREATE TABLE dbo.ctaccount (
 	division_id smallint NULL,
 	account_ref int NULL,
 	account_cd varchar(1) NULL,
@@ -360,7 +361,7 @@ CREATE TABLE ctaccount (
 	documerge_excl_ind smallint NULL
 );
 
-CREATE TABLE ctproperty (
+CREATE TABLE dbo.ctproperty (
 	division_id smallint NULL,
 	property_ref varchar(18) NULL,
 	fund_no smallint NULL,

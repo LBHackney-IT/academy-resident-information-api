@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AcademyResidentInformationApi.V1.Infrastructure
 {
-    [Table("hbclaim")]
+    [Table("hbclaim", Schema = "dbo")]
     public class Claim
     {
         [Column("claim_id")]

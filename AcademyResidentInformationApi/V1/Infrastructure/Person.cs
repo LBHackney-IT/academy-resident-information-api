@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AcademyResidentInformationApi.V1.Infrastructure
 {
-    [Table("hbmember")]
+    [Table("hbmember", Schema = "dbo")]
     public class Person
     {
         [Column("claim_id")]

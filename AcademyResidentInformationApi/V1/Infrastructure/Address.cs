@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AcademyResidentInformationApi.V1.Infrastructure
 {
-    [Table("hbhousehold")]
+    [Table("hbhousehold", Schema = "dbo")]
     public class Address
     {
         public Person Person { get; set; }

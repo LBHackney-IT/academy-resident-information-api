@@ -27,6 +27,8 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 .Where(a => string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
                 .Where(a => string.IsNullOrEmpty(firstname) || a.Person.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname)))
                 .Where(a => string.IsNullOrEmpty(lastname) || a.Person.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname)))
+                .Skip(cursor)
+                .Take(limit)
                 .ToList();
 
             var peopleWithAddresses = addressesFilteredByPostcode

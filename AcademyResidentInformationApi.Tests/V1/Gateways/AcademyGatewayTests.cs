@@ -348,6 +348,38 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
                 .ClaimantAddress
                 .Should().BeEquivalentTo(address.ToDomain());
         }
+
+        [Test]
+        public void GetAllResidentsWontReturnMoreRecordsThanTheLimit()
+        {
+            var manyPeople = new List<Person>
+            {
+                AddPersonRecordToDatabase(),
+                AddPersonRecordToDatabase(),
+                AddPersonRecordToDatabase()
+            }.OrderBy(p => p.ClaimId).ToList();
+            manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
+
+            var peopleReturned = _classUnderTest.GetAllClaimants(0, 2);
+            peopleReturned.Count.Should().Be(2);
+        }
+
+        [Test]
+        public void GetAllResidentsWillOffsetRecordsByTheCursor()
+        {
+            var manyPeople = new List<Person>
+            {
+                AddPersonRecordToDatabase(),
+                AddPersonRecordToDatabase(),
+                AddPersonRecordToDatabase()
+            }.OrderBy(p => p.ClaimId).ToList();
+            manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
+
+            var peopleReturned = _classUnderTest.GetAllClaimants(1, 2);
+            peopleReturned.Count.Should().Be(2);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(1).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
+        }
         private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null, bool withClaim = true)
         {
             var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id);

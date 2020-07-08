@@ -76,6 +76,63 @@
           },
           "rule-action": "include",
           "filters": []
+        },
+      {
+        "rule-type": "transformation",
+        "rule-id": "8",
+        "rule-name": "8",
+        "rule-action": "define-primary-key",
+        "rule-target": "table",
+        "object-locator": {
+          "schema-name": "%",
+          "table-name": "hbmember"
+        },
+        "primary-key-def": {
+          "name": "member-unique-idx",
+          "origin": "unique-index",
+          "columns": [
+            "claim_id",
+            "member_id",
+            "house_id"
+          ]
         }
+      },
+      {
+        "rule-type": "transformation",
+        "rule-id": "9",
+        "rule-name": "9",
+        "rule-action": "define-primary-key",
+        "rule-target": "table",
+        "object-locator": {
+          "schema-name": "%",
+          "table-name": "hbhousehold"
+        },
+        "primary-key-def": {
+          "name": "household-unique-idx",
+          "origin": "unique-index",
+          "columns": [
+            "claim_id",
+            "house_id"
+          ]
+        }
+      },
+      {
+        "rule-type": "transformation",
+        "rule-id": "10",
+        "rule-name": "10",
+        "rule-action": "define-primary-key",
+        "rule-target": "table",
+        "object-locator": {
+          "schema-name": "%",
+          "table-name": "hbclaim"
+        },
+        "primary-key-def": {
+          "name": "member-unique-idx",
+          "origin": "unique-index",
+          "columns": [
+            "claim_id"
+          ]
+        }
+      }
     ]
 }

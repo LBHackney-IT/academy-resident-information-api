@@ -49,7 +49,7 @@ CREATE TABLE dbo.hbmember (
 	forename varchar(32) NULL,
 	find_name varchar(32) NULL,
 	type smallint NULL,
-	birth_date timestamp NULL,
+	birth_date varchar(37) NULL,
 	gender smallint NULL,
 	carer_ind smallint NULL,
 	disable_ind smallint NULL,

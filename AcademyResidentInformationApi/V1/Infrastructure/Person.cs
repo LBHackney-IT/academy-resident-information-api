@@ -12,38 +12,39 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     {
         [Column("claim_id")]
         [Key]
-        public int ClaimId { get; set; }
+        public int? ClaimId { get; set; }
 
         [ForeignKey("ClaimId")]
         public Claim Claim { get; set; }
 
         [Column("house_id")]
-        public int HouseId { get; set; }
+        public int? HouseId { get; set; }
 
         [Column("member_id")]
-        public int MemberId { get; set; }
+        public int? MemberId { get; set; }
 
         [Column("person_ref")]
-        public int PersonRef { get; set; }
+        public int? PersonRef { get; set; }
 
-        [Column("forename")]
+        [Column("forename", TypeName = "varchar")]
         [MaxLength(32)]
         public string FirstName { get; set; }
 
-        [Column("surname")]
+        [Column("surname", TypeName = "varchar")]
         [MaxLength(32)]
         public string LastName { get; set; }
 
-        [Column("title")]
+        [Column("title", TypeName = "varchar")]
         [MaxLength(4)]
         public string Title { get; set; }
 
-        [Column("find_name")]
+        [Column("find_name", TypeName = "varchar")]
         [MaxLength(32)]
         public string FullName { get; set; }
 
-        [Column("birth_date")]
-        public DateTime DateOfBirth { get; set; }
+        [Column("birth_date", TypeName = "varchar")]
+        [MaxLength(37)]
+        public string DateOfBirth { get; set; }
 
         [Column("nino")]
         [MaxLength(10)]

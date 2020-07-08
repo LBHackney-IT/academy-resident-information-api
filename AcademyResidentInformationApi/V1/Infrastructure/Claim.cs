@@ -8,9 +8,9 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     {
         [Column("claim_id")]
         [Key]
-        public int ClaimId { get; set; }
+        public int? ClaimId { get; set; }
 
-        [Column("check_digit")]
+        [Column("check_digit", TypeName = "varchar")]
         [MaxLength(1)]
         public string CheckDigit { get; set; }
     }

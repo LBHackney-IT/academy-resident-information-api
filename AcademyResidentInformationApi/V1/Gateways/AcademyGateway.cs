@@ -20,6 +20,17 @@ namespace AcademyResidentInformationApi.V1.Gateways
         public List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
             string lastname = null, string postcode = null, string address = null)
         {
+            var people = _academyContext.Persons
+                .Include(p => p.Address)
+                .Include(p => p.Claim)
+                .Where(a => string.IsNullOrEmpty(address) || a.Address.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
+                .Where(a => string.IsNullOrEmpty(postcode) || a.Address.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
+                .Where(a => string.IsNullOrEmpty(firstname) || a.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname)))
+                .Where(a => string.IsNullOrEmpty(lastname) || a.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname)))
+                .Skip(cursor)
+                .Take(limit)
+                .ToList();
+
             var addressesFilteredByPostcode = _academyContext.Addresses
                 .Include(p => p.Person)
                 .Include(p => p.Claim)
@@ -31,16 +42,16 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 .Take(limit)
                 .ToList();
 
-            var peopleWithAddresses = addressesFilteredByPostcode
-                .Select(address =>
+            var domainPeople = people
+                .Select(person =>
                     {
-                        var person = address.Person.ToDomain();
-                        person.ClaimantAddress = address.ToDomain();
-                        return person;
+                        var domain = person.ToDomain();
+                        domain.ClaimantAddress = person.Address.ToDomain();
+                        return domain;
                     })
                 .ToList();
 
-            return peopleWithAddresses;
+            return domainPeople;
         }
         private static string StripString(string str)
         {

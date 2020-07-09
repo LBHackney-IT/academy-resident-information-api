@@ -14,13 +14,13 @@ namespace AcademyResidentInformationApi.V1.Factories
         {
             return new ClaimantInformation
             {
-                ClaimId = databaseEntity.ClaimId,
+                ClaimId = databaseEntity.ClaimId.Value,
                 CheckDigit = databaseEntity.Claim?.CheckDigit,
-                PersonRef = databaseEntity.PersonRef,
+                PersonRef = databaseEntity.PersonRef.Value,
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
                 NINumber = databaseEntity.NINumber,
-                DateOfBirth = databaseEntity.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                DateOfBirth = databaseEntity.DateOfBirth,
             };
         }
 

@@ -36,12 +36,12 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 
             return new ClaimantInformation
             {
-                ClaimId = person.ClaimId,
+                ClaimId = person.ClaimId.Value,
                 CheckDigit = claim.CheckDigit,
-                PersonRef = person.PersonRef,
+                PersonRef = person.PersonRef.Value,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
-                DateOfBirth = person.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                DateOfBirth = person.DateOfBirth,
                 NINumber = person.NINumber,
                 ClaimantAddress = new Address
                 {

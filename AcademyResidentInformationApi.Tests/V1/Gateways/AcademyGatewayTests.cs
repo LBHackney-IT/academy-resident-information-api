@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using AcademyResidentInformationApi.Tests.V1.Helper;
-using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.Infrastructure;
@@ -42,12 +38,12 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         public void GetClaimantInformationByClaimIdAndPersonRefReturnsPersonalDetails()
         {
             var databaseEntity = AddPersonRecordToDatabase();
-            var response = _classUnderTest.GetClaimantById(databaseEntity.ClaimId, databaseEntity.PersonRef);
+            var response = _classUnderTest.GetClaimantById(databaseEntity.ClaimId.Value, databaseEntity.PersonRef.Value);
 
             response.FirstName.Should().Be(databaseEntity.FirstName);
             response.LastName.Should().Be(databaseEntity.LastName);
             response.NINumber.Should().Be(databaseEntity.NINumber);
-            response.DateOfBirth.Should().Be(databaseEntity.DateOfBirth.ToString("O"));
+            response.DateOfBirth.Should().Be(databaseEntity.DateOfBirth);
             response.Should().NotBe(null);
         }
 
@@ -57,7 +53,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity = AddPersonRecordToDatabase();
             var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId);
 
-            var response = _classUnderTest.GetClaimantById(databaseEntity.ClaimId, databaseEntity.PersonRef);
+            var response = _classUnderTest.GetClaimantById(databaseEntity.ClaimId.Value, databaseEntity.PersonRef.Value);
 
             var expectedDomainAddress = new DomainAddress
             {
@@ -76,7 +72,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var personEntity = AddPersonRecordToDatabase(withClaim: false);
             var claimEntity = AddClaimToDatabase(personEntity.ClaimId);
 
-            var response = _classUnderTest.GetClaimantById(personEntity.ClaimId, personEntity.PersonRef);
+            var response = _classUnderTest.GetClaimantById(personEntity.ClaimId.Value, personEntity.PersonRef.Value);
 
             response.CheckDigit.Should().Be(claimEntity.CheckDigit);
         }
@@ -393,7 +389,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             return databaseEntity;
         }
 
-        private Address AddAddressToDatabase(int claimId, int houseId, string address = null, string postcode = null)
+        private Address AddAddressToDatabase(int? claimId, int? houseId, string address = null, string postcode = null)
         {
             var addressEntity = TestHelper.CreateDatabaseAddressForPersonId(claimId, houseId, postcode, address);
             AcademyContext.Addresses.Add(addressEntity);
@@ -401,7 +397,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             return addressEntity;
         }
 
-        private Claim AddClaimToDatabase(int claimId)
+        private Claim AddClaimToDatabase(int? claimId)
         {
             var claimEntity = TestHelper.CreateDatabaseClaimEntity(claimId);
             AcademyContext.Claims.Add(claimEntity);

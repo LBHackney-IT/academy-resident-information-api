@@ -1,3 +1,4 @@
+using System;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;

@@ -17,11 +17,11 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
             var domain = personRecord.ToDomain();
             domain.Should().BeEquivalentTo(new ClaimantInformation
             {
-                ClaimId = personRecord.ClaimId,
-                PersonRef = personRecord.PersonRef,
+                ClaimId = personRecord.ClaimId.Value,
+                PersonRef = personRecord.PersonRef.Value,
                 FirstName = personRecord.FirstName,
                 LastName = personRecord.LastName,
-                DateOfBirth = personRecord.DateOfBirth.ToString("O", CultureInfo.InvariantCulture),
+                DateOfBirth = personRecord.DateOfBirth,
                 NINumber = personRecord.NINumber
             });
         }

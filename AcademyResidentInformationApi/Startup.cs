@@ -113,7 +113,7 @@ namespace AcademyResidentInformationApi
         private static void ConfigureDbContext(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
-            services.AddDbContext<AcademyContext>(s => s.UseNpgsql(connectionString));
+            services.AddDbContext<AcademyContext>(s => s.UseNpgsql(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         }
 
         private static void RegisterGateways(IServiceCollection services)

@@ -105,7 +105,6 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             var stringContent = await content.ReadAsStringAsync().ConfigureAwait(true);
             var convertedResponse = JsonConvert.DeserializeObject<ClaimantInformationList>(stringContent);
 
-            // convertedResponse.Claimants.Count.Should().Be(2);
             convertedResponse.Claimants.Should().ContainEquivalentOf(matchingClaimantOne);
             convertedResponse.Claimants.Should().ContainEquivalentOf(matchingClaimantTwo);
         }

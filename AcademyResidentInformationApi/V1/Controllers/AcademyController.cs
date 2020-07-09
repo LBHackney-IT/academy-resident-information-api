@@ -1,3 +1,4 @@
+using System;
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AcademyResidentInformationApi.V1.Boundary.Requests;

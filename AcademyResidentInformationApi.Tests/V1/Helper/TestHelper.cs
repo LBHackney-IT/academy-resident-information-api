@@ -16,23 +16,22 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .Without(p => p.Address)
                 .Without(p => p.Claim)
                 .Create();
-            fp.DateOfBirth = new DateTime
-                (fp.DateOfBirth.Year, fp.DateOfBirth.Month, fp.DateOfBirth.Day);
+            fp.DateOfBirth = faker.Create<DateTime>().ToString("yyyy-MM-dd");
             fp.FirstName = firstname ?? fp.FirstName;
             fp.LastName = lastname ?? fp.LastName;
             fp.ClaimId = id ?? fp.ClaimId;
             return fp;
         }
 
-        public static Address CreateDatabaseAddressForPersonId(int claimId, int houseId, string postcode = null, string address = null)
+        public static Address CreateDatabaseAddressForPersonId(int? claimId, int? houseId, string postcode = null, string address = null)
         {
             var faker = new Fixture();
 
             var fa = faker.Build<Address>()
                 .With(add => add.ClaimId, claimId)
                 .With(add => add.HouseId, houseId)
-                .Without(add => add.Person)
                 .Without(add => add.Claim)
+                .Without(add => add.Person)
                 .Create();
 
             fa.PostCode = postcode ?? fa.PostCode;

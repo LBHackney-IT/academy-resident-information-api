@@ -27,6 +27,9 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 .Where(a => string.IsNullOrEmpty(postcode) || a.Address.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
                 .Where(a => string.IsNullOrEmpty(firstname) || a.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname)))
                 .Where(a => string.IsNullOrEmpty(lastname) || a.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname)))
+                .OrderBy(p => p.ClaimId)
+                .ThenBy(p => p.HouseId)
+                .ThenBy(p => p.MemberId)
                 .Skip(cursor)
                 .Take(limit)
                 .ToList();

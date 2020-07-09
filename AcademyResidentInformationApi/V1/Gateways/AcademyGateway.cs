@@ -11,7 +11,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
     {
         private readonly AcademyContext _academyContext;
 
-
         public AcademyGateway(AcademyContext academyContext)
         {
             _academyContext = academyContext;
@@ -20,41 +19,31 @@ namespace AcademyResidentInformationApi.V1.Gateways
         public List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
             string lastname = null, string postcode = null, string address = null)
         {
-            var people = _academyContext.Persons
-                .Include(p => p.Address)
-                .Include(p => p.Claim)
-                .Where(a => string.IsNullOrEmpty(address) || a.Address.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
-                .Where(a => string.IsNullOrEmpty(postcode) || a.Address.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
-                .Where(a => string.IsNullOrEmpty(firstname) || a.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname)))
-                .Where(a => string.IsNullOrEmpty(lastname) || a.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname)))
-                .OrderBy(p => p.ClaimId)
-                .ThenBy(p => p.HouseId)
-                .ThenBy(p => p.MemberId)
-                .Skip(cursor)
-                .Take(limit)
-                .ToList();
-
-            var addressesFilteredByPostcode = _academyContext.Addresses
-                .Include(p => p.Person)
-                .Include(p => p.Claim)
-                .Where(a => string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address)))
-                .Where(a => string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode)))
-                .Where(a => string.IsNullOrEmpty(firstname) || a.Person.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname)))
-                .Where(a => string.IsNullOrEmpty(lastname) || a.Person.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname)))
-                .Skip(cursor)
-                .Take(limit)
-                .ToList();
-
-            var domainPeople = people
-                .Select(person =>
-                    {
-                        var domain = person.ToDomain();
-                        domain.ClaimantAddress = person.Address.ToDomain();
-                        return domain;
-                    })
-                .ToList();
-
-            return domainPeople;
+            return (
+                from person in _academyContext.Persons
+                join a in _academyContext.Addresses on new { person.ClaimId, person.HouseId } equals new { a.ClaimId, a.HouseId }
+                join c in _academyContext.Claims on person.ClaimId equals c.ClaimId
+                where string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address))
+                where string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode))
+                where string.IsNullOrEmpty(firstname) || person.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname))
+                where string.IsNullOrEmpty(lastname) || person.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname))
+                orderby person.ClaimId, person.HouseId, person.MemberId
+                select new Person
+                {
+                    Address = a,
+                    Claim = c,
+                    Title = person.Title,
+                    FirstName = person.FirstName,
+                    FullName = person.FullName,
+                    ClaimId = person.ClaimId,
+                    HouseId = person.HouseId,
+                    LastName = person.LastName,
+                    MemberId = person.MemberId,
+                    PersonRef = person.PersonRef,
+                    DateOfBirth = person.DateOfBirth,
+                    NINumber = person.NINumber
+                }
+                ).Skip(cursor).Take(limit).ToList().ToDomain();
         }
         private static string StripString(string str)
         {

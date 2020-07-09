@@ -89,7 +89,7 @@
           },
           "primary-key-def": {
             "name": "member-unique-idx",
-            "origin": "unique-index",
+            "origin": "primary-key",
             "columns": [
               "claim_id",
               "member_id",

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Factories;

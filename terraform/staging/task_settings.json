@@ -18,7 +18,7 @@
         "ParallelApplyQueuesPerThread": 0
     },
     "FullLoadSettings": {
-        "TargetTablePrepMode": "DROP_AND_CREATE",
+        "TargetTablePrepMode": "TRUNCATE_BEFORE_LOAD",
         "CreatePkAfterFullLoad": false,
         "StopTaskCachedChangesApplied": false,
         "StopTaskCachedChangesNotApplied": false,

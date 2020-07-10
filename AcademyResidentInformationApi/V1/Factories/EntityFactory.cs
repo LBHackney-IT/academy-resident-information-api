@@ -21,6 +21,7 @@ namespace AcademyResidentInformationApi.V1.Factories
                 LastName = databaseEntity.LastName,
                 NINumber = databaseEntity.NINumber,
                 DateOfBirth = databaseEntity.DateOfBirth,
+                ClaimantAddress = databaseEntity.Address?.ToDomain()
             };
         }
 

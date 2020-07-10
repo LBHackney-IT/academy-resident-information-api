@@ -377,6 +377,23 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(1).ClaimId);
             peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
         }
+
+        [Test]
+        public void GetAllResidentsOrdersRecordsConsistently()
+        {
+            var manyPeople = new List<Person>
+            {
+                AddPersonRecordToDatabase(id: 3),
+                AddPersonRecordToDatabase(id: 1),
+                AddPersonRecordToDatabase(id: 7)
+            }.ToList();
+            manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
+
+            var peopleReturned = _classUnderTest.GetAllClaimants(1, 2);
+            peopleReturned.Count.Should().Be(2);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(0).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
+        }
         private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null, bool withClaim = true)
         {
             var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id);

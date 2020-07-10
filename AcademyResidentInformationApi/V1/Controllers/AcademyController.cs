@@ -37,7 +37,7 @@ namespace AcademyResidentInformationApi.V1.Controllers
         }
 
         [HttpGet]
-        [Route("/claims/{claimId}/person/{personRef}")]
+        [Route("claim/{claimId}/person/{personRef}")]
         public IActionResult ViewRecord(int claimId, int personRef)
         {
             try

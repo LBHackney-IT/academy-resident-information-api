@@ -9,7 +9,8 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null, int? memberId = null)
+        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null,
+            int? memberId = null, int? personRef = null, int? houseId = null)
         {
             var faker = new Fixture();
             var fp = faker.Build<Person>()
@@ -20,7 +21,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             fp.FirstName = firstname ?? fp.FirstName;
             fp.LastName = lastname ?? fp.LastName;
             fp.ClaimId = id ?? fp.ClaimId;
-            fp.MemberId = id ?? fp.MemberId;
+            fp.MemberId = memberId ?? fp.MemberId;
+            fp.PersonRef = personRef ?? fp.PersonRef;
+            fp.HouseId = houseId ?? fp.HouseId;
             return fp;
         }
 

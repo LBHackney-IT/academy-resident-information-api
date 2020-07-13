@@ -53,24 +53,22 @@ namespace AcademyResidentInformationApi.V1.Gateways
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
-            //Retrieve the first record or null
             var databaseRecord = _academyContext.Persons
                 .Include(p => p.Claim)
-                .FirstOrDefault(r => r.ClaimId == claimId && r.PersonRef == personRef);
-            if (databaseRecord == null) return null;
+                .Join(_academyContext.Addresses, person => new { person.HouseId, person.ClaimId },
+                    add => new { add.HouseId, add.ClaimId }, (person, address) => new { address, person })
+                .Where(r => r.person.ClaimId == claimId && r.person.PersonRef == personRef)
+                .FirstOrDefault(r => r.address.ToDate == "2099-12-31 00:00:00.0000000");
 
-            var addressesForPerson = _academyContext.Addresses.Where(a =>
-                (a.ClaimId == databaseRecord.ClaimId) && (a.HouseId == databaseRecord.HouseId));
-            var singleClaimant = MapPersonAndAddressesToClaimantInformation(databaseRecord, addressesForPerson);
-
-            return singleClaimant;
+            return databaseRecord == null
+                ? null
+                : MapPersonAndAddressesToClaimantInformation(databaseRecord.person, databaseRecord.address);
         }
 
-        private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, IEnumerable<Address> addresses)
+        private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, Address address)
         {
             var claimant = person.ToDomain();
-            var addressesDomain = addresses.Select(address => address.ToDomain()).ToList();
-            claimant.ClaimantAddress = addressesDomain.Any() ? addressesDomain.First() : null;
+            claimant.ClaimantAddress = address.ToDomain();
             return claimant;
         }
     }

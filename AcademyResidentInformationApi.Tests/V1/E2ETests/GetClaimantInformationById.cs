@@ -26,7 +26,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             var personRef = _fixture.Create<int>();
             var expectedResponse = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, claimId: claimId, personRef: personRef);
 
-            var requestUri = new Uri($"/claims/{claimId}/person/{personRef}", UriKind.Relative);
+            var requestUri = new Uri($"api/v1/claimants/claim/{claimId}/person/{personRef}", UriKind.Relative);
             var response = Client.GetAsync(requestUri);
             var statusCode = response.Result.StatusCode;
             statusCode.Should().Be(200);
@@ -41,7 +41,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public void GetClaimantInformationByIdReturns404NotFound()
         {
-            var requestUri = new Uri($"/claims/0/househould/0/members/0", UriKind.Relative);
+            var requestUri = new Uri($"api/v1/claimants/claim/0/househould/0/members/0", UriKind.Relative);
             var response = Client.GetAsync(requestUri);
             var statusCode = response.Result.StatusCode;
             statusCode.Should().Be(404);

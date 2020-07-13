@@ -27,6 +27,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 where string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode))
                 where string.IsNullOrEmpty(firstname) || person.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname))
                 where string.IsNullOrEmpty(lastname) || person.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname))
+                where a.ToDate == "2099-12-31 00:00:00.0000000"
                 orderby person.ClaimId, person.HouseId, person.MemberId
                 select new Person
                 {

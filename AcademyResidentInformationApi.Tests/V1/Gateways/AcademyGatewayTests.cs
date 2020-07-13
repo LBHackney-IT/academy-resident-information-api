@@ -118,6 +118,21 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
+        public void GetAllClaimantsIfThereAreClaimantsWillOnlyReturnCurrentAddresses()
+        {
+            var toDate = "2020-03-31 00:00:00.0000000";
+            var oldPersonRecord = AddPersonRecordToDatabase();
+            var newPersonRecord = AddPersonRecordToDatabase(memberId: oldPersonRecord.MemberId, withClaim: false, id: oldPersonRecord.ClaimId);
+            var oldAddress = AddAddressToDatabase(oldPersonRecord.ClaimId, oldPersonRecord.HouseId, toDate: toDate);
+            var newAddress = AddAddressToDatabase(newPersonRecord.ClaimId, newPersonRecord.HouseId);
+
+
+            var listOfPersons = _classUnderTest.GetAllClaimants(0, 20);
+
+            listOfPersons.Should().BeEquivalentTo(newPersonRecord.ToDomain());
+        }
+
+        [Test]
         public void GetAllResidentsWithFirstNameQueryParameterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom");
@@ -394,9 +409,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(0).ClaimId);
             peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
         }
-        private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null, bool withClaim = true)
+        private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null, bool withClaim = true, int? memberId = null)
         {
-            var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id);
+            var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id, memberId);
             AcademyContext.Persons.Add(databaseEntity);
             AcademyContext.SaveChanges();
             if (withClaim)
@@ -407,9 +422,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             return databaseEntity;
         }
 
-        private Address AddAddressToDatabase(int? claimId, int? houseId, string address = null, string postcode = null)
+        private Address AddAddressToDatabase(int? claimId, int? houseId, string address = null, string postcode = null, string toDate = "2099-12-31 00:00:00.0000000")
         {
-            var addressEntity = TestHelper.CreateDatabaseAddressForPersonId(claimId, houseId, postcode, address);
+            var addressEntity = TestHelper.CreateDatabaseAddressForPersonId(claimId, houseId, postcode, address, toDate);
             AcademyContext.Addresses.Add(addressEntity);
             AcademyContext.SaveChanges();
             return addressEntity;

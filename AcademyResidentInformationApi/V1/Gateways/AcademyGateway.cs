@@ -19,15 +19,19 @@ namespace AcademyResidentInformationApi.V1.Gateways
         public List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
             string lastname = null, string postcode = null, string address = null)
         {
+            var firstNameSearchPattern = GetSearchPattern(firstname);
+            var lastNameSearchPattern = GetSearchPattern(lastname);
+            var addressSearchPattern = GetSearchPattern(address);
+            var postcodeSearchPattern = GetSearchPattern(postcode);
             return (
                 from person in _academyContext.Persons
                 join a in _academyContext.Addresses on new { person.ClaimId, person.HouseId } equals new { a.ClaimId, a.HouseId }
                 join c in _academyContext.Claims on person.ClaimId equals c.ClaimId
-                where string.IsNullOrEmpty(address) || a.AddressLine1.ToLower().Replace(" ", "").Contains(StripString(address))
-                where string.IsNullOrEmpty(postcode) || a.PostCode.ToLower().Replace(" ", "").Equals(StripString(postcode))
-                where string.IsNullOrEmpty(firstname) || person.FirstName.ToLower().Replace(" ", "").Contains(StripString(firstname))
-                where string.IsNullOrEmpty(lastname) || person.LastName.ToLower().Replace(" ", "").Contains(StripString(lastname))
                 where a.ToDate == "2099-12-31 00:00:00.0000000"
+                where string.IsNullOrEmpty(address) || EF.Functions.ILike(a.AddressLine1.Replace(" ", ""), addressSearchPattern)
+                where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(a.PostCode.Replace(" ", ""), postcodeSearchPattern)
+                where string.IsNullOrEmpty(firstname) || EF.Functions.ILike(person.FirstName, firstNameSearchPattern)
+                where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(person.LastName, lastNameSearchPattern)
                 orderby person.ClaimId, person.HouseId, person.MemberId
                 select new Person
                 {
@@ -46,9 +50,9 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 }
                 ).Skip(cursor).Take(limit).ToList().ToDomain();
         }
-        private static string StripString(string str)
+        private static string GetSearchPattern(string str)
         {
-            return str?.ToLower().Replace(" ", "");
+            return $"%{str?.Replace(" ", "")}%";
         }
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)

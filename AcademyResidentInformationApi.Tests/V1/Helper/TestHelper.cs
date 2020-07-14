@@ -9,7 +9,8 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null)
+        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null,
+            int? memberId = null, int? personRef = null, int? houseId = null)
         {
             var faker = new Fixture();
             var fp = faker.Build<Person>()
@@ -20,16 +21,21 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             fp.FirstName = firstname ?? fp.FirstName;
             fp.LastName = lastname ?? fp.LastName;
             fp.ClaimId = id ?? fp.ClaimId;
+            fp.MemberId = memberId ?? fp.MemberId;
+            fp.PersonRef = personRef ?? fp.PersonRef;
+            fp.HouseId = houseId ?? fp.HouseId;
             return fp;
         }
 
-        public static Address CreateDatabaseAddressForPersonId(int? claimId, int? houseId, string postcode = null, string address = null)
+        public static Address CreateDatabaseAddressForPersonId(int? claimId, int? houseId, string postcode = null,
+            string address = null, string toDate = "2099-12-31 00:00:00.0000000")
         {
             var faker = new Fixture();
 
             var fa = faker.Build<Address>()
                 .With(add => add.ClaimId, claimId)
                 .With(add => add.HouseId, houseId)
+                .With(add => add.ToDate, toDate)
                 .Without(add => add.Claim)
                 .Without(add => add.Person)
                 .Create();

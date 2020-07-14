@@ -36,5 +36,9 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("post_code", TypeName = "varchar")]
         [MaxLength(10)]
         public string PostCode { get; set; }
+
+        [Column("to_date", TypeName = "varchar")]
+        [MaxLength(37)]
+        public string ToDate { get; set; }
     }
 }

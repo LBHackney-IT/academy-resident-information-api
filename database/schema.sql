@@ -5,7 +5,7 @@ CREATE TABLE dbo.hbhousehold (
 	house_id smallint NULL,
 	last_upd int NULL,
 	from_date timestamp NULL,
-	to_date timestamp NULL,
+	to_date varchar(37) NULL,
 	inc_supp_ind smallint NULL,
 	claim_type_ind smallint NULL,
 	addr1 varchar(35) NULL,

@@ -7,7 +7,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
 {
     public interface IAcademyGateway
     {
-        List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
+        List<ClaimantInformation> GetAllClaimants(Cursor cursor, int limit, string firstname = null,
             string lastname = null, string postcode = null, string address = null);
         ClaimantInformation GetClaimantById(int claimId, int personRef);
     }

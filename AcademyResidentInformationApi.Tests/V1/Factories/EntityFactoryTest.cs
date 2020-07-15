@@ -21,7 +21,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
                 FirstName = personRecord.FirstName,
                 LastName = personRecord.LastName,
                 DateOfBirth = personRecord.DateOfBirth,
-                NINumber = personRecord.NINumber
+                NINumber = personRecord.NINumber,
+                HouseId = personRecord.HouseId.Value,
+                MemberId = personRecord.MemberId.Value,
             });
         }
 

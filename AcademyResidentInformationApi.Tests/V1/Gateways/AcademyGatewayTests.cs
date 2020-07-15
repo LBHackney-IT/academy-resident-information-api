@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AcademyResidentInformationApi.Tests.V1.Helper;
+using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.Infrastructure;
@@ -15,6 +16,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
     public class AcademyGatewayTests : DatabaseTests
     {
         private AcademyGateway _classUnderTest;
+        private readonly Cursor _defaultCursor = new Cursor { ClaimId = 0, HouseId = 0, MemberId = 0 };
 
         [SetUp]
         public new void Setup()
@@ -98,7 +100,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         [Test]
         public void GetAllClaimantsIfThereAreNoClaimantsReturnsAnEmptyList()
         {
-            _classUnderTest.GetAllClaimants(0, 20).Should().BeEmpty();
+            _classUnderTest.GetAllClaimants(_defaultCursor, 20).Should().BeEmpty();
         }
 
         [Test]
@@ -111,7 +113,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var expectedDomain = personEntity.ToDomain();
             expectedDomain.CheckDigit = claim.CheckDigit;
 
-            var personFromList = _classUnderTest.GetAllClaimants(0, 20)
+            var personFromList = _classUnderTest.GetAllClaimants(_defaultCursor, 20)
                 .First(p => p.ClaimId == personEntity.ClaimId);
 
             personFromList.CheckDigit.Should().Be(claim.CheckDigit);
@@ -126,7 +128,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var domainEntity = databaseEntity.ToDomain();
             domainEntity.ClaimantAddress = address.ToDomain();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(0, 20, postcode: address.PostCode);
+            var listOfPersons = _classUnderTest.GetAllClaimants(_defaultCursor, 20, postcode: address.PostCode);
 
             listOfPersons
                 .First(p => p.ClaimId == databaseEntity.ClaimId)
@@ -145,7 +147,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var newAddress = AddAddressToDatabase(newPersonRecord.ClaimId, newPersonRecord.HouseId);
 
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(0, 20);
+            var listOfPersons = _classUnderTest.GetAllClaimants(_defaultCursor, 20);
             var expectedDomain = newPersonRecord.ToDomain();
 
             listOfPersons.Should().BeEquivalentTo(expectedDomain);
@@ -168,7 +170,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var domainEntity2 = databaseEntity2.ToDomain();
             domainEntity2.ClaimantAddress = address2.ToDomain();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, firstname: "ciasom");
             listOfPersons.Count.Should().Be(2);
             listOfPersons.Should().ContainEquivalentOf(domainEntity);
             listOfPersons.Should().ContainEquivalentOf(domainEntity2);
@@ -200,7 +202,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var domainEntity2 = databaseEntity2.ToDomain();
             domainEntity2.ClaimantAddress = address2.ToDomain();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "iaso");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, firstname: "iaso");
             listOfPersons.Count.Should().Be(2);
             listOfPersons.Should().ContainEquivalentOf(domainEntity);
             listOfPersons.Should().ContainEquivalentOf(domainEntity2);
@@ -224,7 +226,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var domainEntity2 = databaseEntity2.ToDomain();
             domainEntity2.ClaimantAddress = address2.ToDomain();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, lastname: "tessellate");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, lastname: "tessellate");
             listOfPersons.Count.Should().Be(2);
             listOfPersons.Should().ContainEquivalentOf(domainEntity);
             listOfPersons.Should().ContainEquivalentOf(domainEntity2);
@@ -255,7 +257,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var domainEntity2 = databaseEntity2.ToDomain();
             domainEntity2.ClaimantAddress = address2.ToDomain();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, lastname: "sell");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, lastname: "sell");
             listOfPersons.Count.Should().Be(2);
             listOfPersons.Should().ContainEquivalentOf(domainEntity);
             listOfPersons.Should().ContainEquivalentOf(domainEntity2);
@@ -270,7 +272,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom", lastname: "Tessellate");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, firstname: "ciasom", lastname: "Tessellate");
             var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
@@ -286,7 +288,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciaso", lastname: "essellat");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, firstname: "ciaso", lastname: "essellat");
             var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
@@ -307,7 +309,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address1);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, postcode: "E8 1DY");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, postcode: "E8 1DY");
             listOfPersons.Count.Should().Be(1);
             listOfPersons
                 .First(p => p.ClaimId == databaseEntity.ClaimId)
@@ -333,7 +335,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.Addresses.Add(address2);
             AcademyContext.SaveChanges();
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, firstname: "ciasom", postcode: "E8 1DY").ToList();
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, firstname: "ciasom", postcode: "E8 1DY").ToList();
             var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
@@ -350,7 +352,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity = AddPersonRecordToDatabase();
             var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId, postcode: postcode);
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, postcode: "E8 1DY");
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, postcode: "E8 1DY");
             var firstPersonId = listOfPersons.First().ClaimId;
 
             listOfPersons.Count.Should().Be(1);
@@ -372,7 +374,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId, address: "1 My Street, Hackney, London");
             var address1 = AddAddressToDatabase(databaseEntity1.ClaimId, databaseEntity.HouseId, address: "5 Another Street, Lambeth, London");
 
-            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: 0, limit: 20, address: addressQuery).ToList();
+            var listOfPersons = _classUnderTest.GetAllClaimants(cursor: _defaultCursor, limit: 20, address: addressQuery).ToList();
             listOfPersons.Count.Should().Be(1);
             listOfPersons
                 .First(p => p.ClaimId == databaseEntity.ClaimId)
@@ -391,7 +393,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             }.OrderBy(p => p.ClaimId).ToList();
             manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
 
-            var peopleReturned = _classUnderTest.GetAllClaimants(0, 2);
+            var peopleReturned = _classUnderTest.GetAllClaimants(_defaultCursor, 2);
             peopleReturned.Count.Should().Be(2);
         }
 
@@ -400,16 +402,20 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         {
             var manyPeople = new List<Person>
             {
-                AddPersonRecordToDatabase(),
-                AddPersonRecordToDatabase(),
-                AddPersonRecordToDatabase()
+                AddPersonRecordToDatabase(id: 23, houseId: 1, memberId: 1),
+                AddPersonRecordToDatabase(id: 23, houseId: 2, memberId: 2, withClaim: false),
+                AddPersonRecordToDatabase(id: 23, houseId: 3, memberId: 1, withClaim: false),
+                AddPersonRecordToDatabase(id: 23, houseId: 4, memberId: 4, withClaim: false),
+                AddPersonRecordToDatabase(id: 1000, houseId: 2, memberId: 4)
             }.OrderBy(p => p.ClaimId).ToList();
             manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
 
-            var peopleReturned = _classUnderTest.GetAllClaimants(1, 2);
-            peopleReturned.Count.Should().Be(2);
-            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(1).ClaimId);
+            var cursor = new Cursor { ClaimId = 23, HouseId = 2, MemberId = 2 };
+            var peopleReturned = _classUnderTest.GetAllClaimants(cursor, 20);
+            peopleReturned.Count.Should().Be(3);
             peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(3).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(4).ClaimId);
         }
 
         [Test]
@@ -417,16 +423,20 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         {
             var manyPeople = new List<Person>
             {
-                AddPersonRecordToDatabase(id: 3),
-                AddPersonRecordToDatabase(id: 1),
-                AddPersonRecordToDatabase(id: 7)
-            }.ToList();
+                AddPersonRecordToDatabase(id: 23, houseId: 2, memberId: 2),
+                AddPersonRecordToDatabase(id: 23, houseId: 3, memberId: 1, withClaim: false),
+                AddPersonRecordToDatabase(id: 23, houseId: 1, memberId: 1, withClaim: false),
+                AddPersonRecordToDatabase(id: 23, houseId: 4, memberId: 4, withClaim: false),
+                AddPersonRecordToDatabase(id: 1000, houseId: 2, memberId: 4)
+            }.OrderBy(p => p.ClaimId).ToList();
             manyPeople.ForEach(p => AddAddressToDatabase(p.ClaimId, p.HouseId));
 
-            var peopleReturned = _classUnderTest.GetAllClaimants(1, 2);
-            peopleReturned.Count.Should().Be(2);
-            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(0).ClaimId);
-            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(2).ClaimId);
+            var cursor = new Cursor { ClaimId = 23, HouseId = 2, MemberId = 2 };
+            var peopleReturned = _classUnderTest.GetAllClaimants(cursor, 20);
+            peopleReturned.Count.Should().Be(3);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(1).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(3).ClaimId);
+            peopleReturned.Should().Contain(ci => ci.ClaimId == manyPeople.ElementAt(4).ClaimId);
         }
         private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null,
             bool withClaim = true, int? memberId = null, int? personRef = null, int? houseId = null)

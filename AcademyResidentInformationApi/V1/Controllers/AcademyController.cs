@@ -1,4 +1,3 @@
-using System;
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using AcademyResidentInformationApi.V1.Boundary.Requests;
@@ -22,15 +21,19 @@ namespace AcademyResidentInformationApi.V1.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListContacts([FromQuery] ClaimantQueryParam cqp, int? cursor = 0, int? limit = 20)
+        public IActionResult ListContacts([FromQuery] ClaimantQueryParam cqp, string cursor = null, int? limit = 20)
         {
             try
             {
-                return Ok(_getAllClaimantsUseCase.Execute(cqp, (int) cursor, (int) limit));
+                return Ok(_getAllClaimantsUseCase.Execute(cqp, cursor, (int) limit));
             }
             catch (InvalidQueryParameterException e)
             {
                 //return 400
+                return BadRequest(e.Message);
+            }
+            catch (InvalidCursorException e)
+            {
                 return BadRequest(e.Message);
             }
 

@@ -6,7 +6,7 @@ namespace AcademyResidentInformationApi.V1.UseCase.Interfaces
 {
     public interface IGetAllClaimantsUseCase
     {
-        ClaimantInformationList Execute(ClaimantQueryParam cqp, int cursor, int limit);
+        ClaimantInformationList Execute(ClaimantQueryParam cqp, string cursor, int limit);
     }
 
 }

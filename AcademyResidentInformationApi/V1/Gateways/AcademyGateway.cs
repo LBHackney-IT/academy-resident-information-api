@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
 using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.V1.Gateways
@@ -16,7 +18,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
             _academyContext = academyContext;
         }
 
-        public List<ClaimantInformation> GetAllClaimants(int cursor, int limit, string firstname = null,
+        public List<ClaimantInformation> GetAllClaimants(Cursor cursor, int limit, string firstname = null,
             string lastname = null, string postcode = null, string address = null)
         {
             var firstNameSearchPattern = GetSearchPattern(firstname);
@@ -32,6 +34,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(a.PostCode.Replace(" ", ""), postcodeSearchPattern)
                 where string.IsNullOrEmpty(firstname) || EF.Functions.ILike(person.FirstName, firstNameSearchPattern)
                 where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(person.LastName, lastNameSearchPattern)
+                where person.ClaimId > cursor.ClaimId || person.HouseId > cursor.HouseId || person.MemberId > cursor.MemberId
                 orderby person.ClaimId, person.HouseId, person.MemberId
                 select new Person
                 {
@@ -48,7 +51,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
                     DateOfBirth = person.DateOfBirth,
                     NINumber = person.NINumber
                 }
-                ).Skip(cursor).Take(limit).ToList().ToDomain();
+                ).Take(limit).ToList().ToDomain();
         }
         private static string GetSearchPattern(string str)
         {

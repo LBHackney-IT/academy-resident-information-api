@@ -6,6 +6,7 @@ using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using AcademyResidentInformationApi.V1.Boundary.Requests;
 using AcademyResidentInformationApi.V1.Domain;
+using Newtonsoft.Json;
 
 namespace AcademyResidentInformationApi.V1.UseCase
 {
@@ -31,6 +32,8 @@ namespace AcademyResidentInformationApi.V1.UseCase
 
             var claimants = _academyGateway.GetAllClaimants(DeconstructCursor(cursor), limit, cqp.FirstName, cqp.LastName, cqp.Postcode, cqp.Address);
 
+            Console.Write("Claimants in usecase");
+            Console.Write(claimants);
             var lastClaimant = claimants.LastOrDefault();
             var nextCursor = claimants.Count == limit ? $"{lastClaimant.ClaimId}-{lastClaimant.HouseId}-{lastClaimant.MemberId}" : "";
             return new ClaimantInformationList

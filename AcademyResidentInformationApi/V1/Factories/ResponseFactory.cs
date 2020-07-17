@@ -37,7 +37,7 @@ namespace AcademyResidentInformationApi.V1.Factories
                 AddressLine2 = claimantAddress.AddressLine2,
                 AddressLine3 = claimantAddress.AddressLine3,
                 AddressLine4 = claimantAddress.AddressLine4,
-                PostCode = claimantAddress.PostCode
+                Postcode = claimantAddress.PostCode
             };
         }
     }

@@ -49,7 +49,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
                     AddressLine2 = address.AddressLine2,
                     AddressLine3 = address.AddressLine3,
                     AddressLine4 = address.AddressLine4,
-                    PostCode = address.PostCode
+                    Postcode = address.PostCode
                 }
 
             };

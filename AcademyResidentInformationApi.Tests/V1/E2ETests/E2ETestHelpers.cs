@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Infrastructure;
-using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Boundary.Responses.Address;
 
 namespace AcademyResidentInformationApi.Tests.V1.E2ETests
@@ -39,10 +33,12 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
                 ClaimId = person.ClaimId.Value,
                 CheckDigit = claim.CheckDigit,
                 PersonRef = person.PersonRef.Value,
+                Title = person.Title,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
                 DateOfBirth = person.DateOfBirth,
                 NINumber = person.NINumber,
+                StatusIndicator = claim.StatusIndicator,
                 ClaimantAddress = new Address
                 {
                     AddressLine1 = address.AddressLine1,

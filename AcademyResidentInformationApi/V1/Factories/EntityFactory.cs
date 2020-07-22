@@ -17,13 +17,15 @@ namespace AcademyResidentInformationApi.V1.Factories
                 ClaimId = databaseEntity.ClaimId.Value,
                 CheckDigit = databaseEntity.Claim?.CheckDigit,
                 PersonRef = databaseEntity.PersonRef.Value,
+                Title = databaseEntity.Title,
                 FirstName = databaseEntity.FirstName,
                 LastName = databaseEntity.LastName,
                 NINumber = databaseEntity.NINumber,
                 DateOfBirth = databaseEntity.DateOfBirth,
                 ClaimantAddress = databaseEntity.Address?.ToDomain(),
                 HouseId = databaseEntity.HouseId.Value,
-                MemberId = databaseEntity.MemberId.Value
+                MemberId = databaseEntity.MemberId.Value,
+                StatusIndicator = databaseEntity.Claim?.StatusIndicator
             };
         }
 

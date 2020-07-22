@@ -13,5 +13,8 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         [Column("check_digit", TypeName = "varchar")]
         [MaxLength(1)]
         public string CheckDigit { get; set; }
+
+        [Column("status_ind")]
+        public int StatusIndicator { get; set; }
     }
 }

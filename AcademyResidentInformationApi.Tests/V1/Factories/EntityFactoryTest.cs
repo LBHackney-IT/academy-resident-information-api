@@ -18,6 +18,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
             {
                 ClaimId = personRecord.ClaimId.Value,
                 PersonRef = personRecord.PersonRef.Value,
+                Title = personRecord.Title,
                 FirstName = personRecord.FirstName,
                 LastName = personRecord.LastName,
                 DateOfBirth = personRecord.DateOfBirth,

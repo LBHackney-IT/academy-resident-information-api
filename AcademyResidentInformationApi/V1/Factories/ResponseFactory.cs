@@ -16,10 +16,12 @@ namespace AcademyResidentInformationApi.V1.Factories
                 ClaimId = domain.ClaimId,
                 CheckDigit = domain.CheckDigit,
                 PersonRef = domain.PersonRef,
+                Title = domain.Title,
                 FirstName = domain.FirstName,
                 LastName = domain.LastName,
                 DateOfBirth = domain.DateOfBirth,
                 NINumber = domain.NINumber,
+                StatusIndicator = domain.StatusIndicator,
                 ClaimantAddress = domain.ClaimantAddress.ToResponse(),
             };
         }

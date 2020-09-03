@@ -5,14 +5,6 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
-  apiKeys:
-    - secureAccess:
-      - api-key-${self:service}-${self:provider.stage}
-  usagePlan:
-    - secureAccess:
-        throttle:
-          burstLimit: 200
-          rateLimit: 100
 
 package:
   artifact: ./bin/release/netcoreapp3.1/academy-resident-information-api.zip
@@ -23,11 +15,14 @@ functions:
     handler: AcademyResidentInformationApi::AcademyResidentInformationApi.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      CONNECTION_STRING: Host=${ssm:/academy-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/academy-api/${self:provider.stage}/postgres-port};Database=academy_mirror;Username=${ssm:/academy-api/${self:provider.stage}/postgres-username};Password=${ssm:/academy-api/${self:provider.stage}/postgres-password}
+      CONNECTION_STRING: Host=${ssm:/academy-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/academy-api/${self:provider.stage}/postgres-port};Database=academy;Username=${ssm:/academy-api/${self:provider.stage}/postgres-username};Password=${ssm:/academy-api/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
           method: ANY
+          authorizer:
+            arn: ${self:custom.authorizerArn.${opt:stage}}
+            type: request
           private: true
 resources:
   Resources:
@@ -81,6 +76,11 @@ resources:
                     - "lambda:InvokeFunction"
                   Resource: "*"
 custom:
+  authorizerArn:
+      development: arn:aws:lambda:eu-west-2:859159924354:function:api-auth-token-generator-development-apiauthverifytoken
+      staging: arn:aws:lambda:eu-west-2:715003523189:function:api-auth-token-generator-staging-apiauthverifytoken
+      production: arn:aws:lambda:eu-west-2:153306643385:function:api-auth-token-generator-production-apiauthverifytoken
+
   vpc:
     staging:
       securityGroupIds:

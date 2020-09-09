@@ -46,6 +46,17 @@
         },
         {
             "rule-type": "selection",
+            "rule-id": "4",
+            "rule-name": "4",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "ctoccupation_cte"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
             "rule-id": "5",
             "rule-name": "5",
             "object-locator": {
@@ -67,72 +78,72 @@
             "filters": []
         },
         {
-          "rule-type": "selection",
-          "rule-id": "7",
-          "rule-name": "7",
-          "object-locator": {
-            "schema-name": "%",
-            "table-name": "hbclaim"
-          },
-          "rule-action": "include",
-          "filters": []
+            "rule-type": "selection",
+            "rule-id": "7",
+            "rule-name": "7",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "hbclaim"
+            },
+            "rule-action": "include",
+            "filters": []
         },
-      {
-        "rule-type": "transformation",
-        "rule-id": "8",
-        "rule-name": "8",
-        "rule-action": "define-primary-key",
-        "rule-target": "table",
-        "object-locator": {
-          "schema-name": "%",
-          "table-name": "hbmember"
+        {
+            "rule-type": "transformation",
+            "rule-id": "8",
+            "rule-name": "8",
+            "rule-action": "define-primary-key",
+            "rule-target": "table",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "hbmember"
+            },
+            "primary-key-def": {
+                "name": "member-unique-idx",
+                "origin": "unique-index",
+                "columns": [
+                    "claim_id",
+                    "member_id",
+                    "house_id"
+                ]
+            }
         },
-        "primary-key-def": {
-          "name": "member-unique-idx",
-          "origin": "unique-index",
-          "columns": [
-            "claim_id",
-            "member_id",
-            "house_id"
-          ]
+        {
+            "rule-type": "transformation",
+            "rule-id": "9",
+            "rule-name": "9",
+            "rule-action": "define-primary-key",
+            "rule-target": "table",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "hbhousehold"
+            },
+            "primary-key-def": {
+                "name": "household-unique-idx",
+                "origin": "unique-index",
+                "columns": [
+                    "claim_id",
+                    "house_id"
+                ]
+            }
+        },
+        {
+            "rule-type": "transformation",
+            "rule-id": "10",
+            "rule-name": "10",
+            "rule-action": "define-primary-key",
+            "rule-target": "table",
+            "object-locator": {
+                "schema-name": "%",
+                "table-name": "hbclaim"
+            },
+            "primary-key-def": {
+                "name": "member-unique-idx",
+                "origin": "unique-index",
+                "columns": [
+                    "claim_id"
+                ]
+            }
         }
-      },
-      {
-        "rule-type": "transformation",
-        "rule-id": "9",
-        "rule-name": "9",
-        "rule-action": "define-primary-key",
-        "rule-target": "table",
-        "object-locator": {
-          "schema-name": "%",
-          "table-name": "hbhousehold"
-        },
-        "primary-key-def": {
-          "name": "household-unique-idx",
-          "origin": "unique-index",
-          "columns": [
-            "claim_id",
-            "house_id"
-          ]
-        }
-      },
-      {
-        "rule-type": "transformation",
-        "rule-id": "10",
-        "rule-name": "10",
-        "rule-action": "define-primary-key",
-        "rule-target": "table",
-        "object-locator": {
-          "schema-name": "%",
-          "table-name": "hbclaim"
-        },
-        "primary-key-def": {
-          "name": "member-unique-idx",
-          "origin": "unique-index",
-          "columns": [
-            "claim_id"
-          ]
-        }
-      }
     ]
 }

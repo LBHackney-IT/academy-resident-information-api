@@ -463,3 +463,19 @@ CREATE TABLE dbo.syphone (
   unsol_tc smallint,
   notes varchar(300)
 );
+
+CREATE TABLE dbo.ctoccupation (
+	account_ref int,
+	property_ref varchar(18),
+	occupation_date timestamp,
+	vacation_date timestamp,
+	transit_ind smallint,
+	live_ind smallint,
+	last_updated_int int
+);
+
+create index ctoccupation_account_ref
+	on dbo.ctoccupation (account_ref);
+
+create index ctoccupation_vacation_date
+	on dbo.ctoccupation (vacation_date);

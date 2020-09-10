@@ -46,22 +46,11 @@
         },
         {
             "rule-type": "selection",
-            "rule-id": "4",
-            "rule-name": "4",
-            "object-locator": {
-                "schema-name": "%",
-                "table-name": "ctoccupation_cte"
-            },
-            "rule-action": "include",
-            "filters": []
-        },
-        {
-            "rule-type": "selection",
             "rule-id": "5",
             "rule-name": "5",
             "object-locator": {
                 "schema-name": "%",
-                "table-name": "syemail"
+                "table-name": "ctoccupation"
             },
             "rule-action": "include",
             "filters": []
@@ -72,7 +61,7 @@
             "rule-name": "6",
             "object-locator": {
                 "schema-name": "%",
-                "table-name": "syphone"
+                "table-name": "syemail"
             },
             "rule-action": "include",
             "filters": []
@@ -83,6 +72,17 @@
             "rule-name": "7",
             "object-locator": {
                 "schema-name": "%",
+                "table-name": "syphone"
+            },
+            "rule-action": "include",
+            "filters": []
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "8",
+            "rule-name": "8",
+            "object-locator": {
+                "schema-name": "%",
                 "table-name": "hbclaim"
             },
             "rule-action": "include",
@@ -90,8 +90,8 @@
         },
         {
             "rule-type": "transformation",
-            "rule-id": "8",
-            "rule-name": "8",
+            "rule-id": "9",
+            "rule-name": "9",
             "rule-action": "define-primary-key",
             "rule-target": "table",
             "object-locator": {
@@ -110,8 +110,8 @@
         },
         {
             "rule-type": "transformation",
-            "rule-id": "9",
-            "rule-name": "9",
+            "rule-id": "10",
+            "rule-name": "10",
             "rule-action": "define-primary-key",
             "rule-target": "table",
             "object-locator": {
@@ -129,8 +129,8 @@
         },
         {
             "rule-type": "transformation",
-            "rule-id": "10",
-            "rule-name": "10",
+            "rule-id": "11",
+            "rule-name": "11",
             "rule-action": "define-primary-key",
             "rule-target": "table",
             "object-locator": {

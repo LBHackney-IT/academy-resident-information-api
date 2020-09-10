@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AcademyResidentInformationApi.V1.Infrastructure
@@ -6,6 +7,7 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     [Table("syphone", Schema = "dbo")]
     public class PhoneNumber
     {
+        [Key]
         [Column("ref")]
         public string Reference { get; set; }
 

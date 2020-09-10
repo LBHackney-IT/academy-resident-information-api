@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
@@ -82,6 +84,35 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .With(o => o.AccountRef, accountRef)
                 .Create();
             return cto;
+        }
+
+        public static Email CreateDatabaseEmailAddressForTaxPayer(int accountRef, string email = null)
+        {
+            var faker = new Fixture();
+            var fakeEmail = faker.Build<Email>()
+                .With(email => email.ReferenceId, accountRef)
+                .Create();
+
+            fakeEmail.EmailAddress = email ?? fakeEmail.EmailAddress;
+
+            return fakeEmail;
+        }
+
+        public static PhoneNumber CreateDatabasePhoneNumbersForTaxPayer(int accountRef, List<string> phoneNumbers = null)
+        {
+            var faker = new Fixture();
+            var fakePhone = faker.Build<PhoneNumber>()
+                .With(fp => fp.Reference, accountRef.ToString())
+                .Create();
+
+            if (phoneNumbers == null) return fakePhone;
+
+            fakePhone.Number1 = phoneNumbers.ElementAtOrDefault(0);
+            fakePhone.Number2 = phoneNumbers.ElementAtOrDefault(1);
+            fakePhone.Number3 = phoneNumbers.ElementAtOrDefault(2);
+            fakePhone.Number4 = phoneNumbers.ElementAtOrDefault(3);
+
+            return fakePhone;
         }
     }
 }

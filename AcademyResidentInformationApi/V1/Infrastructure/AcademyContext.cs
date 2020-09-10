@@ -16,6 +16,10 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         public DbSet<CouncilProperty> CouncilProperties { get; set; }
         public DbSet<Occupation> Occupations { get; set; }
 
+        public DbSet<Email> Emails { get; set; }
+
+        public DbSet<PhoneNumber> PhoneNumbers { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // composite primary key for Address table

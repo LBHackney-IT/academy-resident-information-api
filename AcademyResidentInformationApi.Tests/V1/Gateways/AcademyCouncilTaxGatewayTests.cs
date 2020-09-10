@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Gateways;
@@ -70,6 +71,25 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             response.TaxPayerAddress.Should().BeEquivalentTo(expectedTaxPayerAddress);
         }
 
+        [Test]
+        public void GetCouncilTaxPayerInformationByAccountRefReturnsDetailsWithContactInformation()
+        {
+            const string testEmail = "test@email.com";
+
+            var testPhone = new List<string> { "00000000000", "122223333331" };
+
+            var databaseEntity = AddTaxPayerDatabaseRecord(123456);
+            AddPropertyInformationForTaxPayer(databaseEntity.AccountRef);
+            AddContactInformationForTaxPayer(databaseEntity.AccountRef, testEmail, testPhone);
+
+            var response = _classUnderTest.GetTaxPayerById(databaseEntity.AccountRef);
+
+            response.Should().NotBeNull();
+            response.AccountRef.Should().Be(123456);
+            response.EmailList.Should().BeEquivalentTo(new List<string> { testEmail });
+            response.PhoneNumberList.Should().BeEquivalentTo(testPhone);
+        }
+
         private TaxPayer AddTaxPayerDatabaseRecord(int? accountRef, string firstname = null, string lastname = null)
         {
             var databaseEntity = TestHelper.CreateDatabaseTaxPayerEntity(accountRef, firstname, lastname);
@@ -88,6 +108,17 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AcademyContext.CouncilProperties.Add(propertyEntity);
             AcademyContext.SaveChanges();
             return propertyEntity;
+        }
+
+        private void AddContactInformationForTaxPayer(int accountRef, string email, List<string> phoneNumbers)
+        {
+            var emailDetails = TestHelper.CreateDatabaseEmailAddressForTaxPayer(accountRef, email);
+            AcademyContext.Emails.Add(emailDetails);
+            AcademyContext.SaveChanges();
+
+            var phoneDetails = TestHelper.CreateDatabasePhoneNumbersForTaxPayer(accountRef, phoneNumbers);
+            AcademyContext.PhoneNumbers.Add(phoneDetails);
+            AcademyContext.SaveChanges();
         }
     }
 }

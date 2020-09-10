@@ -74,8 +74,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
 
         public TaxPayerInformation GetTaxPayerById(int accountRef)
         {
-            // var databaseRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
-
             var taxPayerRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
 
             if (taxPayerRecord == null) return null;
@@ -84,7 +82,11 @@ namespace AcademyResidentInformationApi.V1.Gateways
 
             var propertyDetails = _academyContext.CouncilProperties.FirstOrDefault(cp => cp.PropertyRef == occupationDetails.PropertyRef);
 
-            return MapDetailsToTaxPayerInformation(taxPayerRecord, propertyDetails);
+            var emailDetails = _academyContext.Emails.FirstOrDefault(email => email.ReferenceId.Equals(accountRef));
+            var phoneDetails = _academyContext.PhoneNumbers.FirstOrDefault(phone => phone.Reference == accountRef.ToString());
+
+
+            return MapDetailsToTaxPayerInformation(taxPayerRecord, propertyDetails, emailDetails, phoneDetails);
         }
 
         private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, Address address)
@@ -94,11 +96,15 @@ namespace AcademyResidentInformationApi.V1.Gateways
             return claimant;
         }
 
-        private TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo)
+        private TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo, Email email, PhoneNumber phoneNumbers)
         {
             var person = taxPayer.ToDomain();
             person.Uprn = propertyInfo?.Uprn;
             person.TaxPayerAddress = propertyInfo?.ToDomain();
+            person.EmailList = new List<string> { email?.EmailAddress };
+            person.PhoneNumberList = new List<string> { phoneNumbers?.Number1, phoneNumbers?.Number2, phoneNumbers?.Number3, phoneNumbers?.Number4 };
+
+            person.PhoneNumberList.RemoveAll(item => item == null);
 
             return person;
         }

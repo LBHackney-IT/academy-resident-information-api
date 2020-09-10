@@ -423,3 +423,43 @@ CREATE TABLE dbo.ctproperty (
 	own_is_charity smallint NULL,
 	own_addr_abroad smallint NULL
 );
+
+CREATE TABLE dbo.syemail (
+  applic_id varchar(2),
+  division_id smallint,
+  reference_id int,
+  person_type smallint,
+  person_type_seq_no smallint,
+  email_addr varchar(128),
+  email_doc_ind smallint,
+  email_fail_cnt smallint,
+  email_start_date timestamp,
+  email_end_date timestamp,
+  last_updated_int int,
+  creditor_id varchar(16),
+  ben_ctax_ref int,
+  earrg_start_date timestamp,
+  earrg_end_date timestamp,
+  earrg smallint
+);
+
+CREATE TABLE dbo.syphone (
+  applic_id varchar(2),
+  ref_type smallint,
+  ref varchar(20),
+  phonetype1 smallint,
+  phonenum1 varchar(20),
+  findphone1 varchar(20),
+  phonetype2 smallint,
+  phonenum2 varchar(20),
+  findphone2 varchar(20),
+  phonetype3 smallint,
+  phonenum3 varchar(20),
+  findphone3 varchar(20),
+  phonetype4 smallint,
+  phonenum4 varchar(20),
+  findphone4 varchar(20),
+  email varchar(64),
+  unsol_tc smallint,
+  notes varchar(300)
+);

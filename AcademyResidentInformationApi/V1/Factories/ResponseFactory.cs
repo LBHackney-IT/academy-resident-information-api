@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Domain;
+using Address = AcademyResidentInformationApi.V1.Domain.Address;
 using AddressResponse = AcademyResidentInformationApi.V1.Boundary.Responses.Address;
+using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 using ClaimantInformationResponse = AcademyResidentInformationApi.V1.Boundary.Responses.ClaimantInformation;
 
 
@@ -31,15 +34,29 @@ namespace AcademyResidentInformationApi.V1.Factories
             return people.Select(p => p.ToResponse()).ToList();
         }
 
-        private static AddressResponse ToResponse(this Address claimantAddress)
+        public static TaxPayerInformationResponse ToResponse(this TaxPayerInformation taxPayerInfo)
+        {
+            return new TaxPayerInformationResponse
+            {
+                AccountRef = taxPayerInfo.AccountRef,
+                UPRN = taxPayerInfo.Uprn,
+                EmailList = taxPayerInfo.EmailList,
+                PhoneNumberList = taxPayerInfo.PhoneNumberList,
+                FirstName = taxPayerInfo.FirstName,
+                LastName = taxPayerInfo.LastName,
+                TaxPayerAddress = taxPayerInfo.TaxPayerAddress.ToResponse()
+            };
+        }
+
+        private static AddressResponse ToResponse(this Address domainAddress)
         {
             return new AddressResponse()
             {
-                AddressLine1 = claimantAddress.AddressLine1,
-                AddressLine2 = claimantAddress.AddressLine2,
-                AddressLine3 = claimantAddress.AddressLine3,
-                AddressLine4 = claimantAddress.AddressLine4,
-                Postcode = claimantAddress.PostCode
+                AddressLine1 = domainAddress.AddressLine1,
+                AddressLine2 = domainAddress.AddressLine2,
+                AddressLine3 = domainAddress.AddressLine3,
+                AddressLine4 = domainAddress.AddressLine4,
+                Postcode = domainAddress.PostCode
             };
         }
     }

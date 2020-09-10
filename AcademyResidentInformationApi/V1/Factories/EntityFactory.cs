@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Address = AcademyResidentInformationApi.V1.Domain.Address;
 using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
@@ -43,6 +43,16 @@ namespace AcademyResidentInformationApi.V1.Factories
                 AddressLine3 = databaseEntity.AddressLine3,
                 AddressLine4 = databaseEntity.AddressLine4,
                 PostCode = databaseEntity.PostCode
+            };
+        }
+
+        public static TaxPayerInformation ToDomain(this TaxPayer databaseEntity)
+        {
+            return new TaxPayerInformation
+            {
+                AccountRef = databaseEntity.AccountRef,
+                FirstName = databaseEntity.FirstName,
+                LastName = databaseEntity.LastName
             };
         }
     }

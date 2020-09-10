@@ -78,5 +78,12 @@ namespace AcademyResidentInformationApi.V1.Gateways
             claimant.ClaimantAddress = address.ToDomain();
             return claimant;
         }
+
+        public TaxPayerInformation GetTaxPayerById(int accountRef)
+        {
+            var databaseRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
+
+            return databaseRecord?.ToDomain();
+        }
     }
 }

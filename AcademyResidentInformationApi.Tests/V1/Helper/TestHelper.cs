@@ -1,9 +1,7 @@
 using System;
-using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
-using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
@@ -55,6 +53,17 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 CheckDigit = fixture.Create<char>().ToString()
             };
             return claim;
+        }
+
+        public static TaxPayer CreateDatabaseTaxPayerEntity(int? accountRef, string firstname = null, string lastname = null)
+        {
+            var faker = new Fixture();
+            var tp = faker.Build<TaxPayer>()
+                .Create();
+            tp.FirstName = firstname ?? tp.FirstName;
+            tp.LastName = lastname ?? tp.LastName;
+            tp.AccountRef = accountRef ?? tp.AccountRef;
+            return tp;
         }
     }
 }

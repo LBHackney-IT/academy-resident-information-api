@@ -13,6 +13,8 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
 
         public DbSet<Claim> Claims { get; set; }
         public DbSet<TaxPayer> TaxPayers { get; set; }
+        public DbSet<CouncilProperty> CouncilProperties { get; set; }
+        public DbSet<Occupation> Occupations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

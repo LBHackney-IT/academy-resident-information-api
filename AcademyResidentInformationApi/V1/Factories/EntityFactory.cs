@@ -55,5 +55,17 @@ namespace AcademyResidentInformationApi.V1.Factories
                 LastName = databaseEntity.LastName
             };
         }
+
+        public static Address ToDomain(this CouncilProperty databaseEntity)
+        {
+            return new Address
+            {
+                AddressLine1 = databaseEntity.AddressLine1,
+                AddressLine2 = databaseEntity.AddressLine2,
+                AddressLine3 = databaseEntity.AddressLine3,
+                AddressLine4 = databaseEntity.AddressLine4,
+                PostCode = databaseEntity.PostCode
+            };
+        }
     }
 }

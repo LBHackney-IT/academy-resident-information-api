@@ -72,6 +72,21 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 : MapPersonAndAddressesToClaimantInformation(databaseRecord.person, databaseRecord.address);
         }
 
+        public TaxPayerInformation GetTaxPayerById(int accountRef)
+        {
+            // var databaseRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
+
+            var taxPayerRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
+
+            if (taxPayerRecord == null) return null;
+
+            var occupationDetails = _academyContext.Occupations.FirstOrDefault(cto => cto.AccountRef.Equals(taxPayerRecord.AccountRef));
+
+            var propertyDetails = _academyContext.CouncilProperties.FirstOrDefault(cp => cp.PropertyRef == occupationDetails.PropertyRef);
+
+            return MapDetailsToTaxPayerInformation(taxPayerRecord, propertyDetails);
+        }
+
         private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, Address address)
         {
             var claimant = person.ToDomain();
@@ -79,11 +94,13 @@ namespace AcademyResidentInformationApi.V1.Gateways
             return claimant;
         }
 
-        public TaxPayerInformation GetTaxPayerById(int accountRef)
+        private TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo)
         {
-            var databaseRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
+            var person = taxPayer.ToDomain();
+            person.Uprn = propertyInfo?.Uprn;
+            person.TaxPayerAddress = propertyInfo?.ToDomain();
 
-            return databaseRecord?.ToDomain();
+            return person;
         }
     }
 }

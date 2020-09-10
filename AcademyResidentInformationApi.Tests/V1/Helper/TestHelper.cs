@@ -65,5 +65,23 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             tp.AccountRef = accountRef ?? tp.AccountRef;
             return tp;
         }
+
+        public static CouncilProperty CreateDatabasePropertyForTaxPayer(string propertyRef)
+        {
+            var faker = new Fixture();
+            var cp = faker.Build<CouncilProperty>()
+                .With(p => p.PropertyRef, propertyRef)
+                .Create();
+            return cp;
+        }
+
+        public static Occupation CreateDatabaseOccupationEntityForCouncilProperty(int accountRef)
+        {
+            var faker = new Fixture();
+            var cto = faker.Build<Occupation>()
+                .With(o => o.AccountRef, accountRef)
+                .Create();
+            return cto;
+        }
     }
 }

@@ -28,7 +28,8 @@ namespace AcademyResidentInformationApi.V1.Gateways
             var firstNameSearchPattern = GetSearchPattern(firstname);
             var lastNameSearchPattern = GetSearchPattern(lastname);
             var addressSearchPattern = GetSearchPattern(address);
-            var postcodeSearchPattern = GetSearchPattern(postcode);
+
+            var (firstHalf, secondHalf) = SplitPostcode(postcode);
             var query = (
                 from person in _academyContext.Persons
                 join a in _academyContext.Addresses on new { person.ClaimId, person.HouseId } equals new { a.ClaimId, a.HouseId }
@@ -36,7 +37,9 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 where a.ToDate == "2099-12-31 00:00:00.0000000"
                 where person.ClaimId > cursor.ClaimId || person.HouseId > cursor.HouseId || person.MemberId > cursor.MemberId
                 where string.IsNullOrEmpty(address) || EF.Functions.ILike(a.AddressLine1.Replace(" ", ""), addressSearchPattern)
-                where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(a.PostCode.Replace(" ", ""), postcodeSearchPattern)
+                where string.IsNullOrEmpty(postcode)
+                      || postcode.Length > 3 &&  EF.Functions.ILike(a.PostCode, firstHalf) && EF.Functions.ILike(a.PostCode, secondHalf)
+                      || EF.Functions.ILike(a.PostCode, $"%{postcode}%")
                 where string.IsNullOrEmpty(firstname) || EF.Functions.ILike(person.FirstName, firstNameSearchPattern)
                 where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(person.LastName, lastNameSearchPattern)
                 orderby person.ClaimId, person.HouseId, person.MemberId
@@ -59,6 +62,17 @@ namespace AcademyResidentInformationApi.V1.Gateways
             Console.Write(query.ToSql());
             return query.ToList().ToDomain();
         }
+
+        private static (string, string) SplitPostcode(string postcode)
+        {
+            if (postcode == null) return (null, null);
+            if (postcode.Length <= 3) return (postcode, null);
+            var whiteSpaceReplaced = postcode?.Replace(" ", "");
+            var firstHalf = $"%{whiteSpaceReplaced.Substring(0, whiteSpaceReplaced.Length - 3)}%";
+            var secondHalf = $"%{whiteSpaceReplaced.Substring(whiteSpaceReplaced.Length - 3, 3)}%";
+            return (firstHalf, secondHalf);
+        }
+
         private static string GetSearchPattern(string str)
         {
             return $"%{str?.Replace(" ", "")}%";

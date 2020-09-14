@@ -85,16 +85,17 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.Claimants.Count.Should().Be(1);
             convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseOne);
         }
+
         [Test]
         public async Task PostcodeAndAddressQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
         {
-            var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street, Hackney, LDN");
-            var matchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street");
+            var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E1 1RR", addressLines: "1 Seasame street, Hackney, LDN");
+            var matchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E1 1RR", addressLines: "1 Seasame street");
             var nonMatchingClaimant1 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR");
             var nonMatchingClaimant2 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
             var nonMatchingClaimant3 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
 
-            var queryUri = new Uri("api/v1/claimants?postcode=e91rr&address=1 Seasame street", UriKind.Relative);
+            var queryUri = new Uri("api/v1/claimants?postcode=e11rr&address=1 Seasame street", UriKind.Relative);
 
             var response = Client.GetAsync(queryUri);
 
@@ -114,11 +115,10 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         {
             var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR",
                 addressLines: "1 Seasame street, Hackney, LDN", firstname: "ciasom", lastname: "shape");
-            var nonmatchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", addressLines: "1 Seasame street", lastname: "shap");
+            var nonMatchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", addressLines: "1 Seasame street", lastname: "shap");
             var nonMatchingClaimant1 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", firstname: "ciasom");
             var nonMatchingClaimant2 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
             var nonMatchingClaimant3 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
-
 
             var queryUri = new Uri("api/v1/claimants?postcode=e91rr&address=1 Seasame street&first_name=ciasom&last_name=shape", UriKind.Relative);
             var response = Client.GetAsync(queryUri);

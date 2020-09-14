@@ -75,7 +75,6 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         public void GetCouncilTaxPayerInformationByAccountRefReturnsDetailsWithContactInformation()
         {
             const string testEmail = "test@email.com";
-
             var testPhone = new List<string> { "00000000000", "122223333331" };
 
             var databaseEntity = AddTaxPayerDatabaseRecord(123456);

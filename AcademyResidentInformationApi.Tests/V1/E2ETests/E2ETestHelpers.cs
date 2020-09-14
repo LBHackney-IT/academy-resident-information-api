@@ -86,8 +86,8 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
                 AccountRef = person.AccountRef,
                 FirstName = person.FirstName,
                 LastName = person.LastName,
-                EmailList = new List<string>{ email.EmailAddress },
-                PhoneNumberList = new List<string>{ phoneNumber.Number1, phoneNumber.Number2, phoneNumber.Number3, phoneNumber.Number4 },
+                EmailList = new List<string> { email.EmailAddress },
+                PhoneNumberList = new List<string> { phoneNumber.Number1, phoneNumber.Number2, phoneNumber.Number3, phoneNumber.Number4 },
                 TaxPayerAddress = new Address
                 {
                     AddressLine1 = property.AddressLine1,

@@ -9,12 +9,12 @@ namespace AcademyResidentInformationApi.V1.Controllers
     [ApiVersion("1.0")]
     [Route("api/v1/claimants")]
     [Produces("application/json")]
-    public class AcademyController : BaseController
+    public class ClaimantsController : BaseController
     {
         private IGetAllClaimantsUseCase _getAllClaimantsUseCase;
         private readonly IGetClaimantByIdUseCase _getClaimantByIdUseCase;
 
-        public AcademyController(IGetAllClaimantsUseCase getAllClaimantsUseCase, IGetClaimantByIdUseCase getClaimantByIdUseCase)
+        public ClaimantsController(IGetAllClaimantsUseCase getAllClaimantsUseCase, IGetClaimantByIdUseCase getClaimantByIdUseCase)
         {
             _getAllClaimantsUseCase = getAllClaimantsUseCase;
             _getClaimantByIdUseCase = getClaimantByIdUseCase;

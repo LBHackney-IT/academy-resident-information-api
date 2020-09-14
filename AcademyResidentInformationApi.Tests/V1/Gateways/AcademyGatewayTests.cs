@@ -441,7 +441,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         private Person AddPersonRecordToDatabase(string firstname = null, string lastname = null, int? id = null,
             bool withClaim = true, int? memberId = null, int? personRef = null, int? houseId = null)
         {
-            var databaseEntity = TestHelper.CreateDatabasePersonEntity(firstname, lastname, id, memberId, personRef, houseId);
+            var databaseEntity = TestHelper.CreateDatabaseClaimantEntity(firstname, lastname, id, memberId, personRef, houseId);
             AcademyContext.Persons.Add(databaseEntity);
             AcademyContext.SaveChanges();
             if (withClaim)

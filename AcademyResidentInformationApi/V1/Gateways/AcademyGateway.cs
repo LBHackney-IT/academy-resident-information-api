@@ -53,10 +53,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 }
                 ).Take(limit).ToList().ToDomain();
         }
-        private static string GetSearchPattern(string str)
-        {
-            return $"%{str?.Replace(" ", "")}%";
-        }
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
@@ -96,7 +92,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
             return claimant;
         }
 
-        private TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo, Email email, PhoneNumber phoneNumbers)
+        private static TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo, Email email, PhoneNumber phoneNumbers)
         {
             var person = taxPayer.ToDomain();
             person.Uprn = propertyInfo?.Uprn;
@@ -107,6 +103,11 @@ namespace AcademyResidentInformationApi.V1.Gateways
             person.PhoneNumberList.RemoveAll(item => item == null);
 
             return person;
+        }
+
+        private static string GetSearchPattern(string str)
+        {
+            return $"%{str?.Replace(" ", "")}%";
         }
     }
 }

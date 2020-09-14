@@ -23,9 +23,9 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task IfNoQueryParametersListClaimantsReturnsAllClaimantRecordInAcademy()
         {
-            var expectedClaimantResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
-            var expectedClaimantResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
-            var expectedClaimantResponseThree = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+            var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
+            var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
+            var expectedClaimantResponseThree = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
 
             var listUri = new Uri("/api/v1/claimants", UriKind.Relative);
 
@@ -44,9 +44,9 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task FirstNameLastNameQueryParametersReturnsMatchingClaimantRecordsFromAcademy()
         {
-            var expectedClaimantResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
-            var expectedClaimantResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
-            var expectedClaimantResponseThree = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+            var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
+            var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
+            var expectedClaimantResponseThree = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
 
             var queryUri = new Uri("api/v1/claimants?first_name=ciasom&last_name=tessellate", UriKind.Relative);
 
@@ -66,9 +66,9 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task FirstNameLastNameQueryParametersWildcardSearchReturnsMatchingClaimantRecordsFromAcademy()
         {
-            var expectedClaimantResponseOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
-            var expectedClaimantResponseTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
-            var expectedClaimantResponseThree = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+            var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
+            var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
+            var expectedClaimantResponseThree = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
 
             var queryUri = new Uri("api/v1/claimants?first_name=iasom&last_name=essellat", UriKind.Relative);
 
@@ -88,11 +88,11 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task PostcodeAndAddressQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
         {
-            var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street, Hackney, LDN");
-            var matchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street");
-            var nonMatchingClaimant1 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR");
-            var nonMatchingClaimant2 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
-            var nonMatchingClaimant3 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+            var matchingClaimantOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street, Hackney, LDN");
+            var matchingClaimantTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street");
+            var nonMatchingClaimant1 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR");
+            var nonMatchingClaimant2 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
+            var nonMatchingClaimant3 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
 
             var queryUri = new Uri("api/v1/claimants?postcode=e91rr&address=1 Seasame street", UriKind.Relative);
 
@@ -112,12 +112,12 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         [Test]
         public async Task UsingAllQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
         {
-            var matchingClaimantOne = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR",
+            var matchingClaimantOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR",
                 addressLines: "1 Seasame street, Hackney, LDN", firstname: "ciasom", lastname: "shape");
-            var nonmatchingClaimantTwo = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", addressLines: "1 Seasame street", lastname: "shap");
-            var nonMatchingClaimant1 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", firstname: "ciasom");
-            var nonMatchingClaimant2 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
-            var nonMatchingClaimant3 = E2ETestHelpers.AddPersonWithRelatesEntitiesToDb(AcademyContext);
+            var nonmatchingClaimantTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", addressLines: "1 Seasame street", lastname: "shap");
+            var nonMatchingClaimant1 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E4 1RR", firstname: "ciasom");
+            var nonMatchingClaimant2 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, addressLines: "1 Seasame street, Hackney, LDN", postcode: "E4 1RR");
+            var nonMatchingClaimant3 = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
 
 
             var queryUri = new Uri("api/v1/claimants?postcode=e91rr&address=1 Seasame street&first_name=ciasom&last_name=shape", UriKind.Relative);

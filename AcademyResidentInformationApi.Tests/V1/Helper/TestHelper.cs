@@ -9,7 +9,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null,
+        public static Person CreateDatabaseClaimantEntity(string firstname = null, string lastname = null, int? id = null,
             int? memberId = null, int? personRef = null, int? houseId = null)
         {
             var faker = new Fixture();

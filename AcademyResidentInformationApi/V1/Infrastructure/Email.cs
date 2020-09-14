@@ -11,6 +11,7 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
         public int ReferenceId { get; set; }
 
         [Column("email_addr")]
+        [MaxLength(128)]
         public string EmailAddress { get; set; }
     }
 }

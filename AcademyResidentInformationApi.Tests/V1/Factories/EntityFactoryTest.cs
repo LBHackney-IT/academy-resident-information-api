@@ -12,7 +12,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
         [Test]
         public void ItMapsAPersonDatabaseRecordIntoClaimantInformationDomainObject()
         {
-            var personRecord = TestHelper.CreateDatabasePersonEntity();
+            var personRecord = TestHelper.CreateDatabaseClaimantEntity();
             var domain = personRecord.ToDomain();
             domain.Should().BeEquivalentTo(new ClaimantInformation
             {
@@ -31,7 +31,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Factories
         [Test]
         public void ItMapsTheAddressOntoTheClaimantInformationDomainObject()
         {
-            var personRecord = TestHelper.CreateDatabasePersonEntity();
+            var personRecord = TestHelper.CreateDatabaseClaimantEntity();
             var address = personRecord.Address =
                 TestHelper.CreateDatabaseAddressForPersonId(personRecord.ClaimId, personRecord.HouseId);
             var domain = personRecord.ToDomain();

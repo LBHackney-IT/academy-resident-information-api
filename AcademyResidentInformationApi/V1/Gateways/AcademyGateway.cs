@@ -30,11 +30,11 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 join a in _academyContext.Addresses on new { person.ClaimId, person.HouseId } equals new { a.ClaimId, a.HouseId }
                 join c in _academyContext.Claims on person.ClaimId equals c.ClaimId
                 where a.ToDate == "2099-12-31 00:00:00.0000000"
+                where person.ClaimId > cursor.ClaimId || person.HouseId > cursor.HouseId || person.MemberId > cursor.MemberId
                 where string.IsNullOrEmpty(address) || EF.Functions.ILike(a.AddressLine1.Replace(" ", ""), addressSearchPattern)
                 where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(a.PostCode.Replace(" ", ""), postcodeSearchPattern)
                 where string.IsNullOrEmpty(firstname) || EF.Functions.ILike(person.FirstName, firstNameSearchPattern)
                 where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(person.LastName, lastNameSearchPattern)
-                where person.ClaimId > cursor.ClaimId || person.HouseId > cursor.HouseId || person.MemberId > cursor.MemberId
                 orderby person.ClaimId, person.HouseId, person.MemberId
                 select new Person
                 {

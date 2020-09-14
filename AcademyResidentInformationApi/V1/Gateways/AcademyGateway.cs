@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AcademyResidentInformationApi.V1.Domain;
@@ -6,6 +7,9 @@ using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
 using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
+using System.Reflection;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace AcademyResidentInformationApi.V1.Gateways
 {
@@ -25,7 +29,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
             var lastNameSearchPattern = GetSearchPattern(lastname);
             var addressSearchPattern = GetSearchPattern(address);
             var postcodeSearchPattern = GetSearchPattern(postcode);
-            return (
+            var query = (
                 from person in _academyContext.Persons
                 join a in _academyContext.Addresses on new { person.ClaimId, person.HouseId } equals new { a.ClaimId, a.HouseId }
                 join c in _academyContext.Claims on person.ClaimId equals c.ClaimId
@@ -51,7 +55,9 @@ namespace AcademyResidentInformationApi.V1.Gateways
                     DateOfBirth = person.DateOfBirth,
                     NINumber = person.NINumber
                 }
-                ).Take(limit).ToList().ToDomain();
+                ).Take(limit);
+            Console.Write(query.ToSql());
+            return query.ToList().ToDomain();
         }
         private static string GetSearchPattern(string str)
         {
@@ -78,5 +84,27 @@ namespace AcademyResidentInformationApi.V1.Gateways
             claimant.ClaimantAddress = address.ToDomain();
             return claimant;
         }
+
+
+    }
+
+    public static class SqlExtension
+    {
+        public static string ToSql<TEntity>(this IQueryable<TEntity> query) where TEntity : class
+        {
+            var enumerator = query.Provider.Execute<IEnumerable<TEntity>>(query.Expression).GetEnumerator();
+            var relationalCommandCache = enumerator.Private("_relationalCommandCache");
+            var selectExpression = relationalCommandCache.Private<SelectExpression>("_selectExpression");
+            var factory = relationalCommandCache.Private<IQuerySqlGeneratorFactory>("_querySqlGeneratorFactory");
+
+            var sqlGenerator = factory.Create();
+            var command = sqlGenerator.GetCommand(selectExpression);
+
+            string sql = command.CommandText;
+            return sql;
+        }
+
+        private static object Private(this object obj, string privateField) => obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
+        private static T Private<T>(this object obj, string privateField) => (T)obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Controllers;
 using AcademyResidentInformationApi.V1.UseCase.Interfaces;
@@ -14,9 +13,9 @@ using ClaimantInformation = AcademyResidentInformationApi.V1.Boundary.Responses.
 namespace AcademyResidentInformationApi.Tests.V1.Controllers
 {
     [TestFixture]
-    public class AcademyControllerTests
+    public class ClaimantsControllerTests
     {
-        private AcademyController _classUnderTest;
+        private ClaimantsController _classUnderTest;
         private Mock<IGetAllClaimantsUseCase> _mockGetAllClaimantsUseCase;
         private Mock<IGetClaimantByIdUseCase> _mockGetClaimantByIdUseCase;
 
@@ -25,7 +24,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Controllers
         {
             _mockGetAllClaimantsUseCase = new Mock<IGetAllClaimantsUseCase>();
             _mockGetClaimantByIdUseCase = new Mock<IGetClaimantByIdUseCase>();
-            _classUnderTest = new AcademyController(_mockGetAllClaimantsUseCase.Object, _mockGetClaimantByIdUseCase.Object);
+            _classUnderTest = new ClaimantsController(_mockGetAllClaimantsUseCase.Object, _mockGetClaimantByIdUseCase.Object);
         }
 
         [Test]

@@ -53,10 +53,6 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 }
                 ).Take(limit).ToList().ToDomain();
         }
-        private static string GetSearchPattern(string str)
-        {
-            return $"%{str?.Replace(" ", "")}%";
-        }
 
         public ClaimantInformation GetClaimantById(int claimId, int personRef)
         {
@@ -72,11 +68,50 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 : MapPersonAndAddressesToClaimantInformation(databaseRecord.person, databaseRecord.address);
         }
 
+        public TaxPayerInformation GetTaxPayerById(int accountRef)
+        {
+            var taxPayerRecord = _academyContext.TaxPayers.FirstOrDefault(tp => tp.AccountRef == accountRef);
+
+            if (taxPayerRecord == null) return null;
+
+            var occupationDetails = _academyContext.Occupations.FirstOrDefault(cto => cto.AccountRef.Equals(taxPayerRecord.AccountRef));
+
+            var propertyDetails = _academyContext.CouncilProperties.FirstOrDefault(cp => cp.PropertyRef == occupationDetails.PropertyRef);
+
+            var emailDetails = _academyContext.Emails
+                .Where(email => email.ReferenceId.Equals(accountRef))
+                .GroupBy(x => x.EmailAddress)
+                .Select(x => x.Key)
+                .ToList();
+            var phoneDetails = _academyContext.PhoneNumbers.FirstOrDefault(phone => phone.Reference == accountRef.ToString());
+
+
+            return MapDetailsToTaxPayerInformation(taxPayerRecord, propertyDetails, emailDetails, phoneDetails);
+        }
+
         private static ClaimantInformation MapPersonAndAddressesToClaimantInformation(Person person, Address address)
         {
             var claimant = person.ToDomain();
             claimant.ClaimantAddress = address.ToDomain();
             return claimant;
+        }
+
+        private static TaxPayerInformation MapDetailsToTaxPayerInformation(TaxPayer taxPayer, CouncilProperty propertyInfo, List<string> emails, PhoneNumber phoneNumbers)
+        {
+            var person = taxPayer.ToDomain();
+            person.Uprn = propertyInfo?.Uprn;
+            person.TaxPayerAddress = propertyInfo?.ToDomain();
+            person.EmailList = emails;
+            person.PhoneNumberList = new List<string> { phoneNumbers?.Number1, phoneNumbers?.Number2, phoneNumbers?.Number3, phoneNumbers?.Number4 };
+
+            person.PhoneNumberList.RemoveAll(item => item == null);
+
+            return person;
+        }
+
+        private static string GetSearchPattern(string str)
+        {
+            return $"%{str?.Replace(" ", "")}%";
         }
     }
 }

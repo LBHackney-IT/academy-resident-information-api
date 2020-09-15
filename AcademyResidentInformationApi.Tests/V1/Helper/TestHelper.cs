@@ -1,15 +1,15 @@
 using System;
-using AcademyResidentInformationApi.V1.Boundary.Responses;
+using System.Collections.Generic;
+using System.Linq;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
-using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
-        public static Person CreateDatabasePersonEntity(string firstname = null, string lastname = null, int? id = null,
+        public static Person CreateDatabaseClaimantEntity(string firstname = null, string lastname = null, int? id = null,
             int? memberId = null, int? personRef = null, int? houseId = null)
         {
             var faker = new Fixture();
@@ -55,6 +55,64 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 CheckDigit = fixture.Create<char>().ToString()
             };
             return claim;
+        }
+
+        public static TaxPayer CreateDatabaseTaxPayerEntity(int? accountRef, string firstname = null, string lastname = null)
+        {
+            var faker = new Fixture();
+            var tp = faker.Build<TaxPayer>()
+                .Create();
+            tp.FirstName = firstname ?? tp.FirstName;
+            tp.LastName = lastname ?? tp.LastName;
+            tp.AccountRef = accountRef ?? tp.AccountRef;
+            return tp;
+        }
+
+        public static CouncilProperty CreateDatabasePropertyForTaxPayer(string propertyRef)
+        {
+            var faker = new Fixture();
+            var cp = faker.Build<CouncilProperty>()
+                .With(p => p.PropertyRef, propertyRef)
+                .Create();
+            return cp;
+        }
+
+        public static Occupation CreateDatabaseOccupationEntityForCouncilProperty(int accountRef)
+        {
+            var faker = new Fixture();
+            var cto = faker.Build<Occupation>()
+                .With(o => o.AccountRef, accountRef)
+                .Create();
+            return cto;
+        }
+
+        public static Email CreateDatabaseEmailAddressForTaxPayer(int accountRef, string email = null)
+        {
+            var faker = new Fixture();
+            var fakeEmail = faker.Build<Email>()
+                .With(email => email.ReferenceId, accountRef)
+                .Create();
+
+            fakeEmail.EmailAddress = email ?? fakeEmail.EmailAddress;
+
+            return fakeEmail;
+        }
+
+        public static PhoneNumber CreateDatabasePhoneNumbersForTaxPayer(int accountRef, List<string> phoneNumbers = null)
+        {
+            var faker = new Fixture();
+            var fakePhone = faker.Build<PhoneNumber>()
+                .With(fp => fp.Reference, accountRef.ToString())
+                .Create();
+
+            if (phoneNumbers == null) return fakePhone;
+
+            fakePhone.Number1 = phoneNumbers.ElementAtOrDefault(0);
+            fakePhone.Number2 = phoneNumbers.ElementAtOrDefault(1);
+            fakePhone.Number3 = phoneNumbers.ElementAtOrDefault(2);
+            fakePhone.Number4 = phoneNumbers.ElementAtOrDefault(3);
+
+            return fakePhone;
         }
     }
 }

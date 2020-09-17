@@ -112,7 +112,8 @@ namespace AcademyResidentInformationApi
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
+            //To avoid null reference errors when building the project without a connection string env var
+            var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING") ?? "connStr";
             services.AddDbContext<AcademyContext>(s => s.UseNpgsql(connectionString).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
         }
 

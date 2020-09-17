@@ -1,4 +1,4 @@
-# LBH Base API
+# Academy Resident Information API
 
 Base API is a boilerplate code for being reused for new APIs for LBH
 
@@ -62,6 +62,16 @@ Both the API and Test projects have been set up to **treat all warnings from the
 
 However, we can select which errors to suppress by setting the severity of the responsible rule to none, e.g `dotnet_analyzer_diagnostic.<Category-or-RuleId>.severity = none`, within the `.editorconfig` file.
 Documentation on how to do this can be found [here](https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019).
+
+## Adding an index via a migration
+
+For this API we have a database in RDS and using EF Core migrations to manage indexes which we add to the database.
+To add a new index follow these steps.
+
+1, If you haven't done so previously, you need to install the [dotnet ef cli tool](https://docs.microsoft.com/en-us/ef/core/miscellaneous/cli/dotnet) by running `dotnet tool install --global dotnet-ef`.
+2, In your terminal navigate to the project root folder and run `dotnet ef migrations add -o ./V1/Infrastructure/Migrations -p AcademyResidentInformationApi NameOfThisMigration` to create the migration files. NameOfThisMigration should be replaced with your migration name e.g. AddGinIndexToAddressColumn.
+3, Go to the folder /AcademyResidentInformationApi/V1/Infrastructure/Migrations and you should see two new files for the migration. The one which doesn't end in `.Designer` should be empty and in here up can write the migration code. In the `Up` method you need to write a script for adding the index and in the `Down` method you need to write the reverse, the script to drop the index.
+4, If you incorrectly named the migration file, you can either run `CONNECTION_STRING="Host=127.0.0.1;Database=testdb;Username=postgres;Password=mypassword;" dotnet ef migrations remove -p AcademyResidentInformationApi` with the database in the connection string running or just delete the migration files and revert the changes to `AcademyContextModelSnapshot.cs`. Then create the migration files again with the correct name.
 
 ## Testing
 

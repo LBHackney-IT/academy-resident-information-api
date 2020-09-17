@@ -1,5 +1,5 @@
-using FluentAssertions;
 using AcademyResidentInformationApi.V1.UseCase;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace AcademyResidentInformationApi.Tests.V1.UseCase

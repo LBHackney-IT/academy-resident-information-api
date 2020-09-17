@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AcademyResidentInformationApi.V1.Boundary.Requests
 {
-    public class ClaimantQueryParam
+    public class QueryParameters
     {
         [FromQuery(Name = "first_name")]
         public string FirstName { get; set; }

@@ -1,3 +1,4 @@
+using System;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Gateways;
@@ -6,7 +7,6 @@ using AutoFixture;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using System;
 using ClaimantInformationResponse = AcademyResidentInformationApi.V1.Boundary.Responses.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.Tests.V1.UseCase

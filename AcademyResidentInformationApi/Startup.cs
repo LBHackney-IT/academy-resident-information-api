@@ -126,6 +126,7 @@ namespace AcademyResidentInformationApi
             services.AddScoped<IGetAllClaimantsUseCase, GetAllClaimantsUseCase>();
             services.AddScoped<IGetClaimantByIdUseCase, GetClaimantByIdUseCase>();
             services.AddScoped<IGetTaxPayerByIdUseCase, GetTaxPayerByIdUseCase>();
+            services.AddScoped<IGetAllTaxPayersUseCase, GetAllTaxPayersUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

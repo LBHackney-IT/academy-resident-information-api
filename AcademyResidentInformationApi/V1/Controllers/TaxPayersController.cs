@@ -1,8 +1,8 @@
-using AcademyResidentInformationApi.V1.UseCase.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using AcademyResidentInformationApi.V1.Boundary.Requests;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.UseCase;
+using AcademyResidentInformationApi.V1.UseCase.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AcademyResidentInformationApi.V1.Controllers
 {
@@ -13,16 +13,19 @@ namespace AcademyResidentInformationApi.V1.Controllers
     public class TaxPayersController : BaseController
     {
         private readonly IGetTaxPayerByIdUseCase _getTaxPayerByIdUseCase;
+        private readonly IGetAllTaxPayersUseCase _getAllTaxPayersUseCase;
 
-        public TaxPayersController(IGetTaxPayerByIdUseCase getTaxPayerByIdUseCase)
+        public TaxPayersController(IGetAllTaxPayersUseCase getAllTaxPayersUseCase, IGetTaxPayerByIdUseCase getTaxPayerByIdUseCase)
         {
+            _getAllTaxPayersUseCase = getAllTaxPayersUseCase;
             _getTaxPayerByIdUseCase = getTaxPayerByIdUseCase;
         }
 
         [HttpGet]
-        public IActionResult ListTaxPayers()
+        public IActionResult ListTaxPayers([FromQuery] QueryParameters qp)
         {
-            return Ok();
+            var record = _getAllTaxPayersUseCase.Execute(qp);
+            return Ok(record);
         }
 
         [HttpGet]

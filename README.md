@@ -1,6 +1,8 @@
 # Academy Resident Information API
 
-Base API is a boilerplate code for being reused for new APIs for LBH
+Academy Resident Information API retrieves data from the Academy application, this includes both housing benefits claimants and Council Tax details
+
+The data can be retrieved through the use of a GET endpoint which would retrieve all the data or through a specified ID.
 
 ## Stack
 
@@ -14,8 +16,7 @@ Base API is a boilerplate code for being reused for new APIs for LBH
 1. Install [Docker][docker-download].
 2. Install [AWS CLI][AWS-CLI].
 3. Clone this repository.
-4. Rename the initial template.
-5. Open it in your IDE.
+4. Open it in your IDE.
 
 ### Development
 

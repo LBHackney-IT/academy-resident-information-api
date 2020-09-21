@@ -1,6 +1,6 @@
 # Academy Resident Information API
 
-Academy Resident Information API retrieved data from the Academy application, this includes both housing benefits claimants and Council Tax details
+Academy Resident Information API retrieves data from the Academy application, this includes both housing benefits claimants and Council Tax details
 
 The data can be retrieved through the use of a GET endpoint which would retrieve all the data or through a specified ID.
 

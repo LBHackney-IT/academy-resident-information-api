@@ -154,7 +154,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWithFirstNameQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWithFirstNameQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom");
             var databaseEntity1 = AddPersonRecordToDatabase(firstname: "shape");
@@ -178,7 +178,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWildcardSearchWithFirstNameQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWildcardSearchWithFirstNameQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom");
             var databaseEntity1 = AddPersonRecordToDatabase(firstname: "shape");
@@ -210,7 +210,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWithLastNameQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWithLastNameQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(lastname: "tessellate");
             var databaseEntity1 = AddPersonRecordToDatabase(lastname: "square");
@@ -233,7 +233,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWildcardSearchWithLastNameQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWildcardSearchWithLastNameQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(lastname: "tessellate");
             var databaseEntity1 = AddPersonRecordToDatabase(lastname: "square");
@@ -264,7 +264,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWithNameQueryParametersReturnsMatchingResidentOnlyOnce()
+        public void GetAllResidentsWithNameQueryParametersetersReturnsMatchingResidentOnlyOnce()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom", lastname: "Tessellate");
 
@@ -280,7 +280,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWildcardSearchWithNameQueryParametersReturnsMatchingResidentOnlyOnce()
+        public void GetAllResidentsWildcardSearchWithNameQueryParametersetersReturnsMatchingResidentOnlyOnce()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom", lastname: "Tessellate");
 
@@ -296,7 +296,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWithPostCodeQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWithPostCodeQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase();
             var databaseEntity1 = AddPersonRecordToDatabase();
@@ -318,7 +318,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         }
 
         [Test]
-        public void GetAllResidentsWithNameAndPostCodeQueryParameterReturnsMatchingResident()
+        public void GetAllResidentsWithNameAndPostCodeQueryParameterseterReturnsMatchingResident()
         {
             var databaseEntity = AddPersonRecordToDatabase(firstname: "ciasom");
             var address = TestHelper.CreateDatabaseAddressForPersonId(databaseEntity.ClaimId, databaseEntity.HouseId, "E8 1DY");
@@ -347,7 +347,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
 
         [TestCase("E81DY")]
         [TestCase("e8 1DY")]
-        public void GetAllResidentsWithPostCodeQueryParameterIgnoresFormatting(string postcode)
+        public void GetAllResidentsWithPostCodeQueryParameterseterIgnoresFormatting(string postcode)
         {
             var databaseEntity = AddPersonRecordToDatabase();
             var address = AddAddressToDatabase(databaseEntity.ClaimId, databaseEntity.HouseId, postcode: postcode);
@@ -366,7 +366,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         [TestCase("My Street")]
         [TestCase("1 My Street, Hackney, London")]
         [TestCase("Hackney")]
-        public void GetAllResidentsWithAddressQueryParameterReturnsMatchingResident(string addressQuery)
+        public void GetAllResidentsWithAddressQueryParameterseterReturnsMatchingResident(string addressQuery)
         {
             var databaseEntity = AddPersonRecordToDatabase();
             var databaseEntity1 = AddPersonRecordToDatabase();

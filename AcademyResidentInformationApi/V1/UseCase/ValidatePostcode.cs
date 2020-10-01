@@ -1,5 +1,5 @@
-using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 using System.Text.RegularExpressions;
+using AcademyResidentInformationApi.V1.UseCase.Interfaces;
 
 
 namespace AcademyResidentInformationApi.V1.UseCase

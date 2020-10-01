@@ -21,7 +21,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task IfNoQueryParametersListClaimantsReturnsAllClaimantRecordInAcademy()
+        public async Task IfNoQueryParametersetersListClaimantsReturnsAllClaimantRecordInAcademy()
         {
             var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
             var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext);
@@ -42,7 +42,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseThree);
         }
         [Test]
-        public async Task FirstNameLastNameQueryParametersReturnsMatchingClaimantRecordsFromAcademy()
+        public async Task FirstNameLastNameQueryParametersetersReturnsMatchingClaimantRecordsFromAcademy()
         {
             var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
             var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
@@ -64,7 +64,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseOne);
         }
         [Test]
-        public async Task FirstNameLastNameQueryParametersWildcardSearchReturnsMatchingClaimantRecordsFromAcademy()
+        public async Task FirstNameLastNameQueryParametersetersWildcardSearchReturnsMatchingClaimantRecordsFromAcademy()
         {
             var expectedClaimantResponseOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "tessellate");
             var expectedClaimantResponseTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, firstname: "ciasom", lastname: "shape");
@@ -86,7 +86,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.Claimants.Should().ContainEquivalentOf(expectedClaimantResponseOne);
         }
         [Test]
-        public async Task PostcodeAndAddressQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
+        public async Task PostcodeAndAddressQueryParametersetersReturnsMatchingClaimantsRecordsFromAcademy()
         {
             var matchingClaimantOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street, Hackney, LDN");
             var matchingClaimantTwo = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR", addressLines: "1 Seasame street");
@@ -110,7 +110,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task UsingAllQueryParametersReturnsMatchingClaimantsRecordsFromAcademy()
+        public async Task UsingAllQueryParametersetersReturnsMatchingClaimantsRecordsFromAcademy()
         {
             var matchingClaimantOne = E2ETestHelpers.AddClaimantWithRelatesEntitiesToDb(AcademyContext, postcode: "E9 1RR",
                 addressLines: "1 Seasame street, Hackney, LDN", firstname: "ciasom", lastname: "shape");

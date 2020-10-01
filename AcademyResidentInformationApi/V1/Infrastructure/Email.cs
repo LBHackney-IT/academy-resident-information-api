@@ -6,9 +6,14 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
     [Table("syemail", Schema = "dbo")]
     public class Email
     {
-        [Key]
         [Column("reference_id")]
         public int ReferenceId { get; set; }
+
+        [Column("person_type")]
+        public short PersonType { get; set; }
+
+        [Column("person_type_seq_no")]
+        public short PersonTypeSequenceNumber { get; set; }
 
         [Column("email_addr")]
         [MaxLength(128)]

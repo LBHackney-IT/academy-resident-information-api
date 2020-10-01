@@ -48,6 +48,11 @@ namespace AcademyResidentInformationApi.V1.Factories
             };
         }
 
+        public static List<TaxPayerInformationResponse> ToResponse(this IEnumerable<TaxPayerInformation> taxPayers)
+        {
+            return taxPayers.Select(tp => tp.ToResponse()).ToList();
+        }
+
         private static AddressResponse ToResponse(this Address domainAddress)
         {
             return new AddressResponse()

@@ -5,6 +5,7 @@ using AcademyResidentInformationApi.V1.Factories;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
+using AddressDomain = AcademyResidentInformationApi.V1.Domain.Address;
 using ClaimantInformation = AcademyResidentInformationApi.V1.Domain.ClaimantInformation;
 
 namespace AcademyResidentInformationApi.V1.Gateways
@@ -66,6 +67,62 @@ namespace AcademyResidentInformationApi.V1.Gateways
             return databaseRecord == null
                 ? null
                 : MapPersonAndAddressesToClaimantInformation(databaseRecord.person, databaseRecord.address);
+        }
+
+        public List<TaxPayerInformation> GetAllTaxPayers(string firstname = null, string lastname = null, string postcode = null, string address = null)
+        {
+            var firstNameSearchPattern = GetSearchPattern(firstname);
+            var lastNameSearchPattern = GetSearchPattern(lastname);
+            var addressSearchPattern = GetSearchPattern(address);
+            var postcodeSearchPattern = GetSearchPattern(postcode);
+
+            var taxPayers = (
+                from taxPayer in _academyContext.TaxPayers
+                join occupation in _academyContext.Occupations on taxPayer.AccountRef equals occupation.AccountRef
+                join property in _academyContext.CouncilProperties on occupation.PropertyRef equals property.PropertyRef
+                join phoneNumber in _academyContext.PhoneNumbers on taxPayer.AccountRef.ToString() equals phoneNumber.Reference
+                where string.IsNullOrEmpty(firstname) || EF.Functions.ILike(taxPayer.FirstName, firstNameSearchPattern)
+                where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(taxPayer.LastName, lastNameSearchPattern)
+                where string.IsNullOrEmpty(address) || EF.Functions.ILike(property.AddressLine1.Replace(" ", ""), addressSearchPattern)
+                where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(property.PostCode.Replace(" ", ""), postcodeSearchPattern)
+                select new TaxPayerInformation
+                {
+                    AccountRef = taxPayer.AccountRef,
+                    Uprn = property.Uprn,
+                    FirstName = taxPayer.FirstName,
+                    LastName = taxPayer.LastName,
+                    TaxPayerAddress = new AddressDomain
+                    {
+                        AddressLine1 = property.AddressLine1,
+                        AddressLine2 = property.AddressLine2,
+                        AddressLine3 = property.AddressLine3,
+                        AddressLine4 = property.AddressLine4,
+                        PostCode = property.PostCode
+                    },
+                    PhoneNumberList = new List<string>
+                        {
+                            phoneNumber.Number1,
+                            phoneNumber.Number2,
+                            phoneNumber.Number3,
+                            phoneNumber.Number4
+                        }
+                }
+            ).ToList();
+
+            var emailList = _academyContext.Emails
+                .Where(email => taxPayers.Select(t => t.AccountRef)
+                .Contains(email.ReferenceId))
+                .ToList();
+
+            foreach (TaxPayerInformation taxPayer in taxPayers)
+            {
+                taxPayer.EmailList = emailList
+                .Where(email => email.ReferenceId.Equals(taxPayer.AccountRef))
+                .Select(email => email.EmailAddress)
+                .ToList();
+            }
+
+            return taxPayers;
         }
 
         public TaxPayerInformation GetTaxPayerById(int accountRef)

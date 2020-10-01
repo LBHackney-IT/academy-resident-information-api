@@ -68,12 +68,14 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             return tp;
         }
 
-        public static CouncilProperty CreateDatabasePropertyForTaxPayer(string propertyRef)
+        public static CouncilProperty CreateDatabasePropertyForTaxPayer(string propertyRef, string address = null, string postcode = null)
         {
             var faker = new Fixture();
             var cp = faker.Build<CouncilProperty>()
                 .With(p => p.PropertyRef, propertyRef)
                 .Create();
+            cp.AddressLine1 = address ?? cp.AddressLine1;
+            cp.PostCode = postcode ?? cp.PostCode;
             return cp;
         }
 
@@ -93,7 +95,9 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .With(email => email.ReferenceId, accountRef)
                 .Create();
 
-            fakeEmail.EmailAddress = email ?? fakeEmail.EmailAddress;
+            if (email == null) return fakeEmail;
+
+            fakeEmail.EmailAddress = email;
 
             return fakeEmail;
         }

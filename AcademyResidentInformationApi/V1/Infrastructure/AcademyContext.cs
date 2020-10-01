@@ -48,6 +48,14 @@ namespace AcademyResidentInformationApi.V1.Infrastructure
                     x.ClaimId,
                     x.HouseId
                 });
+
+            modelBuilder.Entity<Email>()
+                .HasKey(email => new
+                {
+                    email.PersonType,
+                    email.PersonTypeSequenceNumber,
+                    email.ReferenceId
+                });
         }
     }
 }

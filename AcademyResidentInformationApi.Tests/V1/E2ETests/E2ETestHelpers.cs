@@ -69,7 +69,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             context.Occupations.Add(occupation);
             context.SaveChanges();
 
-            var property = TestHelper.CreateDatabasePropertyForTaxPayer(occupation.PropertyRef);
+            var property = TestHelper.CreateDatabasePropertyForTaxPayer(occupation.PropertyRef, addressLines, postcode);
             context.CouncilProperties.Add(property);
             context.SaveChanges();
 

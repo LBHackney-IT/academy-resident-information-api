@@ -2,16 +2,18 @@ using System.Collections.Generic;
 using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AcademyResidentInformationApi.V1.Infrastructure;
+using Bogus;
 using Address = AcademyResidentInformationApi.V1.Boundary.Responses.Address;
 
 namespace AcademyResidentInformationApi.Tests.V1.E2ETests
 {
     public static class E2ETestHelpers
     {
+        private static Faker _faker = new Faker();
         public static ClaimantInformation AddClaimantWithRelatesEntitiesToDb(AcademyContext context, int? claimId = null, int? personRef = null, string firstname = null, string lastname = null, string postcode = null, string addressLines = null)
         {
             var person = TestHelper.CreateDatabaseClaimantEntity();
-            person.ClaimId = claimId ?? person.ClaimId;
+            person.ClaimId = claimId ?? _faker.Random.Int(0);
             person.PersonRef = personRef ?? person.PersonRef;
 
             person.FirstName = firstname ?? person.FirstName;
@@ -57,7 +59,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             string postcode = null, string addressLines = null)
         {
             var person = TestHelper.CreateDatabaseTaxPayerEntity(accountRef, firstname, lastname);
-            person.AccountRef = accountRef ?? person.AccountRef;
+            person.AccountRef = accountRef ?? _faker.Random.Int(0);
 
             person.FirstName = firstname ?? person.FirstName;
             person.LastName = lastname ?? person.LastName;

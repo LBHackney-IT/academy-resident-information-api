@@ -26,6 +26,8 @@ namespace AcademyResidentInformationApi.Tests
         {
             AcademyContext = new AcademyContext(_builder.Options);
             AcademyContext.Database.EnsureCreated();
+            AcademyContext.TaxPayers.RemoveRange(AcademyContext.TaxPayers);
+            AcademyContext.Persons.RemoveRange(AcademyContext.Persons);
             _transaction = AcademyContext.Database.BeginTransaction();
         }
 

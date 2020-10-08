@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using AcademyResidentInformationApi.V1.Infrastructure;
 using AutoFixture;
+using Bogus;
 using Address = AcademyResidentInformationApi.V1.Infrastructure.Address;
+using Person = AcademyResidentInformationApi.V1.Infrastructure.Person;
 
 namespace AcademyResidentInformationApi.Tests.V1.Helper
 {
     public static class TestHelper
     {
+        private static Faker _faker = new Faker();
         public static Person CreateDatabaseClaimantEntity(string firstname = null, string lastname = null, int? id = null,
             int? memberId = null, int? personRef = null, int? houseId = null)
         {
@@ -20,7 +23,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
             fp.DateOfBirth = faker.Create<DateTime>().ToString("yyyy-MM-dd");
             fp.FirstName = firstname ?? fp.FirstName;
             fp.LastName = lastname ?? fp.LastName;
-            fp.ClaimId = id ?? fp.ClaimId;
+            fp.ClaimId = id ?? _faker.Random.Number(0, 150);
             fp.MemberId = memberId ?? fp.MemberId;
             fp.PersonRef = personRef ?? fp.PersonRef;
             fp.HouseId = houseId ?? fp.HouseId;
@@ -64,7 +67,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Helper
                 .Create();
             tp.FirstName = firstname ?? tp.FirstName;
             tp.LastName = lastname ?? tp.LastName;
-            tp.AccountRef = accountRef ?? tp.AccountRef;
+            tp.AccountRef = accountRef ?? _faker.Random.Int(0);
             return tp;
         }
 

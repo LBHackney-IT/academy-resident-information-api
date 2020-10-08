@@ -31,7 +31,7 @@ namespace AcademyResidentInformationApi.Tests.V1.UseCase
             var stubbedTaxPayers = _fixture.CreateMany<TaxPayerInformation>().ToList();
 
             _mockAcademyGateway.Setup(x =>
-                x.GetAllTaxPayers("ciasom", "tessellate", "E8 1DY", "1 Montage street"))
+                x.GetAllTaxPayers(0, 20, "ciasom", "tessellate", "E8 1DY", "1 Montage street"))
                 .Returns(stubbedTaxPayers);
 
             var qp = new QueryParameters

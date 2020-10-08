@@ -160,7 +160,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
             convertedResponse.NextCursor.Should().Be(null);
         }
         [Test]
-        public async Task IfLimitAndCursorIsSuppliedShouldReturnCorrectSetOfTokens()
+        public async Task IfLimitAndCursorIsSuppliedShouldReturnCorrectSetOfTaxPayersMatchingQuery()
         {
             var firstName = _faker.Person.FirstName;
             var lastName = _faker.Person.LastName;
@@ -183,7 +183,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
         }
 
         [Test]
-        public async Task IfManyTokensInDbAndLimitAndCursorIsSuppliedShouldReturnCorrectSetOfTokens()
+        public async Task IfManyTaxPayersMatchingQueryInDbAndLimitAndCursorIsSuppliedShouldReturnCorrectSetOfTokens()
         {
             var firstName = _faker.Person.FirstName;
             var lastName = _faker.Person.LastName;

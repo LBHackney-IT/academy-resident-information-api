@@ -15,5 +15,7 @@ namespace AcademyResidentInformationApi.V1.Boundary.Requests
 
         [FromQuery(Name = "postcode")]
         public string Postcode { get; set; }
+        public int Limit { get; set; } = 20;
+        public int Cursor { get; set; } = 0;
     }
 }

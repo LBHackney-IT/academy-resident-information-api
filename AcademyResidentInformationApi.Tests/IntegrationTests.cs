@@ -37,10 +37,10 @@ namespace AcademyResidentInformationApi.Tests
         {
             AcademyContext = new AcademyContext(_builder.Options);
             AcademyContext.Database.EnsureCreated();
-
             _factory = new MockWebApplicationFactory<TStartup>(_connection);
             Client = _factory.CreateClient();
-
+            AcademyContext.TaxPayers.RemoveRange(AcademyContext.TaxPayers);
+            AcademyContext.Persons.RemoveRange(AcademyContext.Persons);
             _transaction = AcademyContext.Database.BeginTransaction();
         }
 

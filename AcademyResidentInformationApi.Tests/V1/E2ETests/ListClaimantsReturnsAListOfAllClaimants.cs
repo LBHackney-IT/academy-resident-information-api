@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using AcademyResidentInformationApi.V1.Boundary.Responses;
 using AutoFixture;
+using Bogus;
 using FluentAssertions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -13,6 +14,7 @@ namespace AcademyResidentInformationApi.Tests.V1.E2ETests
     public class ListClaimantsReturnsAListOfAllClaimants : IntegrationTests<Startup>
     {
         private IFixture _fixture;
+        private readonly Faker _faker = new Faker();
 
         [SetUp]
         public void SetUp()

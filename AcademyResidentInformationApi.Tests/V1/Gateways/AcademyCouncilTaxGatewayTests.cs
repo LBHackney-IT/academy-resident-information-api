@@ -4,6 +4,7 @@ using AcademyResidentInformationApi.Tests.V1.Helper;
 using AcademyResidentInformationApi.V1.Domain;
 using AcademyResidentInformationApi.V1.Gateways;
 using AcademyResidentInformationApi.V1.Infrastructure;
+using Bogus;
 using FluentAssertions;
 using NUnit.Framework;
 using Address = AcademyResidentInformationApi.V1.Domain.Address;
@@ -14,6 +15,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
     public class AcademyCouncilTaxGatewayTests : DatabaseTests
     {
         private AcademyGateway _classUnderTest;
+        private readonly Faker _faker = new Faker();
 
 
         [SetUp]
@@ -91,16 +93,16 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         [Test]
         public void GetAllTaxPayersIfThereAreNoTaxPayersReturnsAnEmptyList()
         {
-            _classUnderTest.GetAllTaxPayers().Should().BeEmpty();
+            _classUnderTest.GetAllTaxPayers(0, 20).Should().BeEmpty();
         }
 
         [Test]
         public void GetAllTaxPayersIfThereAreTaxPayersReturnsAListOfAccountNumbersAndNames()
         {
-            var databaseEntity1 = SetUpFullTaxPayerDatabaseRecord();
-            var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord();
+            var databaseEntity1 = SetUpFullTaxPayerDatabaseRecord(1);
+            var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(2);
 
-            var response = _classUnderTest.GetAllTaxPayers();
+            var response = _classUnderTest.GetAllTaxPayers(0, 20);
 
             response.Should().BeOfType<List<TaxPayerInformation>>();
             response.First().Should().BeEquivalentTo(databaseEntity1);
@@ -115,7 +117,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             AddContactInformationForTaxPayer(databaseEntity.AccountRef);
 
 
-            var response = _classUnderTest.GetAllTaxPayers();
+            var response = _classUnderTest.GetAllTaxPayers(0, 20);
             response
                 .First().TaxPayerAddress.AddressLine1
                 .Should().BeEquivalentTo(property.AddressLine1);
@@ -130,7 +132,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
 
             var databaseEntity = SetUpFullTaxPayerDatabaseRecord(emails: testEmails, phoneNumbers: testPhones);
 
-            var response = _classUnderTest.GetAllTaxPayers();
+            var response = _classUnderTest.GetAllTaxPayers(0, 20);
             response.First().EmailList.Should().BeEquivalentTo(testEmails);
             response.First().PhoneNumberList.Should().BeEquivalentTo(testPhones);
         }
@@ -142,7 +144,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(firstname: "shape");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(firstname: "Ciasom");
 
-            var response = _classUnderTest.GetAllTaxPayers(firstname: "ciasom");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, firstname: "ciasom");
             response.Count.Should().Be(2);
             response.Should().ContainEquivalentOf(databaseEntity1);
             response.Should().ContainEquivalentOf(databaseEntity3);
@@ -155,7 +157,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(firstname: "shape");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(firstname: "Ciasom");
 
-            var response = _classUnderTest.GetAllTaxPayers(firstname: "iaso");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, firstname: "iaso");
             response.Count.Should().Be(2);
             response.Should().ContainEquivalentOf(databaseEntity1);
             response.Should().ContainEquivalentOf(databaseEntity3);
@@ -168,7 +170,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(lastname: "shape");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(lastname: "Tessellate");
 
-            var response = _classUnderTest.GetAllTaxPayers(lastname: "tessellate");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, lastname: "tessellate");
             response.Count.Should().Be(2);
             response.Should().ContainEquivalentOf(databaseEntity1);
             response.Should().ContainEquivalentOf(databaseEntity3);
@@ -181,7 +183,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(lastname: "shape");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(lastname: "Tessellate");
 
-            var response = _classUnderTest.GetAllTaxPayers(lastname: "sell");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, lastname: "sell");
             response.Count.Should().Be(2);
             response.Should().ContainEquivalentOf(databaseEntity1);
             response.Should().ContainEquivalentOf(databaseEntity3);
@@ -192,7 +194,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         {
             var databaseEntity = SetUpFullTaxPayerDatabaseRecord(firstname: "ciasom", lastname: "tessellate");
 
-            var response = _classUnderTest.GetAllTaxPayers(firstname: "ciasom", lastname: "tessellate");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, firstname: "ciasom", lastname: "tessellate");
             response.Count.Should().Be(1);
             response.First().Should().BeEquivalentTo(databaseEntity);
         }
@@ -204,7 +206,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(postcode: "E8 5TG");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(postcode: "E8 1DY");
 
-            var response = _classUnderTest.GetAllTaxPayers(postcode: "E8 1DY");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, postcode: "E8 1DY");
             response.Count.Should().Be(2);
             response.Should().ContainEquivalentOf(databaseEntity1);
             response.Should().ContainEquivalentOf(databaseEntity3);
@@ -217,7 +219,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(firstname: "shape", postcode: "E8 5TG");
             var databaseEntity3 = SetUpFullTaxPayerDatabaseRecord(firstname: "Ciasom", postcode: "E8 5RT");
 
-            var response = _classUnderTest.GetAllTaxPayers(firstname: "ciasom", postcode: "E8 1DY");
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, firstname: "ciasom", postcode: "E8 1DY");
             response.Count.Should().Be(1);
             response.Should().ContainEquivalentOf(databaseEntity1);
         }
@@ -228,7 +230,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
         {
             var databaseEntity = SetUpFullTaxPayerDatabaseRecord(postcode: "E8 1DY");
 
-            var response = _classUnderTest.GetAllTaxPayers(postcode: postcodeQuery);
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, postcode: postcodeQuery);
             response.Should().ContainEquivalentOf(databaseEntity);
         }
 
@@ -241,7 +243,7 @@ namespace AcademyResidentInformationApi.Tests.V1.Gateways
             var databaseEntity1 = SetUpFullTaxPayerDatabaseRecord(address: "1 My Street, Hackney, London");
             var databaseEntity2 = SetUpFullTaxPayerDatabaseRecord(address: "5 Another Street, Lambeth, London");
 
-            var response = _classUnderTest.GetAllTaxPayers(address: addressQuery);
+            var response = _classUnderTest.GetAllTaxPayers(0, 20, address: addressQuery);
             response.Count.Should().Be(1);
         }
 

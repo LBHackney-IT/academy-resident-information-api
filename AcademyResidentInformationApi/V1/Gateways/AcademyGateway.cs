@@ -69,7 +69,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 : MapPersonAndAddressesToClaimantInformation(databaseRecord.person, databaseRecord.address);
         }
 
-        public List<TaxPayerInformation> GetAllTaxPayers(string firstname = null, string lastname = null, string postcode = null, string address = null)
+        public List<TaxPayerInformation> GetAllTaxPayers(int cursor, int limit, string firstname = null, string lastname = null, string postcode = null, string address = null)
         {
             var firstNameSearchPattern = GetSearchPattern(firstname);
             var lastNameSearchPattern = GetSearchPattern(lastname);
@@ -85,6 +85,8 @@ namespace AcademyResidentInformationApi.V1.Gateways
                 where string.IsNullOrEmpty(lastname) || EF.Functions.ILike(taxPayer.LastName, lastNameSearchPattern)
                 where string.IsNullOrEmpty(address) || EF.Functions.ILike(property.AddressLine1.Replace(" ", ""), addressSearchPattern)
                 where string.IsNullOrEmpty(postcode) || EF.Functions.ILike(property.PostCode.Replace(" ", ""), postcodeSearchPattern)
+                where taxPayer.AccountRef > cursor
+                orderby taxPayer.AccountRef
                 select new TaxPayerInformation
                 {
                     AccountRef = taxPayer.AccountRef,
@@ -107,7 +109,7 @@ namespace AcademyResidentInformationApi.V1.Gateways
                             phoneNumber.Number4
                         }
                 }
-            ).ToList();
+            ).Take(limit).ToList();
 
             var emailList = _academyContext.Emails
                 .Where(email => taxPayers.Select(t => t.AccountRef)

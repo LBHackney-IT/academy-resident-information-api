@@ -57,6 +57,21 @@ commands:
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve
+  terraform-preview:
+    description: "Preview terraform configuration changes"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+            terraform plan
+          name: terraform preview
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -166,7 +181,7 @@ jobs:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: development
+          environment: 'development'
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:

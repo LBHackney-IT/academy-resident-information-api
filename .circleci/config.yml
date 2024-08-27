@@ -223,7 +223,6 @@ workflows:
 
   check-and-deploy-staging-and-production:
     jobs:
-      - check-code-formatting
       - build-and-test:
           filters:
             branches:

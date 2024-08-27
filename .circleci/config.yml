@@ -209,61 +209,58 @@ jobs:
           stage: "production"
 
 workflows:
-  check-and-deploy-development:
+  check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting
-      - build-and-test
+      - build-and-test:
+          filters:
+            branches:
+              only: master
       - permit-development-terraform-release:
           type: approval
           requires:
             - build-and-test
           filters:
             branches:
-              only: development
+              only: master
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
             - permit-development-terraform-release
           filters:
             branches:
-              only: development
+              only: master
       - terraform-init-and-apply-to-development:
           requires:
             - assume-role-development
           filters:
             branches:
-              only: development
+              only: master
       - permit-development-deployment:
           type: approval
           requires:
             - terraform-init-and-apply-to-development
           filters:
             branches:
-              only: development
+              only: master
       - migrate-database-development:
           requires:
             - permit-development-deployment
             - assume-role-development
           filters:
             branches:
-              only: development
+              only: master
       - deploy-to-development:
           requires:
             - permit-development-deployment
             - assume-role-development
           filters:
             branches:
-              only: development
-  check-and-deploy-staging-and-production:
-    jobs:
-      - build-and-test:
-          filters:
-            branches:
               only: master
       - permit-staging-terraform-release:
           type: approval
           requires:
-            - build-and-test
+            - deploy-to-development
           filters:
             branches:
               only: master

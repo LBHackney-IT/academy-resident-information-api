@@ -222,21 +222,6 @@ jobs:
     steps:
       - deploy-lambda:
           stage: 'production'
-  migrate-database-development:
-    executor: docker-dotnet
-    steps:
-      - migrate-database:
-          stage: "development"
-  migrate-database-staging:
-    executor: docker-dotnet
-    steps:
-      - migrate-database:
-          stage: "staging"
-  migrate-database-production:
-    executor: docker-dotnet
-    steps:
-      - migrate-database:
-          stage: "production"
 
 workflows:
   preview-terraform-changes:

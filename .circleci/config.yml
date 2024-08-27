@@ -239,6 +239,19 @@ jobs:
           stage: "production"
 
 workflows:
+  preview-terraform-changes:
+    jobs:
+      - assume-role-development:
+          context: api-assume-role-development-context
+          filters:
+            branches:
+              ignore: master
+      - terraform-preview-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              ignore: master
   check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting

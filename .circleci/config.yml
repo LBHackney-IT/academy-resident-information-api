@@ -301,10 +301,7 @@ workflows:
       - permit-production-terraform-release:
           type: approval
           requires:
-            - deploy-to-staging- permit-staging-deployment:
-          type: approval
-          requires:
-            - terraform-init-and-apply-to-staging
+            - deploy-to-staging
           filters:
             branches:
               only: master

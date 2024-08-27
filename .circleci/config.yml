@@ -99,11 +99,6 @@ commands:
             fi 
 
 jobs:
-  assume-role-development:
-    executor: docker-python
-    steps:
-      - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
   assume-role-staging:
     executor: docker-python
     steps:
@@ -114,11 +109,6 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
-  terraform-init-and-apply-to-development:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: 'development'
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
@@ -129,11 +119,6 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: 'production'
-  terraform-preview-development:
-    executor: docker-terraform
-    steps:
-      - terraform-preview:
-          environment: 'development'
   terraform-preview-staging:
     executor: docker-terraform
     steps:
@@ -144,11 +129,6 @@ jobs:
     steps:
       - terraform-preview:
           environment: 'production'
-  deploy-to-development:
-    executor: docker-dotnet
-    steps:
-      - deploy-lambda:
-          stage: 'development'
   deploy-to-staging:
     executor: docker-dotnet
     steps:

@@ -213,10 +213,17 @@ workflows:
     jobs:
       - check-code-formatting
       - build-and-test
+      - permit-development-terraform-release:
+          type: approval
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: development
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
-            - build-and-test
+            - permit-development-terraform-release
           filters:
             branches:
               only: development
@@ -226,15 +233,23 @@ workflows:
           filters:
             branches:
               only: development
-      - migrate-database-development:
+      - permit-development-deployment:
+          type: approval
           requires:
             - terraform-init-and-apply-to-development
+          filters:
+            branches:
+              only: development
+      - migrate-database-development:
+          requires:
+            - permit-development-deployment
             - assume-role-development
           filters:
             branches:
               only: development
       - deploy-to-development:
           requires:
+            - permit-development-deployment
             - assume-role-development
           filters:
             branches:

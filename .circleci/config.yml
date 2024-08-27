@@ -209,46 +209,65 @@ jobs:
           stage: "production"
 
 workflows:
-  check-and-deploy-development:
+  check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting
-      - build-and-test
-      - assume-role-development:
-          context: api-assume-role-development-context
+      - build-and-test:
+          filters:
+            branches:
+              only: master
+      - permit-development-terraform-release:
+          type: approval
           requires:
             - build-and-test
           filters:
             branches:
-              only: development
+              only: master
+      - assume-role-development:
+          context: api-assume-role-development-context
+          requires:
+            - permit-development-terraform-release
+          filters:
+            branches:
+              only: master
       - terraform-init-and-apply-to-development:
           requires:
             - assume-role-development
           filters:
             branches:
-              only: development
-      - migrate-database-development:
+              only: master
+      - permit-development-deployment:
+          type: approval
           requires:
             - terraform-init-and-apply-to-development
+          filters:
+            branches:
+              only: master
+      - migrate-database-development:
+          requires:
+            - permit-development-deployment
             - assume-role-development
           filters:
             branches:
-              only: development
+              only: master
       - deploy-to-development:
           requires:
+            - permit-development-deployment
             - assume-role-development
           filters:
             branches:
-              only: development
-  check-and-deploy-staging-and-production:
-    jobs:
-      - build-and-test:
+              only: master
+      - permit-staging-terraform-release:
+          type: approval
+          requires:
+            - deploy-to-development
           filters:
             branches:
               only: master
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
-              - build-and-test
+              - permit-staging-terraform-release
           filters:
              branches:
                only: master
@@ -258,9 +277,16 @@ workflows:
           filters:
             branches:
               only: master
-      - migrate-database-staging:
+      - permit-staging-deployment:
+          type: approval
           requires:
             - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
+      - migrate-database-staging:
+          requires:
+            - permit-staging-deployment
             - assume-role-staging
           filters:
             branches:
@@ -268,7 +294,7 @@ workflows:
       - deploy-to-staging:
           requires:
             - assume-role-staging
-            - migrate-database-staging
+            - permit-staging-deployment
           filters:
             branches:
               only: master
@@ -276,6 +302,9 @@ workflows:
           type: approval
           requires:
             - deploy-to-staging
+          filters:
+            branches:
+              only: master
       - assume-role-production:
           context: api-assume-role-production-context
           requires:
@@ -289,23 +318,23 @@ workflows:
           filters:
             branches:
               only: master
-      - migrate-database-production:
+      - permit-production-deployment:
+          type: approval
           requires:
             - terraform-init-and-apply-to-production
-            - assume-role-production
           filters:
             branches:
               only: master
-      - permit-production-release:
-          type: approval
+      - migrate-database-production:
           requires:
+            - permit-production-deployment
             - assume-role-production
           filters:
             branches:
               only: master
       - deploy-to-production:
           requires:
-            - permit-production-release
+            - permit-production-deployment
             - assume-role-production
             - migrate-database-production
           filters:

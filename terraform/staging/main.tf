@@ -81,32 +81,3 @@ data "aws_ssm_parameter" "academy_password" {
 data "aws_ssm_parameter" "academy_hostname" {
    name = "/academy/reporting-server/hostname"
 }
-module "dms_setup_staging" {
-  source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"
-  environment_name = "staging" //used for resource tags
-  project_name = "resident-information-apis" //used for resource tags
-  //target db for dms endpoint
-  target_db_name = "academy_mirror" //the name of the target database
-  target_endpoint_identifier = "target-academy-endpoint" //unique identifier (name) you give for the endpoint to be created
-  target_db_engine_name = "postgres"
-  target_db_port = 5102
-  target_db_username = data.aws_ssm_parameter.academy_postgres_username.value//ensure you save your Postgres db credentials to the Parameter store and reference it here
-  target_db_password = data.aws_ssm_parameter.academy_postgres_db_password.value//ensure you save your Postgres db credentials to the Parameter store and reference it here
-  target_db_server = data.aws_ssm_parameter.academy_postgres_hostname.value //Postgres instance endpoint
-  target_endpoint_ssl_mode = "none"
-  //source db for dms endpoint
-  source_db_name = "HBCTLIVEDB" //the name of the source (on-prem) database
-  source_endpoint_identifier = "source-academy-endpoint" //unique identifier (name) you give for the endpoint to be created
-  source_db_engine_name = "sqlserver"
-  source_db_port = 1433
-  source_db_username = data.aws_ssm_parameter.academy_username.value //ensure you save your on-prem credentials to the Parameter store and reference it here
-  source_db_password = data.aws_ssm_parameter.academy_password.value //ensure you save your on-prem credentials to the Parameter store and reference it here
-  source_db_server = data.aws_ssm_parameter.academy_hostname.value //your on-prem db IP
-  source_endpoint_ssl_mode = "none"
-  //dms task set up
-  migration_type = "full-load" //full-load | cdc | full-load-and-cdc -> full-load-and-cdc is the preferred option, it does the one-off migration and uses the CDC option for continous migration
-  replication_task_indentifier = "academy-api-dms-task" //unique identifier (name) you give for the instance to be created
-  task_settings = file("${path.module}/task_settings.json") //path to your json file with task settings
-  task_table_mappings = file("${path.module}/selection_rules.json") //path to your json file with selection rules
-  replication_instance_arn = "arn:aws:dms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rep:DNTOW6TGQEGCAOWQMZYHQRTWAA"
-}

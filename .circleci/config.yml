@@ -102,17 +102,6 @@ commands:
             sls deploy --stage <<parameters.stage>> --conceal
 
 jobs:
-  build-and-test:
-    executor: docker-python
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: build
-          command: docker-compose build academy-api-test
-      - run:
-          name: Run tests
-          command: docker-compose run academy-api-test
   assume-role-development:
     executor: docker-python
     steps:

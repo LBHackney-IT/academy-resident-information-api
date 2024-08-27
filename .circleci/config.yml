@@ -82,22 +82,21 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            curl -sL https://deb.nodesource.com/setup_14.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
-          command: npm i -g serverless
-      - run:
-          name: Build lambda
-          command: |
-            cd ./AcademyResidentInformationApi/
-            chmod +x ./build.sh
-            ./build.sh
+          command: npm i -g serverless@^3
       - run:
           name: Deploy lambda
           command: |
             cd ./AcademyResidentInformationApi/
-            sls deploy --stage <<parameters.stage>> --conceal
+            if [ "<<parameters.stage>>" = "development" ]
+            then
+              sls remove --stage <<parameters.stage>> --verbose
+            else
+              sls deploy --stage <<parameters.stage>> --conceal
+            fi 
 
 jobs:
   assume-role-development:

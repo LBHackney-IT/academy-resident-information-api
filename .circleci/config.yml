@@ -91,7 +91,7 @@ commands:
           name: Deploy lambda
           command: |
             cd ./AcademyResidentInformationApi/
-            if [ "<<parameters.stage>>" = "development" ]
+            if [ "<<parameters.stage>>" = "environment" ]
             then
               sls remove --stage <<parameters.stage>> --verbose
             else
@@ -99,11 +99,6 @@ commands:
             fi 
 
 jobs:
-  assume-role-development:
-    executor: docker-python
-    steps:
-      - assume-role-and-persist-workspace:
-          aws-account: $AWS_ACCOUNT_DEVELOPMENT
   assume-role-staging:
     executor: docker-python
     steps:
@@ -114,11 +109,6 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
-  terraform-init-and-apply-to-development:
-    executor: docker-terraform
-    steps:
-      - terraform-init-then-apply:
-          environment: 'development'
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
@@ -129,11 +119,6 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: 'production'
-  terraform-preview-development:
-    executor: docker-terraform
-    steps:
-      - terraform-preview:
-          environment: 'development'
   terraform-preview-staging:
     executor: docker-terraform
     steps:
@@ -144,11 +129,6 @@ jobs:
     steps:
       - terraform-preview:
           environment: 'production'
-  deploy-to-development:
-    executor: docker-dotnet
-    steps:
-      - deploy-lambda:
-          stage: 'development'
   deploy-to-staging:
     executor: docker-dotnet
     steps:
@@ -163,17 +143,6 @@ jobs:
 workflows:
   preview-terraform-changes:
     jobs:
-      - assume-role-development:
-          context: api-assume-role-development-context
-          filters:
-            branches:
-              ignore: master
-      - terraform-preview-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              ignore: master
       - assume-role-staging:
           context: api-assume-role-staging-context
           filters:
@@ -199,42 +168,8 @@ workflows:
 
   check-and-deploy-staging-and-production:
     jobs:
-      - permit-development-terraform-release:
-          type: approval
-          filters:
-            branches:
-              only: master
-      - assume-role-development:
-          context: api-assume-role-development-context
-          requires:
-            - permit-development-terraform-release
-          filters:
-            branches:
-              only: master
-      - terraform-init-and-apply-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: master
-      - permit-development-deployment:
-          type: approval
-          requires:
-            - terraform-init-and-apply-to-development
-          filters:
-            branches:
-              only: master
-      - deploy-to-development:
-          requires:
-            - permit-development-deployment
-            - assume-role-development
-          filters:
-            branches:
-              only: master
       - permit-staging-terraform-release:
           type: approval
-          requires:
-            - deploy-to-development
           filters:
             branches:
               only: master

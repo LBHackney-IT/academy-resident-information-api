@@ -10,18 +10,7 @@ provider "aws" {
   region  = "eu-west-2"
   version = "~> 2.0"
 }
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-locals {
-   //application_name = your application name # The name to use for your application
-   parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
-}
-data "aws_iam_role" "ec2_container_service_role" {
-  name = "ecsServiceRole"
-}
-data "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
-}
+
 terraform {
   backend "s3" {
     bucket  = "terraform-state-staging-apis"
@@ -29,36 +18,4 @@ terraform {
     region  = "eu-west-2"
     key     = "services/academy-information-api/state"
   }
-}
-/*    POSTGRES SET UP    */
-data "aws_vpc" "staging_vpc" {
-  tags = {
-    Name = "vpc-staging-apis-staging"
-  }
-}
-data "aws_subnet_ids" "staging" {
-  vpc_id = data.aws_vpc.staging_vpc.id
- filter {
-    name   = "tag:Type"
-    values = ["private"] # insert values here
-  }
-}
- data "aws_ssm_parameter" "academy_postgres_db_password" {
-   name = "/academy-api/staging/postgres-password"
- }
-  data "aws_ssm_parameter" "academy_postgres_username" {
-   name = "/academy-api/staging/postgres-username"
- }
- data "aws_ssm_parameter" "academy_postgres_hostname" {
-   name = "/academy-api/staging/postgres-hostname"
- }
-
-data "aws_ssm_parameter" "academy_username" {
-   name = "/academy/reporting-server/username"
-}
-data "aws_ssm_parameter" "academy_password" {
-   name = "/academy/reporting-server/password"
-}
-data "aws_ssm_parameter" "academy_hostname" {
-   name = "/academy/reporting-server/hostname"
 }

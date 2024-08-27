@@ -263,7 +263,17 @@ workflows:
           filters:
             branches:
               ignore: master
-
+      - assume-role-production:
+          context: api-assume-role-production-context
+          filters:
+             branches:
+               ignore: master
+      - terraform-preview-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              ignore: master
 
   check-and-deploy-staging-and-production:
     jobs:

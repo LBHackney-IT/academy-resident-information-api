@@ -163,17 +163,6 @@ jobs:
 workflows:
   preview-terraform-changes:
     jobs:
-      - assume-role-development:
-          context: api-assume-role-development-context
-          filters:
-            branches:
-              ignore: master
-      - terraform-preview-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              ignore: master
       - assume-role-staging:
           context: api-assume-role-staging-context
           filters:

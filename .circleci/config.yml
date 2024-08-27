@@ -304,7 +304,13 @@ workflows:
       - permit-production-terraform-release:
           type: approval
           requires:
-            - deploy-to-staging
+            - deploy-to-staging- permit-staging-deployment:
+          type: approval
+          requires:
+            - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
       - assume-role-production:
           context: api-assume-role-production-context
           requires:
@@ -318,23 +324,23 @@ workflows:
           filters:
             branches:
               only: master
-      - migrate-database-production:
+      - permit-production-deployment:
+          type: approval
           requires:
             - terraform-init-and-apply-to-production
-            - assume-role-production
           filters:
             branches:
               only: master
-      - permit-production-release:
-          type: approval
+      - migrate-database-production:
           requires:
+            - permit-production-deployment
             - assume-role-production
           filters:
             branches:
               only: master
       - deploy-to-production:
           requires:
-            - permit-production-release
+            - permit-production-deployment
             - assume-role-production
             - migrate-database-production
           filters:

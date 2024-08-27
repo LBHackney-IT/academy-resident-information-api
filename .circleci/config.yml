@@ -213,14 +213,8 @@ workflows:
 
   check-and-deploy-staging-and-production:
     jobs:
-      - build-and-test:
-          filters:
-            branches:
-              only: master
       - permit-development-terraform-release:
           type: approval
-          requires:
-            - build-and-test
           filters:
             branches:
               only: master

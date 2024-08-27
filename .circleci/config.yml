@@ -57,6 +57,21 @@ commands:
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve
+  terraform-preview:
+    description: "Preview terraform configuration changes"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+            terraform plan
+          name: terraform preview
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -166,7 +181,7 @@ jobs:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: development
+          environment: 'development'
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
@@ -176,6 +191,21 @@ jobs:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
+          environment: 'production'
+  terraform-preview-development:
+    executor: docker-terraform
+    steps:
+      - terraform-preview:
+          environment: 'development'
+  terraform-preview-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-preview:
+          environment: 'staging'
+  terraform-preview-production:
+    executor: docker-terraform
+    steps:
+      - terraform-preview:
           environment: 'production'
   deploy-to-development:
     executor: docker-dotnet
@@ -209,6 +239,42 @@ jobs:
           stage: "production"
 
 workflows:
+  preview-terraform-changes:
+    jobs:
+      - assume-role-development:
+          context: api-assume-role-development-context
+          filters:
+            branches:
+              ignore: master
+      - terraform-preview-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              ignore: master
+      - assume-role-staging:
+          context: api-assume-role-staging-context
+          filters:
+             branches:
+               ignore: master
+      - terraform-preview-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              ignore: master
+      - assume-role-production:
+          context: api-assume-role-production-context
+          filters:
+             branches:
+               ignore: master
+      - terraform-preview-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              ignore: master
+
   check-and-deploy-staging-and-production:
     jobs:
       - check-code-formatting

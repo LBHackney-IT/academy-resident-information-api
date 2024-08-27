@@ -52,6 +52,7 @@ commands:
           name: get and init
       - run:
           name: apply
+          no_output_timeout: 45m
           command: |
             cd ./terraform/<<parameters.environment>>/
             terraform apply -auto-approve
@@ -89,6 +90,7 @@ commands:
           command: npm i -g serverless@^3
       - run:
           name: Deploy lambda
+          no_output_timeout: 45m
           command: |
             cd ./AcademyResidentInformationApi/
             if [ "<<parameters.stage>>" = "environment" ]

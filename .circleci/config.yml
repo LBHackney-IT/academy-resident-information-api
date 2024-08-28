@@ -93,7 +93,7 @@ commands:
           no_output_timeout: 45m
           command: |
             cd ./AcademyResidentInformationApi/
-            if [ "<<parameters.stage>>" = "staging" ]
+            if [ "<<parameters.stage>>" = "environment" ]
             then
               sls remove --stage <<parameters.stage>> --verbose
             else
@@ -137,7 +137,7 @@ workflows:
             branches:
               ignore: master
 
-  check-and-deploy-staging-and-production:
+  remove-production-serverless-and-terraform-resources:
     jobs:
       - assume-role-production:
           context: api-assume-role-production-context

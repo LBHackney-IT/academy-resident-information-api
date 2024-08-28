@@ -77,12 +77,6 @@ resources:
                   Resource: "*"
 custom:
   vpc:
-    staging:
-      securityGroupIds:
-        - sg-0436b39b527a8ef07
-      subnetIds:
-        - subnet-06d3de1bd9181b0d7
-        - subnet-0ed7d7713d1127656
     production:
       securityGroupIds:
         - sg-0f4370f57c11b8082

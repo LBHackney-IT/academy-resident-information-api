@@ -170,69 +170,68 @@ workflows:
 
   check-and-deploy-staging-and-production:
     jobs:
-      - permit-staging-terraform-release:
-          type: approval
-          filters:
-            branches:
-              only: master
       - assume-role-staging:
           context: api-assume-role-staging-context
-          requires:
-              - permit-staging-terraform-release
           filters:
              branches:
                only: master
-      - terraform-init-and-apply-to-staging:
+      - permit-staging-terraform-release:
+          type: approval
           requires:
             - assume-role-staging
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - permit-staging-terraform-release
           filters:
             branches:
               only: master
       - permit-staging-deployment:
           type: approval
           requires:
-            - terraform-init-and-apply-to-staging
+            - assume-role-staging
           filters:
             branches:
               only: master
       - deploy-to-staging:
           requires:
-            - assume-role-staging
             - permit-staging-deployment
-          filters:
-            branches:
-              only: master
-      - permit-production-terraform-release:
-          type: approval
-          requires:
-            - deploy-to-staging
           filters:
             branches:
               only: master
       - assume-role-production:
           context: api-assume-role-production-context
           requires:
-              - permit-production-terraform-release
+            - deploy-to-staging
+            - terraform-init-and-apply-to-staging
           filters:
              branches:
                only: master
-      - terraform-init-and-apply-to-production:
+      - permit-production-terraform-release:
+          type: approval
           requires:
             - assume-role-production
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-production:
+          requires:
+              - permit-production-terraform-release
           filters:
             branches:
               only: master
       - permit-production-deployment:
           type: approval
           requires:
-            - terraform-init-and-apply-to-production
+            - assume-role-production
           filters:
             branches:
               only: master
       - deploy-to-production:
           requires:
             - permit-production-deployment
-            - assume-role-production
           filters:
             branches:
               only: master

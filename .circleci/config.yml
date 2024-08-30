@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+  aws-cli: circleci/aws-cli@5.1.0
 
 executors:
   docker-python:
@@ -98,7 +99,17 @@ commands:
               sls remove --stage <<parameters.stage>> --verbose
             else
               sls deploy --stage <<parameters.stage>> --conceal
-            fi 
+            fi
+  delete-rds:
+    description: "Removes floating AWS RDS instance that TF can't reach anymore"
+    steps:
+      - *attach_workspace
+      - aws-cli/install
+      - run:
+          name: remove floating rds
+          no_output_timeout: 45m
+          command: |
+            aws rds delete-db-instance --db-instance-identifier 'academy-mirror-db-production' --skip-final-snapshot
 
 jobs:
   assume-role-production:
@@ -121,6 +132,10 @@ jobs:
     steps:
       - deploy-lambda:
           stage: 'production'
+  remove-prod-rds:
+    executor: aws-cli/default
+    steps:
+     - delete-rds
 
 workflows:
   preview-terraform-changes:
@@ -151,9 +166,15 @@ workflows:
           filters:
             branches:
               only: master
-      - terraform-init-and-apply-to-production:
+      - remove-prod-rds:
           requires:
               - permit-production-terraform-release
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-apply-to-production:
+          requires:
+              - remove-prod-rds
           filters:
             branches:
               only: master

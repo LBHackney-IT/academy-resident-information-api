@@ -1,7 +1,8 @@
-# This application has been decommissioned.
-
 # Academy Resident Information API
 
+This application and its resources have been decommissioned.
+
+<!--
 Academy Resident Information API retrieves data from the Academy application, this includes both housing benefits claimants and Council Tax details
 
 The data can be retrieved through the use of a GET endpoint which would retrieve all the data or through a specified ID.
@@ -127,3 +128,4 @@ Note: The Host name needs to be the name of the stub database docker-compose ser
 [universal-housing-simulator]: https://github.com/LBHackney-IT/lbh-universal-housing-simulator
 [made-tech]: https://madetech.com/
 [AWS-CLI]: https://aws.amazon.com/cli/
+-->

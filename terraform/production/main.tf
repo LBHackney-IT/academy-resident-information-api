@@ -11,11 +11,6 @@ provider "aws" {
   region  = "eu-west-2"
   version = "~> 2.0"
 }
-data "aws_caller_identity" "current" {}
-data "aws_region" "current" {}
-locals {
-   parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
-}
 
 terraform {
   backend "s3" {
@@ -24,37 +19,4 @@ terraform {
     region  = "eu-west-2"
     key     = "services/academy-resident-information-api/state"
   }
-}
-data "aws_vpc" "production_vpc" {
-  tags = {
-    Name = "vpc-production-apis-production"
-  }
-}
-data "aws_subnet_ids" "production" {
-  vpc_id = data.aws_vpc.production_vpc.id
- filter {
-    name   = "tag:Type"
-    values = ["private"] # insert values here
-  }
-}
-
- data "aws_ssm_parameter" "academy_postgres_db_password" {
-   name = "/academy-api/production/postgres-password"
- }
-  data "aws_ssm_parameter" "academy_postgres_username" {
-   name = "/academy-api/production/postgres-username"
- }
-
-/*      DMS SET UP         */
-data "aws_ssm_parameter" "academy_username" {
-   name = "/academy/reporting-server/username"
-}
-data "aws_ssm_parameter" "academy_password" {
-   name = "/academy/reporting-server/password"
-}
-data "aws_ssm_parameter" "academy_hostname" {
-   name = "/academy/reporting-server/hostname"
-}
-data "aws_ssm_parameter" "academy_postgres_hostname" {
-   name = "/academy-api/production/postgres-hostname"
 }

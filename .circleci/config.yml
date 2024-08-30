@@ -93,7 +93,7 @@ commands:
           no_output_timeout: 45m
           command: |
             cd ./AcademyResidentInformationApi/
-            if [ "<<parameters.stage>>" = "environment" ]
+            if [ "<<parameters.stage>>" = "production" ]
             then
               sls remove --stage <<parameters.stage>> --verbose
             else

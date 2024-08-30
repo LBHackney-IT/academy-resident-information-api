@@ -79,32 +79,3 @@ data "aws_ssm_parameter" "academy_hostname" {
 data "aws_ssm_parameter" "academy_postgres_hostname" {
    name = "/academy-api/production/postgres-hostname"
 }
-module "dms_setup_production" {
-  source = "github.com/LBHackney-IT/aws-dms-terraform.git//dms_setup_existing_instance"
-  environment_name = "production"
-  project_name = "resident-information-apis" 
-  //target db for dms endpoint
-  target_db_name = "academy_mirror" 
-  target_endpoint_identifier = "target-academy-endpoint" 
-  target_db_engine_name = "postgres"
-  target_db_port = 5100
-  target_db_username = data.aws_ssm_parameter.academy_postgres_username.value
-  target_db_password = data.aws_ssm_parameter.academy_postgres_db_password.value
-  target_db_server = data.aws_ssm_parameter.academy_postgres_hostname.value 
-  target_endpoint_ssl_mode = "none"
-  //source db for dms endpoint
-  source_db_name = "HBCTLIVEDB" //the name of the source (on-prem) database
-  source_endpoint_identifier = "source-academy-endpoint" //unique identifier (name) you give for the endpoint to be created
-  source_db_engine_name = "sqlserver"
-  source_db_port = 1433
-  source_db_username = data.aws_ssm_parameter.academy_username.value
-  source_db_password = data.aws_ssm_parameter.academy_password.value
-  source_db_server = data.aws_ssm_parameter.academy_hostname.value 
-  source_endpoint_ssl_mode = "none"
-  //dms task set up
-  migration_type = "full-load" 
-  replication_task_indentifier = "academy-api-dms-task" 
-  task_settings = file("${path.module}/task_settings.json") 
-  task_table_mappings = file("${path.module}/selection_rules.json")
-  replication_instance_arn = "arn:aws:dms:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:rep:65CJ5HE2DMCUW5X6EPKTKUDVWA"
-}

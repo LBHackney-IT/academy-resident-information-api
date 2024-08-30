@@ -1,3 +1,5 @@
+# This application has been decommissioned.
+
 # Academy Resident Information API
 
 Academy Resident Information API retrieves data from the Academy application, this includes both housing benefits claimants and Council Tax details
